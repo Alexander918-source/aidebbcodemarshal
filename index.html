@@ -14,11 +14,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #1e1e1e; /* gris foncé */
+    background-color: #1e1e1e;
     position: relative;
 }
-
-/* Flou subtil sur le fond */
 body::before {
     content: '';
     position: fixed;
@@ -29,20 +27,17 @@ body::before {
     z-index: -1;
     animation: backgroundMove 30s linear infinite;
 }
-
 @keyframes backgroundMove {
     0% { transform: translateY(0px); }
     50% { transform: translateY(10px); }
     100% { transform: translateY(0px); }
 }
-
 h1 {
     font-size: 3em;
     margin-bottom: 10px;
     color: #fff;
     text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
 }
-
 .category-sidebar {
     display: flex;
     flex-wrap: wrap;
@@ -51,7 +46,6 @@ h1 {
     margin-bottom: 30px;
     width: 100%;
 }
-
 .category-sidebar button {
     padding: 12px 25px;
     border-radius: 12px;
@@ -62,22 +56,18 @@ h1 {
     cursor: pointer;
     transition: 0.3s;
 }
-
 .category-sidebar button:hover {
     background: #555;
 }
-
 .category-section {
     display: none;
     max-width: 800px;
     width: 100%;
     margin-bottom: 40px;
 }
-
 .category-section.active {
     display: block;
 }
-
 input, textarea {
     width: 100%;
     padding: 12px;
@@ -88,14 +78,11 @@ input, textarea {
     background: #2c2c2c;
     color: #eee;
 }
-
 input:focus, textarea:focus {
     outline: 2px solid #888;
     background: #3a3a3a;
 }
-
 textarea { height: 100px; resize: vertical; }
-
 button.generate-btn {
     margin-top: 20px;
     padding: 12px 25px;
@@ -109,11 +96,9 @@ button.generate-btn {
     width: 100%;
     transition: 0.3s;
 }
-
 button.generate-btn:hover {
     background: #777;
 }
-
 p.credits {
     margin-top: 40px;
     color: #aaa;
@@ -122,7 +107,6 @@ p.credits {
     font-family: 'PT Serif', serif;
     font-style: italic;
 }
-
 @media(max-width:800px){
     .category-sidebar { flex-direction: column; align-items: center; }
 }
@@ -132,7 +116,6 @@ p.credits {
 
 <h1>Rapport Marshal Service</h1>
 
-<!-- Image principale -->
 <img src="https://i.postimg.cc/J7f1VyWj/STAFF5.png" alt="Logo Staff" style="height:150px; display:block; margin: 0 auto 25px auto;">
 
 <div class="category-sidebar">
@@ -140,6 +123,7 @@ p.credits {
     <button onclick="showSection('deployment')">II. Rapport de déploiement</button>
 </div>
 
+<!-- Rapport de terrain -->
 <div id="terrain" class="category-section active">
     <label>Numéro de rapport :</label><input id="reportNum" placeholder="Ex: 123">
     <label>Date :</label><input id="date" placeholder="Ex: 23/10/2025">
@@ -153,6 +137,7 @@ p.credits {
     <button class="generate-btn" onclick="generateTerrainBBCode()">Copier Rapport de terrain</button>
 </div>
 
+<!-- Rapport de déploiement -->
 <div id="deployment" class="category-section">
     <label>REPORT NO :</label><input id="deployReportNo" placeholder="Ex: 456">
     <label>Ville d'origine :</label><input id="originCity" placeholder="Ex: Springfield">
@@ -172,7 +157,6 @@ p.credits {
     <button class="generate-btn" onclick="generateDeployBBCode()">Copier Rapport de déploiement</button>
 </div>
 
-<!-- Image en bas pour équilibre -->
 <img src="https://i.postimg.cc/BQ4VKs5q/BADGE-1.png" alt="Badge" style="height:120px; display:block; margin: 20px auto;">
 
 <p class="credits">Crédit : Alexander</p>
@@ -195,14 +179,29 @@ function generateTerrainBBCode() {
     const reviewDate = document.getElementById('reviewDate').value;
     const content = document.getElementById('content').value;
 
-    const bbcode = `<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 35px!important; font-family: georgia; color: #000000;"><tbody><tr><td align="left" valign="top"><center><img src="https://i.imgur.com/O5sbaiB.png" height="120px;"></center>REPORT: ${reportNum}<div style="float:right;">DATE: ${date}</div><center>OFFICIAL DOCUMENT<div style="border-top: 1px solid black; border-bottom: 1px solid black; padding: 10px; font-weight: bold; margin-top: 5px; margin-bottom: 5px; letter-spacing: 3px; font-size: 20px;">MARSHAL SERVICE</div>FIELD REPORT</center>${name}<div style="margin-left: 50%;"><img src="${signature}" alt="SIGNATURE" height="100px;">${name}</div>File/Case Ref. No. # ${refNo} <div style="float:right;">Page: ${page}</div></td></tr></tbody></table></center></div>`;
+    const bbcode = `<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 35px!important; font-family: georgia; color: #000000;">
+<tbody>
+<tr><td align="left" valign="top">
+
+<center><img src="https://2img.net/i.imgur.com/O5sbaiB.png" height="120px;"></center>REPORT: ${reportNum}<div style="float:right;">DATE: ${date}</div>
+<center>OFFICIAL DOCUMENT
+<div style="border-top: 1px solid black; border-bottom: 1px solid black; padding: 10px; font-weight: bold; margin-top: 5px; margin-bottom: 5px; letter-spacing: 3px; font-size: 20px;">MARSHAL SERVICE</div>FIELD REPORT</center>
+
+${content}
+
+
+<div style="margin-left: 50%;"><img src="${signature}" alt="SIGNATURE" height="100px;">
+${name}</div></td></tr></tr><tr height="0px;"><td><center>FOR OFFICIAL USE ONLY</center>
+File/Case Ref. No. # ${refNo} <div style="float:right;">Page: ${page}</div>
+
+File/Case Ref. Name: ${refName} <div style="float:right;">Review Date: ${reviewDate}</div></td></tr></tbody></table></center></div>`;
 
     navigator.clipboard.writeText(bbcode);
     document.querySelectorAll('#terrain input, #terrain textarea').forEach(i => i.value = '');
     alert("Rapport de terrain copié et champs réinitialisés !");
 }
 
-// BBCode Déploiement
+// BBCode Déploiement (inchangé)
 function generateDeployBBCode() {
     const deployReportNo = document.getElementById('deployReportNo').value;
     const originCity = document.getElementById('originCity').value;
@@ -230,5 +229,3 @@ function generateDeployBBCode() {
 
 </body>
 </html>
-
-
