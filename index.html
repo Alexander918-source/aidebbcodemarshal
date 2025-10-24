@@ -3,183 +3,178 @@
 <head>
 <meta charset="UTF-8">
 <title>Rapport Marshal Service</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=PT+Serif&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://i.postimg.cc/BQ4VKs5q/BADGE-1.png">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-body {
-    font-family: 'Montserrat', sans-serif;
-    margin: 0;
-    padding: 30px;
-    min-height: 100vh;
-    color: #eee;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #1e1e1e;
-    position: relative;
+:root{
+  --bg-top:#1a1a1a; --bg-bottom:#000000; --accent:#7c6ef0; --text:#eaeaea;
+  --border:rgba(255,255,255,0.1); --radius:12px; --shadow:0 8px 32px rgba(0,0,0,0.5);
 }
-body::before {
-    content: '';
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background-color: rgba(255,255,255,0.03);
-    backdrop-filter: blur(10px);
-    z-index: -1;
-    animation: backgroundMove 30s linear infinite;
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Outfit',sans-serif; color:var(--text);
+  background:linear-gradient(to bottom,var(--bg-top),var(--bg-bottom));
+  min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  overflow-x:hidden; padding:30px; position:relative;
 }
-@keyframes backgroundMove {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(10px); }
-    100% { transform: translateY(0px); }
+/* Badge de fond — 420px, plus net, 5% plus bas, opacité 0.08, fixe */
+.bg-seal{
+  position:fixed; inset:0;
+  background:url('https://i.postimg.cc/BQ4VKs5q/BADGE-1.png') center 55% / 420px no-repeat;
+  opacity:0.08; z-index:-1; pointer-events:none; filter:grayscale(80%) brightness(0.8);
 }
-h1 {
-    font-size: 3em;
-    margin-bottom: 10px;
-    color: #fff;
-    text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+h1{font-size:2.8em;margin-bottom:10px;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.6);text-align:center}
+.logo-wrap img{height:150px;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5));display:block;margin:25px auto}
+.category-sidebar{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;margin-bottom:30px;width:100%}
+.category-sidebar button{
+  padding:12px 25px;border-radius:var(--radius);border:1px solid var(--border);
+  background:rgba(255,255,255,0.08);color:#eee;font-weight:700;cursor:pointer;transition:.3s;backdrop-filter:blur(10px)
 }
-.category-sidebar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 30px;
-    width: 100%;
+.category-sidebar button:hover{background:var(--accent);color:#fff;transform:translateY(-2px)}
+.category-sidebar button.active{background:var(--accent);color:#fff;box-shadow:0 0 15px rgba(124,110,240,.5)}
+.category-section{
+  display:none;max-width:950px;width:100%;margin-bottom:40px;background:rgba(255,255,255,.05);
+  backdrop-filter:blur(18px);border-radius:var(--radius);border:1px solid var(--border);
+  box-shadow:var(--shadow);padding:35px;opacity:0;transform:translateY(20px);transition:all .4s ease
 }
-.category-sidebar button {
-    padding: 12px 25px;
-    border-radius: 12px;
-    border: none;
-    background: #333;
-    color: #eee;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+.category-section.active{display:block;opacity:1;transform:translateY(0)}
+label{color:#bbb;font-weight:600;font-size:.9rem}
+input,textarea{
+  width:100%;padding:12px 14px;border-radius:var(--radius);
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.08);
+  color:#fff;margin-top:5px;font-size:1rem;transition:.3s
 }
-.category-sidebar button:hover {
-    background: #555;
+input:focus,textarea:focus{outline:none;border-color:var(--accent);background:rgba(255,255,255,.15);box-shadow:0 0 20px rgba(124,110,240,.3)}
+textarea{height:120px;resize:vertical}
+button.generate-btn{
+  margin-top:20px;padding:14px;border:1px solid rgba(255,255,255,.2);border-radius:var(--radius);
+  background:rgba(124,110,240,.25);color:#fff;font-weight:700;font-size:1em;cursor:pointer;width:100%;
+  transition:.3s;backdrop-filter:blur(8px)
 }
-.category-section {
-    display: none;
-    max-width: 800px;
-    width: 100%;
-    margin-bottom: 40px;
+button.generate-btn:hover{background:var(--accent);box-shadow:0 8px 20px rgba(124,110,240,.3)}
+/* Sections visuelles (restaurées) */
+.info-section{display:flex;flex-direction:column;align-items:center;text-align:center;gap:35px;margin:10px 0 30px 0;max-width:950px;width:100%}
+.info-block h3{color:#fff;font-size:1.2rem;font-weight:700;margin-bottom:12px;text-shadow:0 0 10px rgba(124,110,240,.25)}
+.info-img{height:140px;border-radius:10px;transition:transform .3s,box-shadow .3s;box-shadow:0 0 10px rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.info-img:hover{transform:scale(1.03);box-shadow:0 0 18px rgba(124,110,240,.35)}
+.wanted-grid{display:flex;justify-content:center;gap:25px;flex-wrap:wrap}
+.footer-logos img{height:120px;display:block;margin:20px auto}
+p.credits{margin-top:10px;color:#bbb;font-size:.95rem;text-align:center;line-height:1.6}
+p.credits strong{color:#fff}
+/* Pop-up épuré */
+#popup{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(124,110,240,.9);color:#fff;padding:12px 18px;border-radius:10px;
+  font-size:1rem;font-weight:700;text-align:center;box-shadow:0 8px 28px rgba(124,110,240,.35);
+  opacity:0;transition:opacity .25s ease;pointer-events:none;z-index:9999
 }
-.category-section.active {
-    display: block;
-}
-input, textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #555;
-    margin-top: 5px;
-    font-size: 1em;
-    background: #2c2c2c;
-    color: #eee;
-}
-input:focus, textarea:focus {
-    outline: 2px solid #888;
-    background: #3a3a3a;
-}
-textarea { height: 100px; resize: vertical; }
-button.generate-btn {
-    margin-top: 20px;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 12px;
-    background: #555;
-    color: #fff;
-    font-weight: bold;
-    font-size: 1em;
-    cursor: pointer;
-    width: 100%;
-    transition: 0.3s;
-}
-button.generate-btn:hover {
-    background: #777;
-}
-p.credits {
-    margin-top: 40px;
-    color: #aaa;
-    font-size: 16px;
-    text-align: center;
-    font-family: 'PT Serif', serif;
-    font-style: italic;
-}
-@media(max-width:800px){
-    .category-sidebar { flex-direction: column; align-items: center; }
-}
+#popup.show{opacity:1}
 </style>
 </head>
 <body>
 
-<h1>Rapport Marshal Service</h1>
+<div class="bg-seal"></div>
 
-<img src="https://i.postimg.cc/J7f1VyWj/STAFF5.png" alt="Logo Staff" style="height:150px; display:block; margin: 0 auto 25px auto;">
+<h1>Rapport Marshal Service</h1>
+<div class="logo-wrap">
+  <img src="https://i.postimg.cc/J7f1VyWj/STAFF5.png" alt="Logo Staff">
+</div>
 
 <div class="category-sidebar">
-    <button onclick="showSection('terrain')">I. Rapport de terrain</button>
-    <button onclick="showSection('deployment')">II. Rapport de déploiement</button>
+  <button onclick="showSection('terrain')" class="active">I. Rapport de terrain</button>
+  <button onclick="showSection('deployment')">II. Rapport de déploiement</button>
 </div>
 
 <!-- Rapport de terrain -->
 <div id="terrain" class="category-section active">
-    <label>Numéro de rapport :</label><input id="reportNum" placeholder="Ex: 123">
-    <label>Date :</label><input id="date" placeholder="Ex: 23/10/2025">
-    <label>Nom :</label><input id="name" placeholder="Ex: John Fisheer">
-    <label>Lien de la signature :</label><input id="signature" placeholder="Ex: https://imgur.com/signature.png">
-    <label>File/Case Ref. No. :</label><input id="refNo" placeholder="Ex: 789">
-    <label>File/Case Ref. Name :</label><input id="refName" placeholder="Ex: Case Alpha">
-    <label>Page :</label><input id="page" placeholder="Ex: 01">
-    <label>Review Date :</label><input id="reviewDate" placeholder="Ex: 30/10/2025">
-    <label>Contenu du rapport :</label><textarea id="content" placeholder="Texte du rapport..."></textarea>
-    <button class="generate-btn" onclick="generateTerrainBBCode()">Copier Rapport de terrain</button>
+  <label>Numéro de rapport :</label><input id="reportNum">
+  <label>Date :</label><input id="date">
+  <label>Nom :</label><input id="name">
+  <label>Lien de la signature :</label><input id="signature">
+  <label>File/Case Ref. No. :</label><input id="refNo">
+  <label>File/Case Ref. Name :</label><input id="refName">
+  <label>Page :</label><input id="page">
+  <label>Review Date :</label><input id="reviewDate">
+  <label>Contenu du rapport :</label><textarea id="content"></textarea>
+  <button class="generate-btn" onclick="generateTerrainBBCode()">Copier Rapport de terrain</button>
 </div>
 
 <!-- Rapport de déploiement -->
 <div id="deployment" class="category-section">
-    <label>REPORT NO :</label><input id="deployReportNo" placeholder="Ex: 001">
-    <label>Ville d'origine :</label><input id="originCity" placeholder="Ex: Towsend">
-    <label>File No :</label><input id="fileNoDeploy" placeholder="Ex: 076">
-    <label>Rapport fait à :</label><input id="reportCity" placeholder="Ex: Nashville">
-    <label>Date du rapport :</label><input id="reportDateDeploy" placeholder="Ex: 23/10/2025">
-    <label>Rapport fait par :</label><input id="author" placeholder="Ex: Davis Harper">
-    <label>Protection faite à :</label><input id="protectedCity" placeholder="Ex: Nashville">
-    <label>Date de la protection :</label><input id="protectionDate" placeholder="Ex: 24/10/2025">
-    <label>Horaires de la protection :</label><input id="protectionHours" placeholder="Ex: 08:00-18:00">
-    <label>Lieux sous protection :</label><input id="protectedLocations" placeholder="Ex: Union-Square">
-    <label>Deputy Marshals en charge :</label><input id="deputies" placeholder="Ex: John, Fisheer">
-    <label>Superviseurs présents :</label><input id="supervisors" placeholder="Ex: Alexy, Peterson">
-    <label>Deputy Marshals présents :</label><input id="deputyPresent" placeholder="Ex: Bryan, O'Connor">
-    <label>Équipements utilisés :</label><input id="equipment" placeholder="Ex: Dodge, ACR">
-    <label>Déroulement de la protection :</label><textarea id="protectionText" placeholder="TEXTE"></textarea>
-    <button class="generate-btn" onclick="generateDeployBBCode()">Copier Rapport de déploiement</button>
+  <label>REPORT NO :</label><input id="deployReportNo">
+  <label>Ville d'origine :</label><input id="originCity">
+  <label>File No :</label><input id="fileNoDeploy">
+  <label>Rapport fait à :</label><input id="reportCity">
+  <label>Date du rapport :</label><input id="reportDateDeploy">
+  <label>Rapport fait par :</label><input id="author">
+  <label>Protection faite à :</label><input id="protectedCity">
+  <label>Date de la protection :</label><input id="protectionDate">
+  <label>Horaires de la protection :</label><input id="protectionHours">
+  <label>Lieux sous protection :</label><input id="protectedLocations">
+  <label>Deputy Marshals en charge :</label><input id="deputies">
+  <label>Superviseurs présents :</label><input id="supervisors">
+  <label>Deputy Marshals présents :</label><input id="deputyPresent">
+  <label>Équipements utilisés :</label><input id="equipment">
+  <label>Déroulement de la protection :</label><textarea id="protectionText"></textarea>
+  <button class="generate-btn" onclick="generateDeployBBCode()">Copier Rapport de déploiement</button>
 </div>
 
-<img src="https://i.postimg.cc/BQ4VKs5q/BADGE-1.png" alt="Badge" style="height:120px; display:block; margin: 20px auto;">
+<!-- Sections visuelles -->
+<div class="info-section">
+  <div class="info-block">
+    <h3>📞 Comment nous contacter ?</h3>
+    <a href="https://i.postimg.cc/PJ3rV63W/r3XZu-TI.png" target="_blank">
+      <img src="https://i.postimg.cc/PJ3rV63W/r3XZu-TI.png" alt="Contact" class="info-img">
+    </a>
+  </div>
+  <div class="info-block">
+    <h3>🕵️ Avis de recherche en cours</h3>
+    <div class="wanted-grid">
+      <a href="https://i.postimg.cc/cJnggN90/Bd-S5K2E.png" target="_blank">
+        <img src="https://i.postimg.cc/cJnggN90/Bd-S5K2E.png" alt="Avis 1" class="info-img">
+      </a>
+      <a href="https://i.postimg.cc/L8rhMbH1/LKK1i-CV.png" target="_blank">
+        <img src="https://i.postimg.cc/L8rhMbH1/LKK1i-CV.png" alt="Avis 2" class="info-img">
+      </a>
+    </div>
+  </div>
+</div>
 
-<p class="credits">Crédit : Alexander</p>
+<div class="footer-logos">
+  <img src="https://i.postimg.cc/BQ4VKs5q/BADGE-1.png" alt="Badge">
+</div>
+<p class="credits">© 2025 — Tous droits réservés au <strong>Marshal Service</strong>.<br>Créé par <strong>John Fisheer</strong>.</p>
+
+<!-- Pop-up -->
+<div id="popup">Rapport copié avec succès</div>
 
 <script>
 function showSection(sectionId){
-    document.querySelectorAll('.category-section').forEach(s => s.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
+  document.querySelectorAll('.category-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+  document.querySelectorAll('.category-sidebar button').forEach(btn=>{
+    btn.classList.toggle('active', btn.getAttribute('onclick').includes(sectionId));
+  });
+}
+function showPopup(){
+  const p=document.getElementById('popup');
+  p.classList.add('show');
+  setTimeout(()=>p.classList.remove('show'),1500);
 }
 
-// BBCode Terrain
+/* --- BBCode Terrain (inchangé) --- */
 function generateTerrainBBCode() {
-    const reportNum = document.getElementById('reportNum').value;
-    const date = document.getElementById('date').value;
-    const name = document.getElementById('name').value;
-    const signature = document.getElementById('signature').value;
-    const refNo = document.getElementById('refNo').value;
-    const refName = document.getElementById('refName').value;
-    const page = document.getElementById('page').value;
-    const reviewDate = document.getElementById('reviewDate').value;
-    const content = document.getElementById('content').value;
+  const reportNum=document.getElementById('reportNum').value;
+  const date=document.getElementById('date').value;
+  const name=document.getElementById('name').value;
+  const signature=document.getElementById('signature').value;
+  const refNo=document.getElementById('refNo').value;
+  const refName=document.getElementById('refName').value;
+  const page=document.getElementById('page').value;
+  const reviewDate=document.getElementById('reviewDate').value;
+  const content=document.getElementById('content').value;
 
-    const bbcode = `<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 35px!important; font-family: georgia; color: #000000;">
+  const bbcode = `<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 35px!important; font-family: georgia; color: #000000;">
 <tbody>
 <tr><td align="left" valign="top">
 
@@ -196,37 +191,35 @@ File/Case Ref. No. # ${refNo} <div style="float:right;">Page: ${page}</div>
 
 File/Case Ref. Name: ${refName} <div style="float:right;">Review Date: ${reviewDate}</div></td></tr></tbody></table></center></div>`;
 
-    navigator.clipboard.writeText(bbcode);
-    document.querySelectorAll('#terrain input, #terrain textarea').forEach(i => i.value = '');
-    alert("Rapport de terrain copié et champs réinitialisés !");
+  navigator.clipboard.writeText(bbcode);
+  document.querySelectorAll('#terrain input,#terrain textarea').forEach(i=>i.value='');
+  showPopup();
 }
 
-// BBCode Déploiement (inchangé)
+/* --- BBCode Déploiement (inchangé) --- */
 function generateDeployBBCode() {
-    const deployReportNo = document.getElementById('deployReportNo').value;
-    const originCity = document.getElementById('originCity').value;
-    const fileNoDeploy = document.getElementById('fileNoDeploy').value;
-    const reportCity = document.getElementById('reportCity').value;
-    const reportDateDeploy = document.getElementById('reportDateDeploy').value;
-    const author = document.getElementById('author').value;
-    const protectedCity = document.getElementById('protectedCity').value;
-    const protectionDate = document.getElementById('protectionDate').value;
-    const protectionHours = document.getElementById('protectionHours').value;
-    const protectedLocations = document.getElementById('protectedLocations').value;
-    const deputies = document.getElementById('deputies').value;
-    const supervisors = document.getElementById('supervisors').value;
-    const deputyPresent = document.getElementById('deputyPresent').value;
-    const equipment = document.getElementById('equipment').value;
-    const protectionText = document.getElementById('protectionText').value;
+  const deployReportNo=document.getElementById('deployReportNo').value;
+  const originCity=document.getElementById('originCity').value;
+  const fileNoDeploy=document.getElementById('fileNoDeploy').value;
+  const reportCity=document.getElementById('reportCity').value;
+  const reportDateDeploy=document.getElementById('reportDateDeploy').value;
+  const author=document.getElementById('author').value;
+  const protectedCity=document.getElementById('protectedCity').value;
+  const protectionDate=document.getElementById('protectionDate').value;
+  const protectionHours=document.getElementById('protectionHours').value;
+  const protectedLocations=document.getElementById('protectedLocations').value;
+  const deputies=document.getElementById('deputies').value;
+  const supervisors=document.getElementById('supervisors').value;
+  const deputyPresent=document.getElementById('deputyPresent').value;
+  const equipment=document.getElementById('equipment').value;
+  const protectionText=document.getElementById('protectionText').value;
 
-    const bbcode = `<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: #ffffff; font-family: sans-serif; font-size: 10px; line-height: 1; color: #000000; padding: 30px; vertical-align: top;"><tbody><tr><td style="vertical-align: top;"><center><table style="border: 0px solid transparent!important"><tbody><tr><td><img height="100px" src="https://i.servimg.com/u/f74/19/89/43/23/xxxxxx10.png"></td><td style="padding-left: 20px; padding-right: 20px; text-align: center;"><span style="font-size: 50px; letter-spacing: 10px">MARSHAL SERVICE</span> <span style="font-size: 20px">DAVIDSON COUNTY SHERIFF'S OFFICE</span></td><td><img height="100px" src="https://i.imgur.com/jDodmWK.png"></td></tr></tbody></table></center> <table style="width: 100%; border: 0px solid black!important;"><tbody><tr><td style="width: 135px;">REPORT NO. ${deployReportNo} THIS CASE ORIGINATED AT</td><td><div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${originCity}</div></td><td style="text-align: right;"> FILE NO.</td><td style="text-align: right; width: 315px"><div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${fileNoDeploy}</div></td></tr></tbody></table> <table style="border-collapse: collapse; border: 2px solid black!important; width: 100%;";><tbody><tr><td style="padding: 5px; border: 1px solid black!important; vertical-align: top; text-align: center; font-weight: bold; font-size: 40px" colspan="3">RAPPORT DE PROTECTION</td></tr><tr><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">RAPPORT FAIT A <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${reportCity}</div></td><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">DATE DU RAPPORT <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${reportDateDeploy}</div></td><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">RAPPORT FAIT PAR <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${author}</div></td></tr><tr><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">PROTECTION FAITE A <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${protectedCity}</div></td><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">DATE DE LA PROTECTION <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${protectionDate}</div></td><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">HORAIRES DE LA PROTECTION <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${protectionHours}</div></td></tr><tr><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">LIEUX SOUS PROTECTION <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${protectedLocations}</div></td><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;" colspan="2">DEPUTY MARSHALS EN CHARGE <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${deputies}</div></td></tr><tr><td style="padding: 5px; border: 1px solid black!important;"><div style="vertical-align: top; height: 270px">SUPERVISEURS PRESENTS <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;"><ul style="margin-bottom: 0em; margin-left: 1em;">${supervisors.split(',').map(s => `<li>${s.trim()}</li>`).join('')}</ul></div></div></td><td style="padding: 5px; border: 1px solid black!important;"><div style="vertical-align: top; height: 270px">DEPUTY MARSHALS PRESENTS <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;"><ul style="margin-bottom: 0em; margin-left: 1em;">${deputyPresent.split(',').map(d => `<li>${d.trim()}</li>`).join('')}</ul></div></div></td><td style="padding: 5px; border: 1px solid black!important;"><div style="vertical-align: top; height: 270px">EQUIPEMENTS UTILISES <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;"><ul style="margin-bottom: 0em; margin-left: 1em;">${equipment.split(',').map(e => `<li>${e.trim()}</li>`).join('')}</ul></div></div></td></tr><tr><td style="padding: 5px; border: 1px solid black!important;" colspan="3"><div style="vertical-align: top; height: 560px">DEROULEMENT DE LA PROTECTION <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px; height: 100%">${protectionText}</div></div></td></tr></tbody></table></center></div>`;
+  const bbcode = `<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: #ffffff; font-family: sans-serif; font-size: 10px; line-height: 1; color: #000000; padding: 30px; vertical-align: top;"><tbody><tr><td style="vertical-align: top;"><center><table style="border: 0px solid transparent!important"><tbody><tr><td><img height="100px" src="https://i.servimg.com/u/f74/19/89/43/23/xxxxxx10.png"></td><td style="padding-left: 20px; padding-right: 20px; text-align: center;"><span style="font-size: 50px; letter-spacing: 10px">MARSHAL SERVICE</span> <span style="font-size: 20px">DAVIDSON COUNTY SHERIFF'S OFFICE</span></td><td><img height="100px" src="https://i.imgur.com/jDodmWK.png"></td></tr></tbody></table></center> <table style="width: 100%; border: 0px solid black!important;"><tbody><tr><td style="width: 135px;">REPORT NO. ${deployReportNo} THIS CASE ORIGINATED AT</td><td><div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${originCity}</div></td><td style="text-align: right;"> FILE NO.</td><td style="text-align: right; width: 315px"><div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${fileNoDeploy}</div></td></tr></tbody></table> <table style="border-collapse: collapse; border: 2px solid black!important; width: 100%;";><tbody><tr><td style="padding: 5px; border: 1px solid black!important; vertical-align: top; text-align: center; font-weight: bold; font-size: 40px" colspan="3">RAPPORT DE PROTECTION</td></tr><tr><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">RAPPORT FAIT A <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${reportCity}</div></td><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">DATE DU RAPPORT <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${reportDateDeploy}</div></td><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">RAPPORT FAIT PAR <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${author}</div></td></tr><tr><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">PROTECTION FAITE A <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${protectedCity}</div></td><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">DATE DE LA PROTECTION <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${protectionDate}</div></td><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">HORAIRES DE LA PROTECTION <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${protectionHours}</div></td></tr><tr><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;">LIEUX SOUS PROTECTION <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${protectedLocations}</div></td><td style="padding: 5px; border: 1px solid black!important; vertical-align: top;" colspan="2">DEPUTY MARSHALS EN CHARGE <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;">${deputies}</div></td></tr><tr><td style="padding: 5px; border: 1px solid black!important;"><div style="vertical-align: top; height: 270px">SUPERVISEURS PRESENTS <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;"><ul style="margin-bottom: 0em; margin-left: 1em;">${supervisors.split(',').map(s=>`<li>${s.trim()}</li>`).join('')}</ul></div></div></td><td style="padding: 5px; border: 1px solid black!important;"><div style="vertical-align: top; height: 270px">DEPUTY MARSHALS PRESENTS <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;"><ul style="margin-bottom: 0em; margin-left: 1em;">${deputyPresent.split(',').map(d=>`<li>${d.trim()}</li>`).join('')}</ul></div></div></td><td style="padding: 5px; border: 1px solid black!important;"><div style="vertical-align: top; height: 270px">EQUIPEMENTS UTILISES <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px;"><ul style="margin-bottom: 0em; margin-left: 1em;">${equipment.split(',').map(e=>`<li>${e.trim()}</li>`).join('')}</ul></div></div></td></tr><tr><td style="padding: 5px; border: 1px solid black!important;" colspan="3"><div style="vertical-align: top; height: 560px">DEROULEMENT DE LA PROTECTION <div style="font-family: Courier; font-size: 25px; font-weight: bold; padding: 5px; height: 100%">${protectionText}</div></div></td></tr></tbody></table></center></div>`;
 
-    navigator.clipboard.writeText(bbcode);
-    document.querySelectorAll('#deployment input, #deployment textarea').forEach(i => i.value = '');
-    alert("Rapport de déploiement copié et champs réinitialisés !");
+  navigator.clipboard.writeText(bbcode);
+  document.querySelectorAll('#deployment input,#deployment textarea').forEach(i=>i.value='');
+  showPopup();
 }
 </script>
-
 </body>
 </html>
-
