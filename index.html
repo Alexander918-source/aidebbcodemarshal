@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>DCSO</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/BQ4VKs5q/BADGE-1.png">
-  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --page-max: 1120px;
@@ -111,7 +111,7 @@
     }
 
     h1 {
-      font-family: 'Chivo', sans-serif;
+      font-family: 'Cinzel', serif;
       font-size: clamp(2rem, 5vw, 3.2rem);
       line-height: 1.1;
       text-shadow: 0 15px 30px rgba(0, 0, 0, 0.9);
@@ -120,9 +120,10 @@
 
     h2,
     h3,
-    h4 { font-family: 'Chivo', sans-serif; }
+    h4 { font-family: 'Cinzel', serif; }
 
     .subtitle {
+      font-family: 'Cinzel', serif;
       max-width: 640px;
       color: var(--text-muted);
       font-size: clamp(0.95rem, 2vw, 1.05rem);
@@ -533,11 +534,11 @@
   <div class="page">
     <header class="masthead">
       <div class="badge">
-        <img src="https://i.postimg.cc/BQ4VKs5q/BADGE-1.png" alt="Badge Metropolitan Division">
-        Metropolitan Division
+        <img src="https://i.postimg.cc/BQ4VKs5q/BADGE-1.png" alt="Badge Marshal Service">
+        Marshal Service
       </div>
-      <h1>𝐇 𝐏𝐋𝐀𝐓𝐎𝐎𝐍</h1>
-      <p class="subtitle">𝐇 𝐏𝐥𝐚𝐭𝐨𝐨𝐧</p>
+      <h1>Marshal Service</h1>
+      <p class="subtitle">Marshal Service</p>
     </header>
 
     <section class="layout">
@@ -588,13 +589,9 @@
                   <label for="page">Page</label>
                   <input id="page" placeholder="Ex: 01">
                 </div>
-                <div class="form-group">
-                  <label for="reviewDate">Review Date</label>
-                  <input id="reviewDate" placeholder="Ex: 30/10/2025">
-                </div>
                 <div class="form-group wide">
                   <label for="content">Contenu du rapport</label>
-                  <textarea id="content" placeholder="Texte du rapport..."></textarea>
+                  <textarea id="content" placeholder="Texte du rapport..." maxlength="2500"></textarea>
                 </div>
               </div>
               <div class="form-actions">
@@ -650,9 +647,9 @@
 
     <footer>
       <div class="footer-seal">
-        <img src="https://i.postimg.cc/BQ4VKs5q/BADGE-1.png" alt="Sceau Metropolitan Division">
+        <img src="https://i.postimg.cc/BQ4VKs5q/BADGE-1.png" alt="Sceau Marshal Service">
       </div>
-      <p>© 2025 · Metropolitan Division — Générateur maintenu par <strong>John Fisheer</strong>.</p>
+      <p>© 2025 · Marshal Service — Générateur maintenu par <strong>John Fisheer</strong>.</p>
     </footer>
   </div>
 
@@ -702,6 +699,36 @@
         return '';
       }
       return multiline ? formatMultiline(element.value) : escapeHtml(element.value);
+    }
+
+    function handleTemplateSelectChange(event) {
+      const select = event.target;
+      if (select.dataset.allowCustom === 'true' && select.value === '__custom') {
+        const previousValue = select.dataset.lastValue || '';
+        const customValue = prompt('Valeur personnalisée pour ce champ :', previousValue);
+
+        if (customValue && customValue.trim()) {
+          const sanitizedValue = customValue.trim();
+          let customOption = select.querySelector('option[data-custom="true"]');
+          if (!customOption) {
+            customOption = document.createElement('option');
+            customOption.dataset.custom = 'true';
+            select.appendChild(customOption);
+          }
+          customOption.value = sanitizedValue;
+          customOption.textContent = sanitizedValue;
+          select.value = sanitizedValue;
+          select.dataset.lastValue = sanitizedValue;
+        } else {
+          if (previousValue) {
+            select.value = previousValue;
+          } else {
+            select.selectedIndex = 0;
+          }
+        }
+      } else {
+        select.dataset.lastValue = select.value;
+      }
     }
 
     const documentTemplates = [];
@@ -758,7 +785,18 @@ OFFICERS IN CHARGE
       description: "Résumé pelable du dossier avec champs d'identification et requêtes.",
       fields: [
         { id: 'summaryReference', label: 'Matricule de référence', placeholder: 'X' },
-        { id: 'summaryClassification', label: 'Classification', placeholder: 'X' },
+        {
+          id: 'summaryClassification',
+          label: 'Classification',
+          type: 'select',
+          placeholder: 'Sélectionner…',
+          options: [
+            { value: 'Confidentiel-Interne', label: 'Confidentiel-Interne' },
+            { value: 'Restreint-Interne', label: 'Restreint-Interne' },
+            { value: 'Secret-Interne', label: 'Secret-Interne' },
+            { value: 'Très Secret-Interne', label: 'Très Secret-Interne' }
+          ]
+        },
         { id: 'summaryFileNumber', label: 'Numéro de dossier', placeholder: 'X' },
         { id: 'summaryReferenceName', label: 'Nom de référence', placeholder: 'X' },
         { id: 'summaryAgents', label: 'Agents en charge', placeholder: 'X' },
@@ -905,14 +943,10 @@ File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date:
       label: 'Personne physique',
       description: 'Version individuelle du contrat de protection personnelle.',
       fields: [
-        { id: 'officeAddress', label: 'Adresse du bureau (entête italique)', placeholder: 'Nashville, TN 37201' },
         { id: 'documentDate', label: 'Date du document', placeholder: 'January 1, 2024' },
-        { id: 'recipientName', label: 'Destinataire - Nom', placeholder: 'Prénom Nom' },
-        { id: 'recipientRole', label: 'Destinataire - Fonction', placeholder: 'Deputy Marshal of the Marshal Service' },
-        { id: 'recipientOfficeLine1', label: 'Destinataire - Ligne 1', placeholder: "Davidson County Sheriff's Office" },
-        { id: 'recipientOfficeLine2', label: 'Destinataire - Ligne 2', placeholder: 'Nashville, TN' },
-        { id: 'protecteurRepresentative', label: 'Représentant du Protecteur', placeholder: 'John Labour' },
-        { id: 'protecteurRepresentativeTitle', label: 'Titre du représentant', placeholder: 'Directeur' },
+        { id: 'recipientName', label: 'Rédacteur - Nom', placeholder: 'Prénom Nom', preserve: true },
+        { id: 'recipientRole', label: 'Rédacteur - Fonction', placeholder: 'Deputy Marshal of the Marshal Service', preserve: true },
+        { id: 'recipientOfficeLine2', label: 'Rédacteur - Localisation', placeholder: 'Nashville, TN', preserve: true },
         { id: 'protegeCivility', label: 'Civilité du Protégé', placeholder: 'Civilité' },
         { id: 'protegeFullName', label: 'Nom complet du Protégé', placeholder: 'Prénom Nom' },
         { id: 'protegeBirthDate', label: 'Date de naissance du Protégé', placeholder: 'XX/XX/XXXX' },
@@ -923,12 +957,10 @@ File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date:
         { id: 'signatureCity', label: 'Ville de signature', placeholder: 'Nashville' },
         { id: 'signatureDate', label: 'Date de signature', placeholder: 'XX/XX/XXXX' },
         { id: 'protegeSignatureLink', label: 'Signature du Protégé (lien image)', placeholder: 'LIEN A METTRE ICI' },
-        { id: 'protecteurSignatureLink', label: 'Signature du Protecteur (lien image)', placeholder: 'LIEN A METTRE ICI' },
-        { id: 'protecteurSignatureName', label: 'Nom du Protecteur signataire', placeholder: 'John Labour' },
-        { id: 'protecteurSignatureTitle', label: 'Titre du Protecteur signataire', placeholder: 'Directeur' }
+        { id: 'protecteurSignatureLink', label: 'Signature du Protecteur (lien image)', placeholder: 'LIEN A METTRE ICI' }
       ],
       template: `<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: #ffffff; font-family: Times New Roman; font-size: 18px; line-height: 1; color: #000000; padding: 30px"><tbody><tr><td valign="top"><table style="border: 0px solid #000000!important; font-size: 20px"><tbody><tr><td><img height="120px" src="https://i.imgur.com/jDodmWK.png"></td><td style="padding-left: 345px"><b>Marshal Service</b><br><br><i>Office of Security Programs</i></td></tr></tbody></table>
-<hr style="border-top: 1px solid #000000;"><span style="padding-left: 470px;  font-size: 16px"><i>{{officeAddress}}</i></span>
+<hr style="border-top: 1px solid #000000;"><span style="padding-left: 470px;  font-size: 16px"><i>Nashville, TN 37201</i></span>
 
 
 <span style="padding-left: 470px">{{documentDate}}</span>
@@ -936,7 +968,7 @@ File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date:
 
 {{recipientName}}
 {{recipientRole}}
-{{recipientOfficeLine1}}
+Davidson County Sheriff's Office
 {{recipientOfficeLine2}}
 
 
@@ -945,7 +977,7 @@ File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date:
 <b>Entre les soussigné(e)s :</b>
 
 
-Le Marshal Service de l'Investigation Division du Davidson County Sheriff's Office dont le siège social est situé One Jerry Newson Way, Nashville, TN 37201, représenté par {{protecteurRepresentative}}, en sa qualité de {{protecteurRepresentativeTitle}},
+Le Marshal Service de l'Investigation Division du Davidson County Sheriff's Office dont le siège social est situé One Jerry Newson Way, Nashville, TN 37201, représenté par John Labour, en sa qualité de Directeur,
 
 Ci-après dénommée le <b>"Protecteur"</b>,
 
@@ -1047,7 +1079,7 @@ Lu et approuvé - Bon pour accord
 
 Pour le Protecteur (Marshal Service)
 
-{{protecteurSignatureName}}, {{protecteurSignatureTitle}}
+John Labour, Directeur
 
 
 
@@ -1063,14 +1095,10 @@ Pour le Protecteur (Marshal Service)
       label: 'Personne morale',
       description: 'Version corporate du contrat de protection personnelle.',
       fields: [
-        { id: 'officeAddress', label: 'Adresse du bureau (entête italique)', placeholder: 'Nashville, TN 37201' },
         { id: 'documentDate', label: 'Date du document', placeholder: 'January 1, 2024' },
-        { id: 'recipientName', label: 'Destinataire - Nom', placeholder: 'Prénom Nom' },
-        { id: 'recipientRole', label: 'Destinataire - Fonction', placeholder: 'Deputy Marshal of the Marshal Service' },
-        { id: 'recipientOfficeLine1', label: 'Destinataire - Ligne 1', placeholder: "Davidson County Sheriff's Office" },
-        { id: 'recipientOfficeLine2', label: 'Destinataire - Ligne 2', placeholder: 'Nashville, TN' },
-        { id: 'protecteurRepresentative', label: 'Représentant du Protecteur', placeholder: 'John Labour' },
-        { id: 'protecteurRepresentativeTitle', label: 'Titre du représentant', placeholder: 'Directeur' },
+        { id: 'recipientName', label: 'Rédacteur - Nom', placeholder: 'Prénom Nom', preserve: true },
+        { id: 'recipientRole', label: 'Rédacteur - Fonction', placeholder: 'Deputy Marshal of the Marshal Service', preserve: true },
+        { id: 'recipientOfficeLine2', label: 'Rédacteur - Localisation', placeholder: 'Nashville, TN', preserve: true },
         { id: 'companyName', label: 'Dénomination sociale', placeholder: 'Nom de la société' },
         { id: 'companySector', label: "Secteur d'activité", placeholder: 'Secteur' },
         { id: 'companyAddress', label: 'Adresse du siège social', placeholder: 'Adresse complète' },
@@ -1082,12 +1110,10 @@ Pour le Protecteur (Marshal Service)
         { id: 'companySignatureLink', label: 'Signature du Protégé (entreprise)', placeholder: 'LIEN A METTRE ICI' },
         { id: 'companySignatureName', label: 'Nom signataire entreprise', placeholder: 'Prénom Nom' },
         { id: 'companySignatureRole', label: 'Fonction signataire entreprise', placeholder: 'Fonction' },
-        { id: 'protecteurSignatureLink', label: 'Signature du Protecteur (lien image)', placeholder: 'LIEN A METTRE ICI' },
-        { id: 'protecteurSignatureName', label: 'Nom du Protecteur signataire', placeholder: 'John Labour' },
-        { id: 'protecteurSignatureTitle', label: 'Titre du Protecteur signataire', placeholder: 'Directeur' }
+        { id: 'protecteurSignatureLink', label: 'Signature du Protecteur (lien image)', placeholder: 'LIEN A METTRE ICI' }
       ],
       template: `<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: #ffffff; font-family: Times New Roman; font-size: 18px; line-height: 1; color: #000000; padding: 30px"><tbody><tr><td valign="top"><table style="border: 0px solid #000000!important; font-size: 20px"><tbody><tr><td><img height="120px" src="https://i.imgur.com/jDodmWK.png"></td><td style="padding-left: 345px"><b>Marshal Service</b><br><br><i>Office of Security Programs</i></td></tr></tbody></table>
-<hr style="border-top: 1px solid #000000;"><span style="padding-left: 470px;  font-size: 16px"><i>{{officeAddress}}</i></span>
+<hr style="border-top: 1px solid #000000;"><span style="padding-left: 470px;  font-size: 16px"><i>Nashville, TN 37201</i></span>
 
 
 <span style="padding-left: 470px">{{documentDate}}</span>
@@ -1095,7 +1121,7 @@ Pour le Protecteur (Marshal Service)
 
 {{recipientName}}
 {{recipientRole}}
-{{recipientOfficeLine1}}
+Davidson County Sheriff's Office
 {{recipientOfficeLine2}}
 
 
@@ -1104,7 +1130,7 @@ Pour le Protecteur (Marshal Service)
 <b>Entre les soussigné(e)s :</b>
 
 
-Le Marshal Service de l'Investigation Division du Davidson County Sheriff's Office dont le siège social est situé One Jerry Newson Way, Nashville, TN 37201, représenté par {{protecteurRepresentative}}, en sa qualité de {{protecteurRepresentativeTitle}},
+Le Marshal Service de l'Investigation Division du Davidson County Sheriff's Office dont le siège social est situé One Jerry Newson Way, Nashville, TN 37201, représenté par John Labour, en sa qualité de Directeur,
 
 Ci-après dénommée le <b>"Protecteur"</b>,
 
@@ -1206,7 +1232,7 @@ Lu et approuvé - Bon pour accord
 
 Pour le Protecteur (Marshal Service)
 
-{{protecteurSignatureName}}, {{protecteurSignatureTitle}}
+John Labour, Directeur
 
 
 
@@ -1225,7 +1251,7 @@ Pour le Protecteur (Marshal Service)
         { id: 'warningDate', label: 'Date', placeholder: '1 Janvier 2025' },
         { id: 'warningFrom', label: 'From', placeholder: 'X' },
         { id: 'warningTo', label: 'To', placeholder: 'X' },
-        { id: 'warningSubject', label: 'Subject', placeholder: 'WARNING ORDER #0' },
+        { id: 'warningNumber', label: 'Numéro du WARNING ORDER', placeholder: '0' },
         { id: 'warningSituation', label: 'Situation', type: 'textarea', placeholder: 'X', rows: 4 },
         { id: 'warningMission', label: 'Mission', type: 'textarea', placeholder: 'X', rows: 3 },
         { id: 'warningChain', label: 'Chaîne de commandement', type: 'textarea', placeholder: 'X', rows: 3 },
@@ -1247,7 +1273,7 @@ NASHVILLE, TN 37201</div></b></center>
 <div style="padding-left: 50px; padding-right: 50px;"><div style="text-align: right;">{{warningDate}}</div>
 From: {{warningFrom}}<br>
 To: {{warningTo}}<br><br>
-Subj: {{warningSubject}}<br><br>
+Subj: WARNING ORDER #{{warningNumber}}<br><br>
 1. <u>Situation :</u> {{warningSituation}}<br><br>
 2. <u>Mission :</u> {{warningMission}}<br><br>
 3. <u> Instruction générales :</u><br>
@@ -1282,7 +1308,8 @@ b. Aux personnes aidant à la préparation de l'OPORD<br>
         { id: 'opordDate', label: 'Date', placeholder: '1 Janvier 2025' },
         { id: 'opordFrom', label: 'From', placeholder: 'X' },
         { id: 'opordTo', label: 'To', placeholder: 'X' },
-        { id: 'opordSubject', label: 'Subject', placeholder: 'OPERATION ORDER 000 (XXX)' },
+        { id: 'opordNumber', label: "Numéro de l'OPORD", placeholder: '000' },
+        { id: 'opordDescriptor', label: 'Désignation (parenthèses)', placeholder: 'XXX' },
         { id: 'opordAreaInterest', label: "Zone d'intérêt", type: 'textarea', placeholder: 'X', rows: 3 },
         { id: 'opordAreaOperations', label: "Zone d'opération", type: 'textarea', placeholder: 'X', rows: 3 },
         { id: 'opordEnemyForces', label: 'Forces ennemies', type: 'textarea', placeholder: 'X', rows: 3 },
@@ -1305,7 +1332,7 @@ NASHVILLE, TN 37201</div></b></center>
 <div style="padding-left: 50px; padding-right: 50px;"><div style="text-align: right;">{{opordDate}}</div>
 From: {{opordFrom}}<br>
 To: {{opordTo}}<br><br>
-Subj: {{opordSubject}}<br><br>
+Subj: OPERATION ORDER {{opordNumber}} ({{opordDescriptor}})<br><br>
 1. <u>Situation :</u><br>
 a. Zone d'intérêt<br>
 {{opordAreaInterest}}<br><br>
@@ -1344,7 +1371,9 @@ b. Signal<br>
         { id: 'fragoDate', label: 'Date', placeholder: '1 Janvier 2025' },
         { id: 'fragoFrom', label: 'From', placeholder: 'X' },
         { id: 'fragoTo', label: 'To', placeholder: 'X' },
-        { id: 'fragoSubject', label: 'Subject', placeholder: 'FRAGMENTARY ORDER #0 TO OPERATION ORDER 000 (XXX)' },
+        { id: 'fragoNumber', label: 'Numéro du FRAGO', placeholder: '0' },
+        { id: 'fragoOpordNumber', label: "Numéro de l'OPORD de référence", placeholder: '000' },
+        { id: 'fragoOpordDescriptor', label: "Désignation de l'OPORD (parenthèses)", placeholder: 'XXX' },
         { id: 'fragoSituation', label: 'Situation', type: 'textarea', placeholder: 'X', rows: 3 },
         { id: 'fragoMission', label: 'Mission', type: 'textarea', placeholder: 'X', rows: 3 },
         { id: 'fragoExecution', label: 'Exécution', type: 'textarea', placeholder: 'X', rows: 3 },
@@ -1361,7 +1390,7 @@ NASHVILLE, TN 37201</div></b></center>
 <div style="padding-left: 50px; padding-right: 50px;"><div style="text-align: right;">{{fragoDate}}</div>
 From: {{fragoFrom}}<br>
 To: {{fragoTo}}<br><br>
-Subj: {{fragoSubject}}<br><br>
+Subj: FRAGMENTARY ORDER #{{fragoNumber}} TO OPERATION ORDER {{fragoOpordNumber}} ({{fragoOpordDescriptor}})<br><br>
 1. <u>Situation :</u> {{fragoSituation}}<br>
 2. <u>Mission :</u> {{fragoMission}}<br>
 3. <u>Exécution :</u> {{fragoExecution}}<br>
@@ -1528,14 +1557,87 @@ MARSHAL SERVICE</b>
           if (field.rows) {
             input.rows = field.rows;
           }
+          input.maxLength = field.maxLength ?? 2500;
+        } else if (field.type === 'select') {
+          input = document.createElement('select');
+          input.dataset.allowCustom = field.allowCustom ? 'true' : 'false';
+          input.dataset.lastValue = '';
+
+          if (field.placeholder) {
+            const placeholderOption = document.createElement('option');
+            placeholderOption.value = '';
+            placeholderOption.textContent = field.placeholder;
+            placeholderOption.disabled = true;
+            placeholderOption.hidden = true;
+            placeholderOption.selected = true;
+            input.append(placeholderOption);
+          }
+
+          if (Array.isArray(field.options)) {
+            field.options.forEach(option => {
+              const optionElement = document.createElement('option');
+              if (typeof option === 'string') {
+                optionElement.value = option;
+                optionElement.textContent = option;
+              } else {
+                optionElement.value = option.value;
+                optionElement.textContent = option.label;
+                if (option.disabled) {
+                  optionElement.disabled = true;
+                }
+              }
+              input.append(optionElement);
+            });
+          }
+
+          if (field.allowCustom) {
+            const customOption = document.createElement('option');
+            customOption.value = '__custom';
+            customOption.textContent = 'Valeur personnalisée…';
+            input.append(customOption);
+          }
+
+          input.addEventListener('change', handleTemplateSelectChange);
         } else {
           input = document.createElement('input');
           input.type = field.inputType || 'text';
         }
 
         input.id = `field-${field.id}`;
-        input.placeholder = field.placeholder || '';
+        if (field.type !== 'select') {
+          input.placeholder = field.placeholder || '';
+          if (field.maxLength && field.type !== 'textarea') {
+            input.maxLength = field.maxLength;
+          }
+        }
         input.autocomplete = 'off';
+
+        if (field.value !== undefined) {
+          if (field.type === 'select') {
+            input.value = field.value;
+            input.dataset.lastValue = field.value;
+          } else {
+            input.value = field.value;
+          }
+        }
+
+        if (field.readonly) {
+          if (field.type === 'select') {
+            input.disabled = true;
+          } else {
+            input.readOnly = true;
+          }
+          input.dataset.preserve = 'true';
+        }
+
+        if (field.disabled) {
+          input.disabled = true;
+          input.dataset.preserve = 'true';
+        }
+
+        if (field.preserve) {
+          input.dataset.preserve = 'true';
+        }
 
         wrapper.append(input);
         templateFields.append(wrapper);
@@ -1574,8 +1676,26 @@ MARSHAL SERVICE</b>
       navigator.clipboard.writeText(bbcode);
 
       if (templateFields) {
-        templateFields.querySelectorAll('input, textarea').forEach(field => {
-          field.value = '';
+        templateFields.querySelectorAll('input, textarea, select').forEach(field => {
+          if (field.dataset.preserve === 'true') {
+            return;
+          }
+          if (field.tagName === 'SELECT') {
+            const selectElement = field;
+            const customOption = selectElement.querySelector('option[data-custom="true"]');
+            if (customOption) {
+              customOption.remove();
+            }
+            const placeholderOption = selectElement.querySelector('option[disabled][hidden]');
+            if (placeholderOption) {
+              selectElement.selectedIndex = Array.from(selectElement.options).indexOf(placeholderOption);
+            } else {
+              selectElement.selectedIndex = 0;
+            }
+            selectElement.dataset.lastValue = '';
+          } else {
+            field.value = '';
+          }
         });
       }
 
@@ -1595,8 +1715,9 @@ MARSHAL SERVICE</b>
       const refNo = getFieldValue('refNo');
       const refName = getFieldValue('refName');
       const page = getFieldValue('page');
-      const reviewDate = getFieldValue('reviewDate');
       const content = getFieldValue('content', true);
+
+      const reviewDate = 'N/A';
 
       const bbcode = `<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 35px!important; font-family: georgia; color: #000000;"><tbody><tr><td align="left" valign="top"><center><img src="https://i.imgur.com/O5sbaiB.png" height="120px;"></center>REPORT: ${reportNum}<div style="float:right;">DATE: ${date}</div>
 <center>OFFICIAL DOCUMENT
