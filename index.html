@@ -791,8 +791,8 @@ OFFICERS IN CHARGE
           type: 'select',
           placeholder: 'Sélectionner…',
           options: [
-            { value: 'Confidentiel-Interne', label: 'Confidentiel-Interne' },
-            { value: 'Restreint-Interne', label: 'Restreint-Interne' },
+            { value: 'Confidential-Interne', label: 'Confidential-Interne' },
+            { value: 'Restrictif-Interne', label: 'Restrictif-Interne' },
             { value: 'Secret-Interne', label: 'Secret-Interne' },
             { value: 'Très Secret-Interne', label: 'Très Secret-Interne' }
           ]
@@ -833,8 +833,7 @@ OFFICERS IN CHARGE
     const officialFields = [
       { id: 'officialFileNumber', label: 'File/Case Ref. No.', placeholder: 'XXX' },
       { id: 'officialDate', label: 'Date', placeholder: 'XX/XX/XXXX' },
-      { id: 'officialFileName', label: 'File/Case Ref. Name', placeholder: 'XXX' },
-      { id: 'officialReviewDate', label: 'Review Date', placeholder: 'XX/XX/XXXX' }
+      { id: 'officialFileName', label: 'File/Case Ref. Name', placeholder: 'XXX' }
     ];
 
     documentTemplates.push({
@@ -858,7 +857,7 @@ CLASSIFIED DOCUMENTS ENCLOSED</div>
 <div style="margin-top: 285px; text-align: left;"><center>FOR OFFICIAL USE ONLY</center>
 File/Case Ref. No. # {{officialFileNumber}} <div style="float:right;">Date: {{officialDate}}</div>
 
-File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: {{officialReviewDate}}</div></div></div></div></td></tr></tbody></table></center>
+File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: N/A</div></div></div></div></td></tr></tbody></table></center>
 </div>`
     });
 
@@ -883,7 +882,7 @@ CLASSIFIED DOCUMENTS ENCLOSED</div>
 <div style="margin-top: 285px; text-align: left;"><center>FOR OFFICIAL USE ONLY</center>
 File/Case Ref. No. # {{officialFileNumber}} <div style="float:right;">Date: {{officialDate}}</div>
 
-File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: {{officialReviewDate}}</div></div></div></div></td></tr></tbody></table></center>
+File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: N/A</div></div></div></div></td></tr></tbody></table></center>
 </div>`
     });
 
@@ -908,7 +907,7 @@ CLASSIFIED DOCUMENTS ENCLOSED</div>
 <div style="margin-top: 285px; text-align: left;"><center>FOR OFFICIAL USE ONLY</center>
 File/Case Ref. No. # {{officialFileNumber}} <div style="float:right;">Date: {{officialDate}}</div>
 
-File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: {{officialReviewDate}}</div></div></div></div></td></tr></tbody></table></center>
+File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: N/A</div></div></div></div></td></tr></tbody></table></center>
 </div>`
     });
 
@@ -933,7 +932,7 @@ CLASSIFIED DOCUMENTS ENCLOSED</div>
 <div style="margin-top: 285px; text-align: left;"><center>FOR OFFICIAL USE ONLY</center>
 File/Case Ref. No. # {{officialFileNumber}} <div style="float:right;">Date: {{officialDate}}</div>
 
-File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: {{officialReviewDate}}</div></div></div></div></td></tr></tbody></table></center>
+File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: N/A</div></div></div></div></td></tr></tbody></table></center>
 </div>`
     });
 
