@@ -35,10 +35,10 @@
       color: var(--text);
       background-color: #04060a;
       min-height: 100vh;
-      padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem) 2rem;
+      padding: clamp(1.5rem, 4vw, 3rem);
       display: flex;
-      flex-direction: column;
       align-items: center;
+      justify-content: center;
       position: relative;
       overflow-x: hidden;
     }
@@ -79,6 +79,259 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 1.4rem;
       box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.65);
+    }
+
+    .os-shell {
+      background: radial-gradient(circle at top, rgba(48, 72, 120, 0.5), rgba(6, 8, 14, 0.95));
+      border-radius: 16px;
+      min-height: 520px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .os-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.08), transparent 55%),
+        radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.14), transparent 45%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .login-screen,
+    .desktop-screen {
+      position: relative;
+      z-index: 1;
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .login-card {
+      width: min(420px, 100%);
+      background: rgba(8, 12, 20, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .login-logo {
+      width: 68px;
+      height: 68px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(212, 175, 55, 0.2));
+      display: grid;
+      place-items: center;
+      margin: 0 auto;
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .login-logo img {
+      width: 42px;
+      height: 42px;
+      filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.6));
+    }
+
+    .login-card h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      margin: 0;
+    }
+
+    .login-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .login-card form {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .login-card button {
+      padding: 0.75rem 1.2rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      color: var(--accent-contrast);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.35);
+      transition: transform 0.2s ease;
+    }
+
+    .login-card button:hover {
+      transform: translateY(-2px);
+    }
+
+    .login-hint {
+      font-size: 0.75rem;
+      color: rgba(220, 220, 220, 0.65);
+    }
+
+    .login-error {
+      font-size: 0.85rem;
+      color: #ff7a7a;
+      min-height: 1.2rem;
+    }
+
+    .desktop-screen {
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      gap: 1rem;
+      background: radial-gradient(circle at top, rgba(30, 60, 120, 0.75), rgba(8, 12, 18, 0.95));
+    }
+
+    .desktop-visible .login-screen {
+      display: none;
+    }
+
+    .desktop-visible .desktop-screen {
+      display: flex;
+    }
+
+    .desktop-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.85rem;
+      padding: 0 0.5rem;
+    }
+
+    .desktop-topbar .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .desktop-topbar img {
+      width: 26px;
+      height: 26px;
+    }
+
+    .desktop-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 1.2rem;
+    }
+
+    .desktop-icons {
+      display: grid;
+      gap: 1rem;
+      align-content: start;
+      padding-left: 0.4rem;
+    }
+
+    .desktop-icon {
+      display: grid;
+      justify-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.85);
+      text-align: center;
+    }
+
+    .desktop-icon span {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: rgba(12, 16, 28, 0.7);
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.45);
+    }
+
+    .desktop-icon img {
+      width: 26px;
+      height: 26px;
+    }
+
+    .template-window {
+      background: rgba(8, 12, 20, 0.8);
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .window-header {
+      padding: 0.8rem 1.2rem;
+      background: rgba(6, 8, 14, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+    }
+
+    .window-header span {
+      font-size: 0.8rem;
+      color: rgba(220, 220, 220, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .window-body {
+      padding: 1.2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .taskbar {
+      height: 44px;
+      background: rgba(6, 8, 14, 0.9);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.8rem;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .taskbar .left,
+    .taskbar .right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .taskbar .start {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+    }
+
+    .taskbar .sound {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      display: grid;
+      place-items: center;
+      font-size: 0.7rem;
     }
 
     .laptop__base {
@@ -736,30 +989,13 @@
         height: 80px;
       }
 
-      .section-header {
-        padding: 1.2rem;
-      }
-
-      .panels {
-        padding: 1.2rem;
-      }
-
-      .form-actions {
-        flex-direction: column;
-      }
-
-      .generate-btn {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .resource-grid {
+      .desktop-grid {
         grid-template-columns: 1fr;
-        padding: 0 1.2rem 1.2rem;
       }
 
-      .resources h2 {
-        padding: 1.2rem 1.2rem 0;
+      .desktop-icons {
+        grid-auto-flow: column;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
       }
     }
   </style>
@@ -781,171 +1017,81 @@
     <div class="laptop__lid">
       <div class="laptop__camera" aria-hidden="true"></div>
       <div class="laptop__screen">
-        <div class="page">
-          <header class="masthead">
-            <div class="badge">
-              <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Badge Marshal Service">
-              Marshal Service
-            </div>
-            <h1>Marshal Service</h1>
-            <p class="subtitle">Marshal Service — Tactical Operations Desk</p>
-            <button class="sound-chip" type="button" id="soundToggle" aria-pressed="false">
-              <span aria-hidden="true"></span>
-              Field Audio
-            </button>
-          </header>
-
-          <section class="layout">
-            <div class="workspace">
-              <section class="access-gate surface" aria-label="Secure access panel">
-                <div class="access-header">
-                  <div class="access-title">
-                    <h2>Secure Access Gateway</h2>
-                    <p>Property of US Marshal Service · AES-256 Encrypted Session</p>
-                  </div>
-                  <div class="status-stack">
-                    <div class="status-pill"><span class="status-dot"></span>ONLINE NODE</div>
-                    <div class="status-pill">TRUST LEVEL: CLEARANCE 4</div>
-                  </div>
-                </div>
-                <div class="secure-grid">
-                  <div class="secure-card">
-                    <h3>LOGIN</h3>
-                    <form class="login-form">
-                      <div class="form-group">
-                        <label for="loginAgent">Agent ID</label>
-                        <input id="loginAgent" placeholder="USMS-AGT-1047" autocomplete="off">
-                      </div>
-                      <div class="form-group">
-                        <label for="loginKey">Secure Passphrase</label>
-                        <input id="loginKey" type="password" placeholder="●●●●●●●●●" autocomplete="off">
-                      </div>
-                      <div class="login-actions">
-                        <button class="generate-btn" type="button">Authenticate</button>
-                        <button class="secondary-btn" type="button">Request Token</button>
-                      </div>
-                      <p class="access-note">All access events are logged and monitored. Unauthorized activity will trigger immediate lockdown.</p>
-                    </form>
-                  </div>
-                  <div class="secure-card">
-                    <h3>Session Integrity</h3>
-                    <p>Quantum-signed audit trail active. Key rotation scheduled every 12 minutes. VPN mesh routed through Nashville HQ.</p>
-                  </div>
-                  <div class="secure-card">
-                    <h3>Operational Audio</h3>
-                    <p>Enable the field comms channel to hear the tactical dispatch tone while you work. Toggle from the header control.</p>
-                  </div>
-                </div>
-              </section>
-
-              <div class="workspace__main surface">
-                <div class="section-header">
-                  <div class="section-switcher">
-                    <label for="sectionSelect">Type de rapport</label>
-                    <div class="select-wrapper">
-                      <select id="sectionSelect" aria-label="Changer de type de rapport" onchange="showSection(this.value)">
-                        <option value="terrain">Field Report</option>
-                        <option value="documents">Documents spéciaux</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="panels">
-                  <article id="terrain" class="panel active" role="region" aria-labelledby="terrain-title">
-                    <header>
-                      <h2 id="terrain-title">Field Report</h2>
-                    </header>
-                    <div class="form-grid">
-                      <div class="form-group">
-                        <label for="reportNum">Numéro de rapport</label>
-                        <input id="reportNum" placeholder="Ex: 123">
-                      </div>
-                      <div class="form-group">
-                        <label for="date">Date</label>
-                        <input id="date" placeholder="Ex: 23/10/2025">
-                      </div>
-                      <div class="form-group">
-                        <label for="name">Nom</label>
-                        <input id="name" placeholder="Ex: John Fisheer">
-                      </div>
-                      <div class="form-group">
-                        <label for="signature">Lien de la signature</label>
-                        <input id="signature" placeholder="Ex: https://imgur.com/signature.png">
-                      </div>
-                      <div class="form-group">
-                        <label for="refNo">File/Case Ref. No.</label>
-                        <input id="refNo" placeholder="Ex: 789">
-                      </div>
-                      <div class="form-group">
-                        <label for="refName">File/Case Ref. Name</label>
-                        <input id="refName" placeholder="Ex: Case Alpha">
-                      </div>
-                      <div class="form-group">
-                        <label for="page">Page</label>
-                        <input id="page" placeholder="Ex: 01">
-                      </div>
-                      <div class="form-group wide">
-                        <label for="content">Contenu du rapport</label>
-                        <textarea id="content" placeholder="Texte du rapport..." maxlength="2500"></textarea>
-                      </div>
-                    </div>
-                    <div class="form-actions">
-                      <button class="generate-btn" onclick="generateTerrainBBCode()">Copier le rapport</button>
-                    </div>
-                  </article>
-
-
-                  <article id="documents" class="panel" role="region" aria-labelledby="documents-title">
-                    <header>
-                      <h2 id="documents-title">Documents spéciaux</h2>
-                    </header>
-                    <div class="template-panel">
-                      <div class="template-select">
-                        <label for="templateSelect">Modèle de document</label>
-                        <select id="templateSelect" aria-describedby="templateDescription"></select>
-                      </div>
-                      <p id="templateDescription" class="template-description" aria-live="polite"></p>
-                      <div id="templateFields" class="form-grid dynamic-grid"></div>
-                      <div class="form-actions">
-                        <button class="generate-btn" onclick="generateDocumentBBCode()">Copier le modèle</button>
-                      </div>
-                    </div>
-                  </article>
-                </div>
+        <div class="os-shell" id="osShell">
+          <section class="login-screen" id="loginScreen">
+            <div class="login-card">
+              <div class="login-logo">
+                <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Logo Marshal Service">
               </div>
+              <h1>Portail sécurisé</h1>
+              <p>Authentification requise pour accéder au bureau de templates. Session chiffrée AES-256.</p>
+              <form id="loginForm">
+                <div class="form-group">
+                  <label for="loginUser">Identifiant</label>
+                  <input type="text" id="loginUser" placeholder="Votre identifiant" autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label for="loginPass">Mot de passe</label>
+                  <input type="password" id="loginPass" placeholder="••••••••" autocomplete="off">
+                </div>
+                <button type="submit">Se connecter</button>
+              </form>
+              <div class="login-error" id="loginError" aria-live="polite"></div>
+              <div class="login-hint">Accès provisoire : Alexandre · Mot de passe : test</div>
             </div>
-
-            <section class="resources surface" aria-label="Ressources utiles">
-              <h2>Ressources</h2>
-              <div class="resource-grid">
-                <a class="resource" href="https://i.postimg.cc/PJ3rV63W/r3XZu-TI.png" target="_blank" rel="noopener">
-                  <figure>
-                    <img src="https://i.postimg.cc/x8hqz1w1/r3XZu-TI-(1).png" alt="Procédure de contact">
-                    <figcaption>Procédure de contact — numéros d'urgence.</figcaption>
-                  </figure>
-                </a>
-                <a class="resource" href="https://i.postimg.cc/cJnggN90/Bd-S5K2E.png" target="_blank" rel="noopener">
-                  <figure>
-                    <img src="https://i.postimg.cc/50ttKz1J/LKK1i-CV-(1).png" alt="Avis de recherche 1">
-                    <figcaption>Avis de recherche prioritaire.</figcaption>
-                  </figure>
-                </a>
-                <a class="resource" href="https://i.postimg.cc/L8rhMbH1/LKK1i-CV.png" target="_blank" rel="noopener">
-                  <figure>
-                    <img src="https://i.postimg.cc/k4DnvdFq/Bd-S5K2E-(1).png" alt="Avis de recherche 2">
-                    <figcaption>Dossier complémentaire — profils associés.</figcaption>
-                  </figure>
-                </a>
-              </div>
-            </section>
           </section>
 
-          <footer>
-            <div class="footer-seal">
-              <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Sceau Marshal Service">
+          <section class="desktop-screen" id="desktopScreen">
+            <div class="desktop-topbar">
+              <div class="brand">
+                <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Logo Marshal Service">
+                Bureau opérationnel
+              </div>
+              <div>Connexion sécurisée · AES-256</div>
             </div>
-            <p>© 2025 · Marshal Service — All rights reserved by <strong>Alexandre</strong>.</p>
-          </footer>
+
+            <div class="desktop-grid">
+              <div class="desktop-icons">
+                <div class="desktop-icon">
+                  <span><img src="https://i.postimg.cc/9QhG4psp/folder.png" alt="Icône dossier"></span>
+                  Templates
+                </div>
+                <div class="desktop-icon">
+                  <span><img src="https://i.postimg.cc/T2McJf8J/lock.png" alt="Icône sécurité"></span>
+                  Sécurité
+                </div>
+              </div>
+
+              <div class="template-window">
+                <div class="window-header">
+                  <div>Catalogue des templates</div>
+                  <span>Actif</span>
+                </div>
+                <div class="window-body">
+                  <div class="template-select">
+                    <label for="templateSelect">Catégorie template</label>
+                    <select id="templateSelect"></select>
+                  </div>
+                  <p class="template-description" id="templateDescription"></p>
+                  <div class="form-grid" id="templateFields"></div>
+                  <div class="form-actions">
+                    <button class="generate-btn" type="button" onclick="generateDocumentBBCode()">Générer le modèle</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="taskbar">
+              <div class="left">
+                <div class="start">■</div>
+                <div>Templates</div>
+              </div>
+              <div class="right">
+                <button class="sound" id="soundToggle" type="button" aria-pressed="false">🔊</button>
+                <div id="clock">09:24</div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </div>
@@ -955,24 +1101,13 @@
     </div>
   </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite">Rapport copié dans le presse-papiers</div>
+  <div id="toast" class="toast" role="status" aria-live="polite">Copié dans le presse-papiers</div>
 
   <audio id="fieldAudio" preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c2f6ad499.mp3?filename=radio-static-1-4684.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    function showSection(sectionId) {
-      document.querySelectorAll('.panel').forEach(panel => {
-        panel.classList.toggle('active', panel.id === sectionId);
-      });
-
-      const select = document.getElementById('sectionSelect');
-      if (select && select.value !== sectionId) {
-        select.value = sectionId;
-      }
-    }
-
     function resetFields(scope) {
       scope.querySelectorAll('input, textarea, select').forEach(field => {
         field.value = '';
@@ -985,6 +1120,43 @@
       setTimeout(() => toast.classList.remove('show'), 1800);
     }
 
+    const osShell = document.getElementById('osShell');
+    const loginForm = document.getElementById('loginForm');
+    const loginUser = document.getElementById('loginUser');
+    const loginPass = document.getElementById('loginPass');
+    const loginError = document.getElementById('loginError');
+    const validUser = 'Alexandre';
+    const validPass = 'test';
+
+    if (loginForm) {
+      loginForm.addEventListener('submit', event => {
+        event.preventDefault();
+        const userValue = loginUser?.value.trim();
+        const passValue = loginPass?.value.trim();
+
+        if (userValue === validUser && passValue === validPass) {
+          loginError.textContent = '';
+          osShell?.classList.add('desktop-visible');
+          loginForm.reset();
+        } else {
+          loginError.textContent = 'Identifiant ou mot de passe incorrect.';
+        }
+      });
+    }
+
+    const clock = document.getElementById('clock');
+    const updateClock = () => {
+      if (!clock) {
+        return;
+      }
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      clock.textContent = `${hours}:${minutes}`;
+    };
+    updateClock();
+    setInterval(updateClock, 1000 * 30);
+
     const soundToggle = document.getElementById('soundToggle');
     const fieldAudio = document.getElementById('fieldAudio');
     if (soundToggle && fieldAudio) {
@@ -995,10 +1167,10 @@
         if (isActive) {
           fieldAudio.pause();
           fieldAudio.currentTime = 0;
-          soundToggle.querySelector('span').style.background = '#ffb400';
+          soundToggle.textContent = '🔊';
         } else {
           fieldAudio.play();
-          soundToggle.querySelector('span').style.background = '#00c08b';
+          soundToggle.textContent = '🔈';
         }
       });
     }
@@ -1768,7 +1940,6 @@ MARSHAL SERVICE</b>
     const templateSelect = document.getElementById('templateSelect');
     const templateFields = document.getElementById('templateFields');
     const templateDescription = document.getElementById('templateDescription');
-    const sectionSelectControl = document.getElementById('sectionSelect');
     const templateGroupsOrder = [
       'Première de couverture',
       'Page de garde',
@@ -1777,13 +1948,6 @@ MARSHAL SERVICE</b>
       'Fermeture de dossier'
     ];
     let firstSelectableTemplateId = '';
-
-    if (sectionSelectControl) {
-      const activePanel = document.querySelector('.panel.active');
-      if (activePanel) {
-        sectionSelectControl.value = activePanel.id;
-      }
-    }
 
     function populateTemplateSelect() {
       if (!templateSelect) {
