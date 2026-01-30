@@ -74,6 +74,59 @@
     .hidden{display:none !important}
     .fade{animation:fade .22s ease}
     @keyframes fade{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)}}
+    .power-screen{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), rgba(5,8,14,.95) 65%);
+      z-index:20;
+    }
+    .power-card{
+      width:min(420px, 100%);
+      background: rgba(8,12,20,.78);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 20px;
+      box-shadow: 0 24px 70px rgba(0,0,0,.65);
+      padding: 22px;
+      display:grid;
+      gap:16px;
+      text-align:center;
+    }
+    .power-btn{
+      width:110px;
+      height:110px;
+      border-radius: 50%;
+      border:2px solid rgba(212,175,55,.5);
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.12), rgba(10,13,20,.65));
+      color:var(--text);
+      display:grid;
+      place-items:center;
+      margin:0 auto;
+      cursor:pointer;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .power-btn:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 0 18px rgba(212,175,55,.4);
+      border-color: rgba(212,175,55,.8);
+    }
+    .power-btn svg{
+      width:36px;
+      height:36px;
+      stroke: rgba(255,255,255,.9);
+      fill:none;
+      stroke-width:2.2;
+    }
+    .power-title{
+      font-family:Cinzel,serif;
+      font-size:1.1rem;
+      letter-spacing:.08em;
+    }
+    .power-subtitle{
+      color:var(--muted);
+      font-size:.85rem;
+    }
     .btn{
       appearance:none;border:1px solid var(--stroke2);
       background: rgba(10,14,22,.55);
@@ -436,16 +489,41 @@
 
     .template-panel{
       display:grid;
-      gap:12px;
+      gap:14px;
     }
     .template-select{
       display:grid;
-      gap:8px;
+      gap:10px;
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      padding:12px;
     }
     .template-description{
       color: rgba(255,255,255,.68);
       font-size:.85rem;
       min-height: 1.3rem;
+    }
+    .template-select select{
+      appearance:none;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      padding:.7rem 2.4rem .7rem .9rem;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 10px center no-repeat;
+      color:var(--text);
+      font-weight:700;
+      letter-spacing:.02em;
+    }
+    .template-select select:focus{
+      outline:none;
+      border-color: rgba(212,175,55,.55);
+      box-shadow:0 0 0 3px rgba(212,175,55,.18);
+    }
+    .template-select option{
+      background-color:#0b0f18;
+      color:#fff;
     }
     .form-grid{
       display:grid;
@@ -509,8 +587,22 @@
     <div class="camera" aria-hidden="true"></div>
     <div class="screen">
 
+      <!-- POWER -->
+      <section class="power-screen fade" id="powerScreen">
+        <div class="power-card">
+          <div class="logo" aria-hidden="true">
+            <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="">
+          </div>
+          <div class="power-title">DCSO TABLET</div>
+          <div class="power-subtitle">Appuyez pour allumer</div>
+          <button class="power-btn" id="powerBtn" type="button" aria-label="Allumer la tablette">
+            <svg viewBox="0 0 24 24"><path d="M12 2v8"/><path d="M7.5 4.5a8 8 0 1 0 9 0"/></svg>
+          </button>
+        </div>
+      </section>
+
       <!-- LOGIN -->
-      <section class="login fade" id="login">
+      <section class="login fade hidden" id="login">
         <div class="login-card">
           <div class="login-top">
             <div class="logo">
@@ -760,8 +852,8 @@ const state = {
   wifi: true,
   airplane: false,
   ambience: false,
-  brightness: 0.70,
-  volume: 0.60,
+  brightness: 1.0,
+  volume: 0.70,
   username: "—"
 };
 
@@ -785,6 +877,8 @@ function setScreenBrightness(val){
   scr.style.filter = `brightness(${0.55 + val*0.65})`;
 }
 
+setScreenBrightness(state.brightness);
+
 /* ---- time ---- */
 function tickClock(){
   const d = new Date();
@@ -797,6 +891,15 @@ function tickClock(){
   $("#dateLine").textContent = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 tickClock(); setInterval(tickClock, 30000);
+
+const powerBtn = $("#powerBtn");
+if (powerBtn) {
+  powerBtn.addEventListener("click", () => {
+    try{SFX.open();}catch(e){}
+    $("#powerScreen").classList.add("hidden");
+    $("#login").classList.remove("hidden");
+  });
+}
 
 /* ---- login ---- */
 function setLoginStatus(text, ok=false, err=false){
@@ -935,6 +1038,12 @@ $("#vol").addEventListener("input", (e)=>{
   state.volume = v;
   SFX.setVolume(v);
 });
+
+$("#bri").value = String(Math.round(state.brightness * 100));
+$("#briVal").textContent = `${$("#bri").value}%`;
+$("#vol").value = String(Math.round(state.volume * 100));
+$("#volVal").textContent = `${$("#vol").value}%`;
+SFX.setVolume(state.volume);
 
 /* ---- lock/logout ---- */
 function lock(){
