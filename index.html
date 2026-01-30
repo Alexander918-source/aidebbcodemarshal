@@ -23,6 +23,9 @@
       --radius-sm: 12px;
       --shadow: 0 18px 38px rgba(0, 0, 0, 0.82);
       --grid-gap: clamp(1rem, 2vw, 1.6rem);
+      --laptop-surface: rgba(12, 14, 20, 0.85);
+      --laptop-edge: rgba(255, 255, 255, 0.12);
+      --laptop-glow: rgba(212, 175, 55, 0.15);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,6 +41,94 @@
       align-items: center;
       position: relative;
       overflow-x: hidden;
+    }
+
+    .laptop {
+      width: min(100%, 1180px);
+      display: grid;
+      gap: 0;
+      filter: drop-shadow(0 45px 80px rgba(0, 0, 0, 0.8));
+    }
+
+    .laptop__lid {
+      background: linear-gradient(160deg, rgba(18, 20, 28, 0.96), rgba(6, 8, 12, 0.98));
+      border-radius: 24px 24px 16px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1.4rem 1.6rem 2rem;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 25px 60px rgba(0, 0, 0, 0.65);
+    }
+
+    .laptop__camera {
+      position: absolute;
+      top: 0.6rem;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #2d3342, #0b0e14 55%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transform: translateX(-50%);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+    }
+
+    .laptop__screen {
+      background: linear-gradient(180deg, rgba(7, 9, 13, 0.94), rgba(4, 6, 10, 0.98));
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1.4rem;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.65);
+    }
+
+    .laptop__base {
+      background: linear-gradient(140deg, rgba(16, 18, 24, 0.95), rgba(8, 10, 14, 0.98));
+      border-radius: 0 0 24px 24px;
+      padding: 1.5rem 3rem 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: none;
+      position: relative;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 25px 55px rgba(0, 0, 0, 0.6);
+    }
+
+    .laptop__keyboard {
+      height: 110px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(32, 34, 42, 0.6), rgba(12, 14, 20, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .laptop__keyboard::before {
+      content: "";
+      position: absolute;
+      inset: 18px 20px;
+      background-image:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 50px),
+        repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 28px);
+      border-radius: 12px;
+      opacity: 0.5;
+    }
+
+    .laptop__trackpad {
+      width: 180px;
+      height: 70px;
+      margin: 1rem auto 0;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(28, 30, 38, 0.7), rgba(10, 12, 18, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+    }
+
+    .screen-frame {
+      background: linear-gradient(180deg, rgba(10, 12, 18, 0.95), rgba(6, 8, 14, 0.98));
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1.2rem;
+      min-height: 720px;
     }
 
     .background {
@@ -80,6 +171,207 @@
       display: flex;
       flex-direction: column;
       gap: clamp(1.5rem, 3vw, 2.5rem);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .login-screen {
+      display: grid;
+      place-items: center;
+      min-height: 720px;
+      position: relative;
+      background: radial-gradient(circle at top, rgba(15, 22, 36, 0.85), rgba(4, 6, 12, 0.95));
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    .login-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('https://i.postimg.cc/52HqTH4C/Alex-4.png') center/cover no-repeat;
+      opacity: 0.18;
+      filter: blur(2px);
+    }
+
+    .login-card {
+      position: relative;
+      z-index: 1;
+      width: min(92%, 460px);
+      background: rgba(8, 10, 16, 0.88);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 2rem;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65);
+      display: grid;
+      gap: 1.2rem;
+      text-align: center;
+    }
+
+    .login-logo {
+      display: grid;
+      justify-items: center;
+      gap: 0.6rem;
+    }
+
+    .login-logo img {
+      width: 90px;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.6));
+    }
+
+    .login-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .login-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .login-form {
+      display: grid;
+      gap: 0.9rem;
+      text-align: left;
+    }
+
+    .login-form .form-group label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .login-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .login-hint {
+      font-size: 0.8rem;
+      color: rgba(220, 220, 220, 0.75);
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .login-error {
+      font-size: 0.85rem;
+      color: #ff7a7a;
+      text-align: center;
+      min-height: 1.2rem;
+    }
+
+    .desktop {
+      display: grid;
+      gap: 1.4rem;
+    }
+
+    .desktop-wallpaper {
+      background: linear-gradient(135deg, rgba(8, 12, 20, 0.8), rgba(12, 18, 34, 0.9)),
+        url('https://i.postimg.cc/52HqTH4C/Alex-4.png') center/cover no-repeat;
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: grid;
+      gap: 1.5rem;
+      min-height: 720px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .desktop-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .desktop-user {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(8, 10, 16, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 0.6rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+    }
+
+    .desktop-user img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .desktop-icons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      max-width: 520px;
+    }
+
+    .desktop-icon {
+      display: grid;
+      gap: 0.5rem;
+      justify-items: center;
+      text-align: center;
+      padding: 0.8rem;
+      border-radius: 14px;
+      background: rgba(8, 10, 16, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .desktop-icon:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .desktop-icon img {
+      width: 48px;
+    }
+
+    .desktop-window {
+      background: rgba(8, 10, 16, 0.82);
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+    }
+
+    .window-titlebar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1.2rem;
+      background: rgba(12, 14, 20, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .window-titlebar h2 {
+      font-size: 1rem;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .window-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.35);
     }
 
     .masthead {
@@ -150,6 +442,161 @@
     .workspace__main {
       display: grid;
       gap: var(--grid-gap);
+    }
+
+    .access-gate {
+      padding: 1.5rem;
+      display: grid;
+      gap: 1.2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .access-gate::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(212, 175, 55, 0.12), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(0, 136, 255, 0.08), transparent 45%);
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .access-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .access-title {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .access-title h2 {
+      font-size: 1.3rem;
+    }
+
+    .access-title p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .status-stack {
+      display: grid;
+      gap: 0.35rem;
+      text-align: right;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(220, 220, 220, 0.7);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      justify-content: flex-end;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00c08b;
+      box-shadow: 0 0 8px rgba(0, 192, 139, 0.6);
+    }
+
+    .secure-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      position: relative;
+      z-index: 1;
+    }
+
+    .secure-card {
+      background: rgba(10, 12, 18, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      display: grid;
+      gap: 0.6rem;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.35);
+    }
+
+    .secure-card h3 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .secure-card p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .login-form {
+      display: grid;
+      gap: 0.8rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .secondary-btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: rgba(12, 14, 20, 0.6);
+      color: var(--text);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .secondary-btn:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.18);
+    }
+
+    .access-note {
+      font-size: 0.8rem;
+      color: rgba(220, 220, 220, 0.72);
+      line-height: 1.5;
+    }
+
+    .sound-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(8, 10, 16, 0.6);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+    }
+
+    .sound-chip span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffb400;
+      box-shadow: 0 0 8px rgba(255, 180, 0, 0.6);
     }
 
     .section-header {
@@ -490,6 +937,19 @@
         padding: 1rem;
       }
 
+      .laptop__base {
+        padding: 1.2rem 1.6rem 1.5rem;
+      }
+
+      .laptop__keyboard {
+        height: 80px;
+      }
+
+      .desktop-wallpaper,
+      .login-screen {
+        min-height: 560px;
+      }
+
       .section-header {
         padding: 1.2rem;
       }
@@ -531,129 +991,165 @@
         decoding="async">
     </picture>
   </div>
-  <div class="page">
-    <header class="masthead">
-      <div class="badge">
-        <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Badge Marshal Service">
-        Marshal Service
-      </div>
-      <h1>Marshal Service</h1>
-      <p class="subtitle">Marshal Service</p>
-    </header>
+  <div class="laptop">
+    <div class="laptop__lid">
+      <div class="laptop__camera" aria-hidden="true"></div>
+      <div class="laptop__screen">
+        <div class="screen-frame">
+          <section class="login-screen" id="loginScreen">
+            <div class="login-card">
+              <div class="login-logo">
+                <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Logo Marshal Service">
+                <div class="login-title">US Marshal Service</div>
+                <div class="login-subtitle">Propriété du US Marshal Service · Session chiffrée AES-256</div>
+              </div>
+              <form class="login-form" id="loginForm">
+                <div class="form-group">
+                  <label for="loginAgent">Identifiant</label>
+                  <input id="loginAgent" placeholder="Alexandre" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                  <label for="loginKey">Mot de passe</label>
+                  <input id="loginKey" type="password" placeholder="test" autocomplete="off" required>
+                </div>
+                <div class="login-actions">
+                  <button class="generate-btn" type="submit">Se connecter</button>
+                  <button class="secondary-btn" type="button">Demander un accès</button>
+                </div>
+              </form>
+              <div id="loginError" class="login-error" aria-live="polite"></div>
+              <p class="login-hint">Session chiffrée AES-256 · Connexions surveillées · Accès restreint</p>
+            </div>
+          </section>
 
-    <section class="layout">
-      <div class="workspace">
-        <div class="workspace__main surface">
-          <div class="section-header">
-            <div class="section-switcher">
-              <label for="sectionSelect">Type de rapport</label>
-              <div class="select-wrapper">
-                <select id="sectionSelect" aria-label="Changer de type de rapport" onchange="showSection(this.value)">
-                  <option value="terrain">Field Report</option>
-                  <option value="documents">Documents spéciaux</option>
-                </select>
+          <section class="desktop hidden" id="desktopScreen" aria-label="Bureau sécurisé">
+            <div class="desktop-wallpaper">
+              <div class="desktop-header">
+                <div class="desktop-user">
+                  <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Utilisateur">
+                  <div>
+                    <div>Agent connecté : <strong>Alexandre</strong></div>
+                    <div class="access-note">Accès AES-256 actif</div>
+                  </div>
+                </div>
+                <button class="sound-chip" type="button" id="soundToggle" aria-pressed="false">
+                  <span aria-hidden="true"></span>
+                  Son du bureau
+                </button>
+              </div>
+
+              <div class="desktop-icons">
+                <button class="desktop-icon" type="button" id="openTemplates">
+                  <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Icône modèles">
+                  <span>Modèles</span>
+                </button>
+                <div class="desktop-icon">
+                  <img src="https://i.postimg.cc/PJ3rV63W/r3XZu-TI.png" alt="Icône sécurité">
+                  <span>Centre de contrôle</span>
+                </div>
+              </div>
+
+              <div class="desktop-window" id="templatesWindow">
+                <div class="window-titlebar">
+                  <h2>Catalogue des modèles</h2>
+                  <div class="window-controls" aria-hidden="true">
+                    <span class="window-dot"></span>
+                    <span class="window-dot"></span>
+                    <span class="window-dot"></span>
+                  </div>
+                </div>
+                <div class="workspace__main">
+                  <div class="section-header">
+                    <div class="section-switcher">
+                      <label for="sectionSelect">Type de rapport</label>
+                      <div class="select-wrapper">
+                        <select id="sectionSelect" aria-label="Changer de type de rapport" onchange="showSection(this.value)">
+                        <option value="terrain">Rapport terrain</option>
+                        <option value="documents">Documents spéciaux</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panels">
+                    <article id="terrain" class="panel" role="region" aria-labelledby="terrain-title">
+                      <header>
+                      <h2 id="terrain-title">Rapport terrain</h2>
+                      </header>
+                      <div class="form-grid">
+                        <div class="form-group">
+                          <label for="reportNum">Numéro de rapport</label>
+                          <input id="reportNum" placeholder="Ex: 123">
+                        </div>
+                        <div class="form-group">
+                          <label for="date">Date</label>
+                          <input id="date" placeholder="Ex: 23/10/2025">
+                        </div>
+                        <div class="form-group">
+                          <label for="name">Nom</label>
+                          <input id="name" placeholder="Ex: John Fisheer">
+                        </div>
+                        <div class="form-group">
+                          <label for="signature">Lien de la signature</label>
+                          <input id="signature" placeholder="Ex: https://imgur.com/signature.png">
+                        </div>
+                        <div class="form-group">
+                          <label for="refNo">File/Case Ref. No.</label>
+                          <input id="refNo" placeholder="Ex: 789">
+                        </div>
+                        <div class="form-group">
+                          <label for="refName">File/Case Ref. Name</label>
+                          <input id="refName" placeholder="Ex: Case Alpha">
+                        </div>
+                        <div class="form-group">
+                          <label for="page">Page</label>
+                          <input id="page" placeholder="Ex: 01">
+                        </div>
+                        <div class="form-group wide">
+                          <label for="content">Contenu du rapport</label>
+                          <textarea id="content" placeholder="Texte du rapport..." maxlength="2500"></textarea>
+                        </div>
+                      </div>
+                      <div class="form-actions">
+                        <button class="generate-btn" onclick="generateTerrainBBCode()">Copier le rapport</button>
+                      </div>
+                    </article>
+
+
+                    <article id="documents" class="panel active" role="region" aria-labelledby="documents-title">
+                      <header>
+                        <h2 id="documents-title">Documents spéciaux</h2>
+                      </header>
+                      <div class="template-panel">
+                        <div class="template-select">
+                          <label for="templateSelect">Modèle de document</label>
+                          <select id="templateSelect" aria-describedby="templateDescription"></select>
+                        </div>
+                        <p id="templateDescription" class="template-description" aria-live="polite"></p>
+                        <div id="templateFields" class="form-grid dynamic-grid"></div>
+                        <div class="form-actions">
+                          <button class="generate-btn" onclick="generateDocumentBBCode()">Copier le modèle</button>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="panels">
-            <article id="terrain" class="panel active" role="region" aria-labelledby="terrain-title">
-              <header>
-                <h2 id="terrain-title">Field Report</h2>
-              </header>
-              <div class="form-grid">
-                <div class="form-group">
-                  <label for="reportNum">Numéro de rapport</label>
-                  <input id="reportNum" placeholder="Ex: 123">
-                </div>
-                <div class="form-group">
-                  <label for="date">Date</label>
-                  <input id="date" placeholder="Ex: 23/10/2025">
-                </div>
-                <div class="form-group">
-                  <label for="name">Nom</label>
-                  <input id="name" placeholder="Ex: John Fisheer">
-                </div>
-                <div class="form-group">
-                  <label for="signature">Lien de la signature</label>
-                  <input id="signature" placeholder="Ex: https://imgur.com/signature.png">
-                </div>
-                <div class="form-group">
-                  <label for="refNo">File/Case Ref. No.</label>
-                  <input id="refNo" placeholder="Ex: 789">
-                </div>
-                <div class="form-group">
-                  <label for="refName">File/Case Ref. Name</label>
-                  <input id="refName" placeholder="Ex: Case Alpha">
-                </div>
-                <div class="form-group">
-                  <label for="page">Page</label>
-                  <input id="page" placeholder="Ex: 01">
-                </div>
-                <div class="form-group wide">
-                  <label for="content">Contenu du rapport</label>
-                  <textarea id="content" placeholder="Texte du rapport..." maxlength="2500"></textarea>
-                </div>
-              </div>
-              <div class="form-actions">
-                <button class="generate-btn" onclick="generateTerrainBBCode()">Copier le rapport</button>
-              </div>
-            </article>
-
-
-            <article id="documents" class="panel" role="region" aria-labelledby="documents-title">
-              <header>
-                <h2 id="documents-title">Documents spéciaux</h2>
-              </header>
-              <div class="template-panel">
-                <div class="template-select">
-                  <label for="templateSelect">Modèle de document</label>
-                  <select id="templateSelect" aria-describedby="templateDescription"></select>
-                </div>
-                <p id="templateDescription" class="template-description" aria-live="polite"></p>
-                <div id="templateFields" class="form-grid dynamic-grid"></div>
-                <div class="form-actions">
-                  <button class="generate-btn" onclick="generateDocumentBBCode()">Copier le modèle</button>
-                </div>
-              </div>
-            </article>
-          </div>
+          </section>
         </div>
       </div>
-
-      <section class="resources surface" aria-label="Ressources utiles">
-        <h2>Ressources</h2>
-        <div class="resource-grid">
-          <a class="resource" href="https://i.postimg.cc/PJ3rV63W/r3XZu-TI.png" target="_blank" rel="noopener">
-            <figure>
-              <img src="https://i.postimg.cc/x8hqz1w1/r3XZu-TI-(1).png" alt="Procédure de contact">
-              <figcaption>Procédure de contact — numéros d'urgence.</figcaption>
-            </figure>
-          </a>
-          <a class="resource" href="https://i.postimg.cc/cJnggN90/Bd-S5K2E.png" target="_blank" rel="noopener">
-            <figure>
-              <img src="https://i.postimg.cc/50ttKz1J/LKK1i-CV-(1).png" alt="Avis de recherche 1">
-              <figcaption>Avis de recherche prioritaire.</figcaption>
-            </figure>
-          </a>
-          <a class="resource" href="https://i.postimg.cc/L8rhMbH1/LKK1i-CV.png" target="_blank" rel="noopener">
-            <figure>
-              <img src="https://i.postimg.cc/k4DnvdFq/Bd-S5K2E-(1).png" alt="Avis de recherche 2">
-              <figcaption>Dossier complémentaire — profils associés.</figcaption>
-            </figure>
-          </a>
-        </div>
-      </section>
-    </section>
-
-    <footer>
-      <div class="footer-seal">
-        <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Sceau Marshal Service">
-      </div>
-      <p>© 2025 · Marshal Service — All rights reserved by <strong>Alexandre</strong>.</p>
-    </footer>
+    </div>
+    <div class="laptop__base" aria-hidden="true">
+      <div class="laptop__keyboard"></div>
+      <div class="laptop__trackpad"></div>
+    </div>
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite">Rapport copié dans le presse-papiers</div>
+
+  <audio id="fieldAudio" preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c2f6ad499.mp3?filename=radio-static-1-4684.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
     function showSection(sectionId) {
@@ -677,6 +1173,58 @@
       const toast = document.getElementById('toast');
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    const loginForm = document.getElementById('loginForm');
+    const loginScreen = document.getElementById('loginScreen');
+    const desktopScreen = document.getElementById('desktopScreen');
+    const loginError = document.getElementById('loginError');
+    const openTemplates = document.getElementById('openTemplates');
+
+    if (loginForm && loginScreen && desktopScreen) {
+      loginForm.addEventListener('submit', event => {
+        event.preventDefault();
+        const agentValue = (document.getElementById('loginAgent')?.value || '').trim();
+        const keyValue = (document.getElementById('loginKey')?.value || '').trim();
+
+        if (agentValue === 'Alexandre' && keyValue === 'test') {
+          loginScreen.classList.add('hidden');
+          desktopScreen.classList.remove('hidden');
+          if (loginError) {
+            loginError.textContent = '';
+          }
+          showSection('documents');
+        } else {
+          if (loginError) {
+            loginError.textContent = "Identifiants incorrects. Veuillez réessayer.";
+          }
+        }
+      });
+    }
+
+    if (openTemplates) {
+      openTemplates.addEventListener('click', () => {
+        showSection('documents');
+        document.getElementById('templateSelect')?.focus();
+      });
+    }
+
+    const soundToggle = document.getElementById('soundToggle');
+    const fieldAudio = document.getElementById('fieldAudio');
+    if (soundToggle && fieldAudio) {
+      fieldAudio.loop = true;
+      soundToggle.addEventListener('click', () => {
+        const isActive = soundToggle.getAttribute('aria-pressed') === 'true';
+        soundToggle.setAttribute('aria-pressed', String(!isActive));
+        if (isActive) {
+          fieldAudio.pause();
+          fieldAudio.currentTime = 0;
+          soundToggle.querySelector('span').style.background = '#ffb400';
+        } else {
+          fieldAudio.play();
+          soundToggle.querySelector('span').style.background = '#00c08b';
+        }
+      });
     }
 
     function escapeHtml(value) {
