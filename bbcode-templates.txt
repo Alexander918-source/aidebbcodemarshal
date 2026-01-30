@@ -1,0 +1,507 @@
+--- TEMPLATE 1 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: #d2b89a; font-size: 15px; line-height: 1; font-family: sans-serif; letter-spacing: 2px; color: #000000; border: 0px!important; padding: 0px!important;">
+<tbody><tr><td align="center" valign="top"><div style="margin: 55px; border: 20px solid #b03746; height: 1225px; padding-top: 55px;"><b><span style="font-size: 25px">DAVIDSON COUNTY SHERIFF'S OFFICE</span>
+
+<img height="200px" src="https://i.imgur.com/O5sbaiB.png"/>
+
+<span style="font-size: 45px">MARSHAL SERVICE</span>
+
+<span style="font-size: 30px; color: #b03746">OFFICE OF SECURITY PROGRAMS
+VULNERABLE INDIVIDUAL PROGRAM</span>
+
+<table style="border: 0px solid #000000!important; width: 635px; background-color: #000000; padding: 0px!important"><tbody><tr><td><span style="font-size: 30px; color: #d2b89a; width: 100px"><center>INTERNAL DISSEMINATION ONLY</center></span></td></tr></tbody></table>
+
+<span style="font-size: 20px">CIRCULATION NOTICE:</span>
+
+<table style="border: 4px solid #000000!important; padding: 10px; width: 635px"><tbody><tr><td><span style="font-size: 20px; letter-spacing: 0px; word-spacing: 3px">Materials contained here within are from confidential sources
+and contain restricted information. All materials enclosed are
+strictly for the internal use of the Marshal Service.</span></td></tr></tbody></table>
+
+FILE/CASE REF. NO.
+<table style="border: 0px solid #000000!important; border-bottom: 3px solid #000000!important; width: 450px; height: 40px; padding-top: 5px"><tbody><tr><td><span style="font-size: 35px; font-family: Courier; letter-spacing: 0px"><b><center>{{fileRefNumber}}</center></b></span></td></tr></tbody></table>
+
+FILE/CASE REF. NAME
+<span style="font-size: 35px; font-family: Courier; letter-spacing: 0px"><table style="border: 0px solid #000000!important; border-bottom: 3px solid #000000!important; width: 700px; height: 40px; padding-top: 5px"><tbody><tr><td><b><center>{{fileRefNameLine1}}</center></b></td></tr></tbody></table>
+<table style="border: 0px solid #000000!important; border-bottom: 3px solid #000000!important; width: 700px; height: 40px; padding-top: 5px"><tbody><tr><td><b><center>{{fileRefNameLine2}}</center></b></td></tr></tbody></table></span>
+
+OFFICERS IN CHARGE
+<span style="font-size: 35px; font-family: Courier; letter-spacing: 0px"><table style="border: 0px solid #000000!important; border-bottom: 3px solid #000000!important; width: 500px; height: 40px; padding-top: 5px"><tbody><tr><td><b><center>{{officerLine1}}</center></b></td></tr></tbody></table>
+<table style="border: 0px solid #000000!important; border-bottom: 3px solid #000000!important; width: 500px; height: 40px; padding-top: 5px"><tbody><tr><td><b><center>{{officerLine2}}</center></b></td></tr></tbody></table></span>
+
+</b></div></td></tr></tbody></table></center>
+</div>
+
+--- TEMPLATE 2 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: #d2b89a; font-size: 15px; line-height: 1; font-family: sans-serif; color: #000000; border: 0px!important; padding: 0px!important;">
+<tbody><tr><td align="center" valign="top"><div style="background: white; padding: 30px; padding-top: 20px; width: 500px; color: darkred; margin-top: 150px;"><table style="padding: 0px!important; border: 0px!important"><tr><td style="text-align: center; width: 300px;">PEEL HERE
+▼</td><td style="text-align: center; width: 300px;">PEEL HERE
+▼</td></tr></table>
+
+<span style="font-size: 30px; letter-spacing: 5px; font-weight: bold;">- FILE SUMMARY -</span>
+<br><div style="border: 2px solid darkred; padding: 15px; text-align: left; font-size: 12px; line-height: 25px;"><b>Matricule de référence :</b> {{summaryReference}}<br>
+<b>Classification :</b> {{summaryClassification}}<br>
+<b>Numéro de dossier :</b> {{summaryFileNumber}}<br>
+<b>Nom de référence :</b> {{summaryReferenceName}}<br>
+<b>Agents en charge :</b> {{summaryAgents}}<br>
+<b>Bureau concerné :</b> {{summaryBureau}}<br>
+<b>Cellule concernée :</b> {{summaryCell}}<br>
+<b>Date d'ouverture :</b> {{summaryOpeningDate}}</div><div style="font-size: 15px; font-weight: bold; margin: 5px;">- REQUEST -</div><div style="border: 2px solid darkred; padding: 15px; text-align: left; font-size: 12px; line-height: 25px;"><b>Requérant :</b> {{requestApplicant}}<br>
+<b>Civilité :</b> {{requestCivility}}<br>
+<b>Date d'émission :</b> {{requestEmissionDate}}<br>
+<b>Heure d'émission :</b> {{requestEmissionTime}}<br>
+<b>Répondant :</b> {{requestResponder}}</div></div></td></tr></tbody></table></center>
+</div>
+
+--- TEMPLATE 3 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 0px!important; font-family: georgia; color: #000000">
+<tbody><tr><td align="center" valign="top"><div style="margin: 20px;border: 75px solid #197239; height: 1295px; padding: 10px;">OFFICIAL DOCUMENT
+<div style="letter-spacing: 2px; font-size: 20px; font-weight: bold; margin-top: 15px;">DAVIDSON COUNTY SHERIFF'S OFFICE</div>
+<div style="font-weight: bold; color: #197239; font-size: 35px; margin-bottom: 50px; margin-top: 5px;">SENSITIVE DOCUMENTS ENCLOSED</div><img src="https://i.imgur.com/O5sbaiB.png" height="250px;">
+<div style="font-weight: bold; color: #197239; font-size: 40px; margin-top: 50px;">EYES ONLY</div>
+<div style="letter-spacing: 2px; font-size: 25px; margin-top: 10px;">DO NOT DUPLICATE</div>
+<div style="font-size: 30px; font-family: sans-serif; color: #197239; font-weight: bold; line-height: 35px;">MARSHAL SERVICE
+INVESTIGATION DIVISION
+
+
+CLASSIFIED DOCUMENTS ENCLOSED</div>
+<span style="font-size: 20px; color: #197239; font-weight: bold;">CONFIDENTIAL - INTERNAL</span>
+<div style="margin-top: 285px; text-align: left;"><center>FOR OFFICIAL USE ONLY</center>
+File/Case Ref. No. # {{officialFileNumber}} <div style="float:right;">Date: {{officialDate}}</div>
+
+File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: N/A</div></div></div></div></td></tr></tbody></table></center>
+</div>
+
+--- TEMPLATE 4 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 0px!important; font-family: georgia; color: #000000">
+<tbody><tr><td align="center" valign="top"><div style="margin: 20px;border: 75px solid #315aa8; height: 1295px; padding: 10px;">OFFICIAL DOCUMENT
+<div style="letter-spacing: 2px; font-size: 20px; font-weight: bold; margin-top: 15px;">DAVIDSON COUNTY SHERIFF'S OFFICE</div>
+<div style="font-weight: bold; color: #315aa8; font-size: 35px; margin-bottom: 50px; margin-top: 5px;">SENSITIVE DOCUMENTS ENCLOSED</div><img src="https://i.imgur.com/O5sbaiB.png" height="250px;">
+<div style="font-weight: bold; color: #315aa8; font-size: 40px; margin-top: 50px;">EYES ONLY</div>
+<div style="letter-spacing: 2px; font-size: 25px; margin-top: 10px;">DO NOT DUPLICATE</div>
+<div style="font-size: 30px; font-family: sans-serif; color: #315aa8; font-weight: bold; line-height: 35px;">MARSHAL SERVICE
+INVESTIGATION DIVISION
+
+
+CLASSIFIED DOCUMENTS ENCLOSED</div>
+<span style="font-size: 20px; color: #315aa8; font-weight: bold;">RESTRICTED - INTERNAL</span>
+<div style="margin-top: 285px; text-align: left;"><center>FOR OFFICIAL USE ONLY</center>
+File/Case Ref. No. # {{officialFileNumber}} <div style="float:right;">Date: {{officialDate}}</div>
+
+File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: N/A</div></div></div></div></td></tr></tbody></table></center>
+</div>
+
+--- TEMPLATE 5 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 0px!important; font-family: georgia; color: #000000">
+<tbody><tr><td align="center" valign="top"><div style="margin: 20px;border: 75px solid #d43e4b; height: 1295px; padding: 10px;">OFFICIAL DOCUMENT
+<div style="letter-spacing: 2px; font-size: 20px; font-weight: bold; margin-top: 15px;">DAVIDSON COUNTY SHERIFF'S OFFICE</div>
+<div style="font-weight: bold; color: #d43e4b; font-size: 35px; margin-bottom: 50px; margin-top: 5px;">SENSITIVE DOCUMENTS ENCLOSED</div><img src="https://i.imgur.com/O5sbaiB.png" height="250px;">
+<div style="font-weight: bold; color: #d43e4b; font-size: 40px; margin-top: 50px;">EYES ONLY</div>
+<div style="letter-spacing: 2px; font-size: 25px; margin-top: 10px;">DO NOT DUPLICATE</div>
+<div style="font-size: 30px; font-family: sans-serif; color: #d43e4b; font-weight: bold; line-height: 35px;">MARSHAL SERVICE
+INVESTIGATION DIVISION
+
+
+CLASSIFIED DOCUMENTS ENCLOSED</div>
+<span style="font-size: 20px; color: #d43e4b; font-weight: bold;">SECRET - INTERNAL</span>
+<div style="margin-top: 285px; text-align: left;"><center>FOR OFFICIAL USE ONLY</center>
+File/Case Ref. No. # {{officialFileNumber}} <div style="float:right;">Date: {{officialDate}}</div>
+
+File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: N/A</div></div></div></div></td></tr></tbody></table></center>
+</div>
+
+--- TEMPLATE 6 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 0px!important; font-family: georgia; color: #000000">
+<tbody><tr><td align="center" valign="top"><div style="margin: 20px;border: 75px solid #f2624f; height: 1295px; padding: 10px;">OFFICIAL DOCUMENT
+<div style="letter-spacing: 2px; font-size: 20px; font-weight: bold; margin-top: 15px;">DAVIDSON COUNTY SHERIFF'S OFFICE</div>
+<div style="font-weight: bold; color: #f2624f; font-size: 35px; margin-bottom: 50px; margin-top: 5px;">SENSITIVE DOCUMENTS ENCLOSED</div><img src="https://i.imgur.com/O5sbaiB.png" height="250px;">
+<div style="font-weight: bold; color: #f2624f; font-size: 40px; margin-top: 50px;">EYES ONLY</div>
+<div style="letter-spacing: 2px; font-size: 25px; margin-top: 10px;">DO NOT DUPLICATE</div>
+<div style="font-size: 30px; font-family: sans-serif; color: #f2624f; font-weight: bold; line-height: 35px;">MARSHAL SERVICE
+INVESTIGATION DIVISION
+
+
+CLASSIFIED DOCUMENTS ENCLOSED</div>
+<span style="font-size: 20px; color: #f2624f; font-weight: bold;">TOP SECRET - INTERNAL</span>
+<div style="margin-top: 285px; text-align: left;"><center>FOR OFFICIAL USE ONLY</center>
+File/Case Ref. No. # {{officialFileNumber}} <div style="float:right;">Date: {{officialDate}}</div>
+
+File/Case Ref. Name: {{officialFileName}} <div style="float:right;">Review Date: N/A</div></div></div></div></td></tr></tbody></table></center>
+</div>
+
+--- TEMPLATE 7 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: #ffffff; font-family: Times New Roman; font-size: 18px; line-height: 1; color: #000000; padding: 30px"><tbody><tr><td valign="top"><table style="border: 0px solid #000000!important; font-size: 20px"><tbody><tr><td><img height="120px" src="https://i.imgur.com/jDodmWK.png"></td><td style="padding-left: 345px"><b>Marshal Service</b><br><br><i>Office of Security Programs</i></td></tr></tbody></table>
+<hr style="border-top: 1px solid #000000;"><span style="padding-left: 470px;  font-size: 16px"><i>Nashville, TN 37201</i></span>
+
+
+<span style="padding-left: 470px">{{documentDate}}</span>
+
+
+{{recipientName}}
+{{recipientRole}}
+Davidson County Sheriff's Office
+{{recipientOfficeLine2}}
+
+
+<span style="font-size: 24px;"><center><b>CONTRAT DE PROTECTION PERSONELLE</b></center></span>
+
+<b>Entre les soussigné(e)s :</b>
+
+
+Le Marshal Service de l'Investigation Division du Davidson County Sheriff's Office dont le siège social est situé One Jerry Newson Way, Nashville, TN 37201, représenté par John Labour, en sa qualité de Directeur,
+
+Ci-après dénommée le <b>"Protecteur"</b>,
+
+
+<b>Et</b>
+
+{{protegeCivility}} {{protegeFullName}}, né(e) le {{protegeBirthDate}} à {{protegeBirthPlace}}, de nationalité {{protegeNationality}}, demeurant au {{protegeAddress}},
+
+Ci-après dénommée le <b>"Protégé"</b>.
+
+
+Il a été conclu le présent engagement d'un commun accord entre les parties, conformément aux dispositions légales.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 1 - ENGAGEMENT</b></span>
+
+A compter du {{engagementDate}}, date de signature du contrat, le Protégé s'engage à prévenir au minimum 48 heures à l'avance de sa nécessité à bénéficier des services de protection contenant toutes les informations requises à sa mise en place.
+
+Dans le cas où le Protégé ne respecte pas ce délai minimum, le Protecteur fera le nécessaire afin de garantir les services de protection mais se réserve le droit, s'il le juge légitime et suffisamment motivé, de ne pas assurer la protection attendue.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 2 - DUREE DU CONTRAT</b></span>
+
+Le contrat de protection personnelle du Protégé est un contrat à durée indéterminée et pourra prendre fin, à toute époque, de la volonté de l'une ou l'autres des parties, sous réserve du respect des délais de préavis légaux ou conventionnels applicables.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 3 - RUPTURE DU CONTRAT - RESTITUTION </b></span>
+
+Le présent contrat ne pourra être rompu avant l'arrivée du terme qu'en cas de :
+<ul><li>faute grave ou lourde du Protégé,</li><li>force majeure,</li><li>accord entre les deux parties,</li><li>justification par le Protégé de sa protection sous contrat à durée indéterminée.</li></ul>Il prendra fin, le cas échéant, automatiquement et sans formalité au terme susvisé à l'Article 2.
+
+Tous les documents établis par le Protégé ainsi que tous équipements professionnels et documents confiés à celui-ci dans le cadre de son statut, resteront la propriété du Protecteur. </td></tr></tbody></table>
+
+<table style="width: 1005px; height: 1340px; background-color: #ffffff; font-family: Times New Roman; font-size: 18px; line-height: 1; color: #000000; padding: 30px"><tbody><tr><td valign="top">Le Protégé s'engage expressément à restituer ou céder, le jour même de la cessation de son statut au sein du Protecteur, sans qu'il soit nécessaire d'une démarche ou d'une mise en demeure préalable du Protecteur, tout support de quelque nature que ce soit et notamment, sans que cette liste soit limitative, tous documents, copies, disquettes en sa possession, ainsi que tout matériel ou fourniture qui lui aura été confiés.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 4 - ABSENCES</b></span>
+
+En cas d’absence prévisible, le Protégé sollicitera l’autorisation auprès du/des opérateur(s) en charge ou de toute personne dûment mandatée.
+
+En cas d’absence imprévisible, le Protégé sera tenu de prévenir ou de faire prévenir immédiatement le(s) opérateur(s) en charge ou toute personne dûment mandatée.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 5 - RESPONSABILITE</b></span>
+
+Le Protecteur tien entière responsabilité vis-à-vis du Protégé dès lors que les services de protection sont requis et que la présente requête a été traitée impliquant la présence physique d'opérateurs chargés d'honorer ces services.
+
+Cette responsabilité relève également, dans le cadre d'une protection, d'un pouvoir discrétionnaire concernant les déplacements, les demandes ou toute autre action que le Protégé a prévu ou souhaite entreprendre.
+
+Le Protecteur doit avoir la possibilité d'indiquer quoi faire mais également quand et où et de statuer lorsque nécessaire dans le dessein d'assurer la sécurité du Protégé.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 6 - CLAUSE D'EXCLUSIVITE</b></span>
+
+Le Protecteur interdit au Protégé de demander et jouir des services de protection d'un autre Protecteur pendant l'exécution de son contrat.
+
+Cette clause constitue une clause essentielle du présent contrat et tout manquement à cette obligation d'exclusivité est susceptible de constituer une faute grave entraînant la rupture anticipée du présent contrat.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 7 - OBLIGATION DE CONFIDENTIALITE</b></span>
+
+Au cours de l'exécution du présent contrat et après sa cessation pour quelque cause que ce soit pendant une durée de 10 ans, le Protégé sera tenu à une discrétion absolue sur tous les faits, événements, documents ou renseignements dont il/elle aurait eu connaissance en raison de son statut ou de son appartenance au Protecteur, et qui concerne tant sa gestion et son fonctionnement que son savoir-faire et ses projets et clients.
+
+Cette clause constitue une clause essentielle du présent contrat et tout manquement à l'obligation de réserve est susceptible de constituer une faute grave entraînant la rupture anticipée du présent contrat et engageant la responsabilité du Protégé à l'égard du Protecteur.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 8 - MATERIELS ET DOCUMENTS</b></span>
+
+Le Protecteur pourra être amené à confier au Protégé des produits, matériels, plans, fichiers et documents divers. Il s'interdit expressément d'en faire un autre usage que celui autorisé par son protecteur et s'engage à les lui présenter ou les lui restituer sur simple demande.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 9 - DECLARATIONS DIVERSES</b></span>
+
+Le Protégé, à la signature des présentes, déclare être libre de tout engagement, notamment d'exclusivité, et de toute obligation de non-partage de responsabilité de protection.
+
+Toute fausse déclaration à ce sujet étant susceptible d'entraîner la rupture du présent contrat de protection personnelle.
+
+Le Protégé, devra faire connaître au Protecteur, sans délai, toute modification postérieure à son engagement qui pourrait intervenir dans son état civil, sa situation de famille, son adresse, etc.</td></tr></tbody></table>
+
+<table style="width: 1005px; height: 1340px; background-color: #ffffff; font-family: Times New Roman; font-size: 18px; line-height: 1; color: #000000; padding: 30px"><tbody><tr><td valign="top">Fait en double exemplaire, dont un est remis à chacune des parties,
+
+A {{signatureCity}}, le {{signatureDate}}.
+
+
+<img src="{{protegeSignatureLink}}" alt="Signature">
+
+
+Lu et approuvé - Bon pour accord
+
+Le Protégé*
+
+{{protegeCivility}} {{protegeFullName}}
+
+
+<img src="{{protecteurSignatureLink}}" alt="Signature">
+
+
+Lu et approuvé - Bon pour accord
+
+Pour le Protecteur (Marshal Service)
+
+John Labour, Directeur
+
+
+
+<b>* Faire précéder la signature du Protégé de la mention "Lu et approuvé - Bon pour accord"
+
+<i>Les deux parties doivent parapher chaque page et signer la page de signature</i></b></td></tr></table></center>
+</div>
+
+--- TEMPLATE 8 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: #ffffff; font-family: Times New Roman; font-size: 18px; line-height: 1; color: #000000; padding: 30px"><tbody><tr><td valign="top"><table style="border: 0px solid #000000!important; font-size: 20px"><tbody><tr><td><img height="120px" src="https://i.imgur.com/jDodmWK.png"></td><td style="padding-left: 345px"><b>Marshal Service</b><br><br><i>Office of Security Programs</i></td></tr></tbody></table>
+<hr style="border-top: 1px solid #000000;"><span style="padding-left: 470px;  font-size: 16px"><i>Nashville, TN 37201</i></span>
+
+
+<span style="padding-left: 470px">{{documentDate}}</span>
+
+
+{{recipientName}}
+{{recipientRole}}
+Davidson County Sheriff's Office
+{{recipientOfficeLine2}}
+
+
+<span style="font-size: 24px;"><center><b>CONTRAT DE PROTECTION PERSONELLE</b></center></span>
+
+<b>Entre les soussigné(e)s :</b>
+
+
+Le Marshal Service de l'Investigation Division du Davidson County Sheriff's Office dont le siège social est situé One Jerry Newson Way, Nashville, TN 37201, représenté par John Labour, en sa qualité de Directeur,
+
+Ci-après dénommée le <b>"Protecteur"</b>,
+
+
+<b>Et</b>
+
+La société {{companyName}}, {{companySector}} dont le siège social est situé {{companyAddress}} représentée par {{companyRepresentativeName}}, en sa qualité de {{companyRepresentativeRole}},
+
+Ci-après dénommée le <b>"Protégé"</b>.
+
+
+Il a été conclu le présent engagement d'un commun accord entre les parties, conformément aux dispositions légales.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 1 - ENGAGEMENT</b></span>
+
+A compter du {{engagementDate}}, date de signature du contrat, le Protégé s'engage à prévenir au minimum 48 heures à l'avance de sa nécessité à bénéficier des services de protection contenant toutes les informations requises à sa mise en place.
+
+Dans le cas où le Protégé ne respecte pas ce délai minimum, le Protecteur fera le nécessaire afin de garantir les services de protection mais se réserve le droit, s'il le juge légitime et suffisamment motivé, de ne pas assurer la protection attendue.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 2 - DUREE DU CONTRAT</b></span>
+
+Le contrat de protection personnelle du Protégé est un contrat à durée indéterminée et pourra prendre fin, à toute époque, de la volonté de l'une ou l'autres des parties, sous réserve du respect des délais de préavis légaux ou conventionnels applicables.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 3 - RUPTURE DU CONTRAT - RESTITUTION </b></span>
+
+Le présent contrat ne pourra être rompu avant l'arrivée du terme qu'en cas de :
+<ul><li>faute grave ou lourde du Protégé,</li><li>force majeure,</li><li>accord entre les deux parties,</li><li>justification par le Protégé de sa protection sous contrat à durée indéterminée.</li></ul>Il prendra fin, le cas échéant, automatiquement et sans formalité au terme susvisé à l'Article 2.
+
+Tous les documents établis par le Protégé ainsi que tous équipements professionnels et documents confiés à celui-ci dans le cadre de son statut, resteront la propriété du Protecteur. </td></tr></tbody></table>
+
+<table style="width: 1005px; height: 1340px; background-color: #ffffff; font-family: Times New Roman; font-size: 18px; line-height: 1; color: #000000; padding: 30px"><tbody><tr><td valign="top">Le Protégé s'engage expressément à restituer ou céder, le jour même de la cessation de son statut au sein du Protecteur, sans qu'il soit nécessaire d'une démarche ou d'une mise en demeure préalable du Protecteur, tout support de quelque nature que ce soit et notamment, sans que cette liste soit limitative, tous documents, copies, disquettes en sa possession, ainsi que tout matériel ou fourniture qui lui aura été confiés.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 4 - ABSENCES</b></span>
+
+En cas d’absence prévisible, le Protégé sollicitera l’autorisation auprès du/des opérateur(s) en charge ou de toute personne dûment mandatée.
+
+En cas d’absence imprévisible, le Protégé sera tenu de prévenir ou de faire prévenir immédiatement le(s) opérateur(s) en charge ou toute personne dûment mandatée.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 5 - RESPONSABILITE</b></span>
+
+Le Protecteur tien entière responsabilité vis-à-vis du Protégé dès lors que les services de protection sont requis et que la présente requête a été traitée impliquant la présence physique d'opérateurs chargés d'honorer ces services.
+
+Cette responsabilité relève également, dans le cadre d'une protection, d'un pouvoir discrétionnaire concernant les déplacements, les demandes ou toute autre action que le Protégé a prévu ou souhaite entreprendre.
+
+Le Protecteur doit avoir la possibilité d'indiquer quoi faire mais également quand et où et de statuer lorsque nécessaire dans le dessein d'assurer la sécurité du Protégé.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 6 - CLAUSE D'EXCLUSIVITE</b></span>
+
+Le Protecteur interdit au Protégé de demander et jouir des services de protection d'un autre Protecteur pendant l'exécution de son contrat.
+
+Cette clause constitue une clause essentielle du présent contrat et tout manquement à cette obligation d'exclusivité est susceptible de constituer une faute grave entraînant la rupture anticipée du présent contrat.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 7 - OBLIGATION DE CONFIDENTIALITE</b></span>
+
+Au cours de l'exécution du présent contrat et après sa cessation pour quelque cause que ce soit pendant une durée de 10 ans, le Protégé sera tenu à une discrétion absolue sur tous les faits, événements, documents ou renseignements dont il/elle aurait eu connaissance en raison de son statut ou de son appartenance au Protecteur, et qui concerne tant sa gestion et son fonctionnement que son savoir-faire et ses projets et clients.
+
+Cette clause constitue une clause essentielle du présent contrat et tout manquement à l'obligation de réserve est susceptible de constituer une faute grave entraînant la rupture anticipée du présent contrat et engageant la responsabilité du Protégé à l'égard du Protecteur.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 8 - MATERIELS ET DOCUMENTS</b></span>
+
+Le Protecteur pourra être amené à confier au Protégé des produits, matériels, plans, fichiers et documents divers. Il s'interdit expressément d'en faire un autre usage que celui autorisé par son protecteur et s'engage à les lui présenter ou les lui restituer sur simple demande.
+
+
+<span style="font-size: 24px;"><b>ARTICLE 9 - DECLARATIONS DIVERSES</b></span>
+
+Le Protégé, à la signature des présentes, déclare être libre de tout engagement, notamment d'exclusivité, et de toute obligation de non-partage de responsabilité de protection.
+
+Toute fausse déclaration à ce sujet étant susceptible d'entraîner la rupture du présent contrat de protection personnelle.
+
+Le Protégé, devra faire connaître au Protecteur, sans délai, toute modification postérieure à son engagement qui pourrait intervenir dans son état civil, sa situation de famille, son adresse, etc.</td></tr></tbody></table>
+
+<table style="width: 1005px; height: 1340px; background-color: #ffffff; font-family: Times New Roman; font-size: 18px; line-height: 1; color: #000000; padding: 30px"><tbody><tr><td valign="top">Fait en double exemplaire, dont un est remis à chacune des parties,
+
+A {{signatureCity}}, le {{signatureDate}}.
+
+
+<img src="{{companySignatureLink}}" alt="Signature">
+
+
+Lu et approuvé - Bon pour accord
+
+Le Protégé*
+
+{{companySignatureName}}, {{companySignatureRole}}
+
+
+<img src="{{protecteurSignatureLink}}" alt="Signature">
+
+
+Lu et approuvé - Bon pour accord
+
+Pour le Protecteur (Marshal Service)
+
+John Labour, Directeur
+
+
+
+<b>* Faire précéder la signature du Protégé de la mention "Lu et approuvé - Bon pour accord"
+
+<i>Les deux parties doivent parapher chaque page et signer la page de signature</i></b></td></tr></table></center>
+</div>
+
+--- TEMPLATE 9 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 35px!important; font-family: Courier; color: #000000;">
+<tbody><tr><td align="left" valign="top"><div style="float:left; position: absolute;"><img src="https://i.imgur.com/O5sbaiB.png" height="100px;"></div><br><center><b><div style="font-size: 20px; font-family: georgia;">MARSHAL SERVICE</div><div style="font-size: 10px; line-height: 15px; font-family: georgia;">TACTICAL OPERATIONS CENTER
+ONE JERRY NEWSON WAY,
+NASHVILLE, TN 37201</div></b></center>
+
+<div style="padding-left: 50px; padding-right: 50px;"><div style="text-align: right;">{{warningDate}}</div>
+From: {{warningFrom}}<br>
+To: {{warningTo}}<br><br>
+Subj: WARNING ORDER #{{warningNumber}}<br><br>
+1. <u>Situation :</u> {{warningSituation}}<br><br>
+2. <u>Mission :</u> {{warningMission}}<br><br>
+3. <u> Instruction générales :</u><br>
+a. Chaîne de commandement<br>
+{{warningChain}}<br><br>
+b. Equipes spéciales/organisation des tâches<br>
+{{warningTeams}}<br><br>
+c. Uniforme et équipement communs à tous<br>
+{{warningUniform}}<br><br>
+d. Armes, munitions ou équipements spéciaux<br>
+{{warningWeapons}}<br><br>
+e. Planning provisoire<br>
+{{warningSchedule}}<br><br>
+f. Instructions générales supplémentaires<br>
+{{warningInstructions}}<br><br>
+4. <u>Instructions spéciales</u><br>
+a. Aux chefs subordonnés<br>
+{{warningSpecialSubordinates}}<br><br>
+b. Aux personnes aidant à la préparation de l'OPORD<br>
+{{warningSpecialPreparers}}<br><br>
+
+<div style="margin-left: 50%;"><img src="{{warningSignatureLink}}" alt="SIGNATURE" height="100px;">
+{{warningSignatureName}}</div></div></td></tr></tbody></table></center></div>
+
+--- TEMPLATE 10 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 35px!important; font-family: Courier; color: #000000;">
+<tbody><tr><td align="left" valign="top"><div style="float:left; position: absolute;"><img src="https://i.imgur.com/O5sbaiB.png" height="100px;"></div><br><center><b><div style="font-size: 20px; font-family: georgia;">MARSHAL SERVICE</div><div style="font-size: 10px; line-height: 15px; font-family: georgia;">TACTICAL OPERATIONS CENTER
+ONE JERRY NEWSON WAY,
+NASHVILLE, TN 37201</div></b></center>
+
+<div style="padding-left: 50px; padding-right: 50px;"><div style="text-align: right;">{{opordDate}}</div>
+From: {{opordFrom}}<br>
+To: {{opordTo}}<br><br>
+Subj: OPERATION ORDER {{opordNumber}} ({{opordDescriptor}})<br><br>
+1. <u>Situation :</u><br>
+a. Zone d'intérêt<br>
+{{opordAreaInterest}}<br><br>
+b. Zone d'opération<br>
+{{opordAreaOperations}}<br><br>
+c. Forces ennemies<br>
+{{opordEnemyForces}}<br><br>
+d. Forces amies<br>
+{{opordFriendlyForces}}<br><br>
+2. <u>Mission :</u> {{opordMission}}<br><br>
+3. <u>Exécution :</u><br>
+a. Concept des opérations<br>
+{{opordConcept}}<br><br>
+b. Tâches des unités de manœuvre<br>
+{{opordTasksManeuver}}<br><br>
+c. Tâches des unités de soutien<br>
+{{opordTasksSupport}}<br><br>
+d. Instructions de coordination<br>
+{{opordCoordination}}<br><br>
+4. <u>Commandement et signal</u><br>
+a. Commandement<br>
+{{opordCommand}}<br><br>
+b. Signal<br>
+{{opordSignal}}<br><br>
+
+<div style="margin-left: 50%;"><img src="{{opordSignatureLink}}" alt="SIGNATURE" height="100px;">
+{{opordSignatureName}}</div></div></td></tr></tbody></table></center></div>
+
+--- TEMPLATE 11 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: white; font-size: 15px; border: 1px solid black!important; padding: 35px!important; font-family: Courier; color: #000000;">
+<tbody><tr><td align="left" valign="top"><div style="float:left; position: absolute;"><img src="https://i.imgur.com/O5sbaiB.png" height="100px;"></div><br><center><b><div style="font-size: 20px; font-family: georgia;">MARSHAL SERVICE</div><div style="font-size: 10px; line-height: 15px; font-family: georgia;">TACTICAL OPERATIONS CENTER
+ONE JERRY NEWSON WAY,
+NASHVILLE, TN 37201</div></b></center>
+
+<div style="padding-left: 50px; padding-right: 50px;"><div style="text-align: right;">{{fragoDate}}</div>
+From: {{fragoFrom}}<br>
+To: {{fragoTo}}<br><br>
+Subj: FRAGMENTARY ORDER #{{fragoNumber}} TO OPERATION ORDER {{fragoOpordNumber}} ({{fragoOpordDescriptor}})<br><br>
+1. <u>Situation :</u> {{fragoSituation}}<br>
+2. <u>Mission :</u> {{fragoMission}}<br>
+3. <u>Exécution :</u> {{fragoExecution}}<br>
+4. <u>Assistance technique</u> {{fragoSupport}}<br>
+5. <u>Commandement et signal</u> {{fragoCommandSignal}}<br><br>
+
+<div style="margin-left: 50%;"><img src="{{fragoSignatureLink}}" alt="SIGNATURE" height="100px;">
+{{fragoSignatureName}}</div></div></td></tr></tbody></table></center></div>
+
+--- TEMPLATE 12 ---
+<div class="ampress-mb"><center><table style="width: 1005px; height: 1340px; background-color: #d2b89a; font-size: 15px; line-height: 1; border: 0px!important; padding: 0px!important; font-family: sans-serif; letter-spacing: 2px; color: #000000">
+<tbody><tr><td align="center" valign="bottom">
+<div style="background: white; padding: 15px; transform: rotate(7deg); position: relative; bottom: 600px; font-size: 12px; text-align: left; left: 200px; width: fit-content;"><center><div style="font-weight: bold; font-size: 25px; color: white; background-color: black; padding-left: 5px; padding-right: 5px;">ADMINISTRATIVE FILES</div>
+
+<span style="font-weight: bold; font-size: 20px; color: red; font-family: times">CLÔTURE DU DOSSIER</span></center>
+MATRICULE DE REFERENCE:
+
+<div style="border: 1px solid black; padding: 10px; text-align: center;">{{closureMatricule}}</div>
+<table style="border: 0px!important; padding: 0px!important;"><tbody><tr><td>NUMERO DE DOSSIER:
+AGENTS EN CHARGE:
+
+DATE DE CLÔTURE:</td>
+<td>{{closureFileNumber}}
+{{closureAgents}}
+{{closureDate}}</td></tr></tbody></table>
+
+MOTIF:
+
+<div style="border: 1px solid black; padding: 10px; height: 100px">{{closureReason}}</div></div>
+<b>DAVIDSON COUNTY SHERIFF'S OFFICE
+MARSHAL SERVICE</b>
+
+<div style="background: white; width: 350px; padding: 5px"><img src="https://barcode.tec-it.com/barcode.ashx?data=4 019643 846672&code=Code128&translate-esc=on"></div>
+</b></td></tr></tbody></table></center>
+</div>
