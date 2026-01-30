@@ -44,28 +44,29 @@
     }
 
     .laptop {
-      width: min(100%, 1180px);
+      width: min(100%, 940px);
       display: grid;
       gap: 0;
-      filter: drop-shadow(0 45px 80px rgba(0, 0, 0, 0.8));
+      filter: drop-shadow(0 35px 70px rgba(0, 0, 0, 0.85));
     }
 
     .laptop__lid {
-      background: linear-gradient(160deg, rgba(18, 20, 28, 0.96), rgba(6, 8, 12, 0.98));
-      border-radius: 24px 24px 16px 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 1.4rem 1.6rem 2rem;
+      background: linear-gradient(160deg, rgba(18, 20, 30, 0.98), rgba(5, 7, 12, 0.98));
+      border-radius: 36px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1.6rem 1.8rem;
       position: relative;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05),
-        0 25px 60px rgba(0, 0, 0, 0.65);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 25px 60px rgba(0, 0, 0, 0.65),
+        inset 0 -10px 25px rgba(255, 255, 255, 0.05);
     }
 
     .laptop__camera {
       position: absolute;
-      top: 0.6rem;
+      top: 0.7rem;
       left: 50%;
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #2d3342, #0b0e14 55%);
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -74,12 +75,13 @@
     }
 
     .laptop__screen {
-      background: linear-gradient(180deg, rgba(7, 9, 13, 0.94), rgba(4, 6, 10, 0.98));
-      border-radius: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 1.4rem;
-      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.65);
+      background: linear-gradient(180deg, rgba(7, 9, 13, 0.96), rgba(4, 6, 10, 0.98));
+      border-radius: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1.6rem;
+      box-shadow: inset 0 0 45px rgba(0, 0, 0, 0.7);
     }
+
 
     .os-shell {
       background: radial-gradient(circle at top, rgba(48, 72, 120, 0.5), rgba(6, 8, 14, 0.95));
@@ -172,6 +174,12 @@
       transform: translateY(-2px);
     }
 
+    .login-card button:disabled {
+      opacity: 0.6;
+      cursor: progress;
+      transform: none;
+    }
+
     .login-hint {
       font-size: 0.75rem;
       color: rgba(220, 220, 220, 0.65);
@@ -181,6 +189,33 @@
       font-size: 0.85rem;
       color: #ff7a7a;
       min-height: 1.2rem;
+    }
+
+    .login-loading {
+      font-size: 0.85rem;
+      color: rgba(220, 220, 220, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 1.2rem;
+    }
+
+    .login-loading.active {
+      display: inline-flex;
+    }
+
+    .loading-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 1s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
     }
 
     .desktop-screen {
@@ -221,6 +256,26 @@
     .desktop-topbar img {
       width: 26px;
       height: 26px;
+    }
+
+    .desktop-actions {
+      display: inline-flex;
+      gap: 0.6rem;
+      align-items: center;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .logout-btn {
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(12, 16, 24, 0.6);
+      color: rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
 
     .desktop-grid {
@@ -334,81 +389,6 @@
       font-size: 0.7rem;
     }
 
-    .laptop__base {
-      background: linear-gradient(140deg, rgba(16, 18, 24, 0.95), rgba(8, 10, 14, 0.98));
-      border-radius: 0 0 24px 24px;
-      padding: 1.5rem 3rem 2rem;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-top: none;
-      position: relative;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 25px 55px rgba(0, 0, 0, 0.6);
-    }
-
-    .laptop__keyboard {
-      height: 110px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(32, 34, 42, 0.6), rgba(12, 14, 20, 0.95));
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .laptop__keyboard::before {
-      content: "";
-      position: absolute;
-      inset: 18px 20px;
-      background-image:
-        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 50px),
-        repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 28px);
-      border-radius: 12px;
-      opacity: 0.5;
-    }
-
-    .laptop__trackpad {
-      width: 180px;
-      height: 70px;
-      margin: 1rem auto 0;
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(28, 30, 38, 0.7), rgba(10, 12, 18, 0.95));
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
-    }
-
-    .background {
-      position: fixed;
-      inset: 0;
-      z-index: -3;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .background::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(6, 9, 14, 0.18), transparent 55%),
-                  radial-gradient(circle at 80% 15%, rgba(6, 8, 12, 0.16), transparent 45%),
-                  linear-gradient(140deg, rgba(4, 6, 10, 0.42), rgba(4, 6, 10, 0.08));
-      mix-blend-mode: multiply;
-    }
-
-    .background picture,
-    .background img {
-      width: 100vw;
-      height: 100vh;
-      display: block;
-    }
-
-    .background img {
-      object-fit: cover;
-      transform: translateZ(0);
-      filter: none;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: optimizeQuality;
-      will-change: transform;
-    }
 
 
     .page {
@@ -981,14 +961,6 @@
         padding: 1rem;
       }
 
-      .laptop__base {
-        padding: 1.2rem 1.6rem 1.5rem;
-      }
-
-      .laptop__keyboard {
-        height: 80px;
-      }
-
       .desktop-grid {
         grid-template-columns: 1fr;
       }
@@ -1001,18 +973,6 @@
   </style>
 </head>
 <body>
-  <div class="background" aria-hidden="true">
-    <picture>
-      <source srcset="https://i.postimg.cc/52HqTH4C/Alex-4.png" media="(min-width: 2400px)">
-      <img
-        src="https://i.postimg.cc/52HqTH4C/Alex-4.png"
-        srcset="https://i.postimg.cc/52HqTH4C/Alex-4.png 1920w, https://i.postimg.cc/52HqTH4C/Alex-4.png 2560w, https://i.postimg.cc/52HqTH4C/Alex-4.png 3200w, https://i.postimg.cc/52HqTH4C/Alex-4.png 3840w"
-        sizes="100vw"
-        alt=""
-        loading="eager"
-        decoding="async">
-    </picture>
-  </div>
   <div class="laptop">
     <div class="laptop__lid">
       <div class="laptop__camera" aria-hidden="true"></div>
@@ -1036,6 +996,10 @@
                 </div>
                 <button type="submit">Se connecter</button>
               </form>
+              <div class="login-loading" id="loginLoading" aria-live="polite">
+                <span class="loading-dot" aria-hidden="true"></span>
+                Vérification sécurisée...
+              </div>
               <div class="login-error" id="loginError" aria-live="polite"></div>
               <div class="login-hint">Accès provisoire : Alexandre · Mot de passe : test</div>
             </div>
@@ -1047,7 +1011,10 @@
                 <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Logo Marshal Service">
                 Bureau opérationnel
               </div>
-              <div>Connexion sécurisée · AES-256</div>
+              <div class="desktop-actions">
+                <span>Connexion sécurisée · AES-256</span>
+                <button class="logout-btn" id="logoutBtn" type="button">Déconnexion</button>
+              </div>
             </div>
 
             <div class="desktop-grid">
@@ -1095,10 +1062,6 @@
         </div>
       </div>
     </div>
-    <div class="laptop__base" aria-hidden="true">
-      <div class="laptop__keyboard"></div>
-      <div class="laptop__trackpad"></div>
-    </div>
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite">Copié dans le presse-papiers</div>
@@ -1125,6 +1088,8 @@
     const loginUser = document.getElementById('loginUser');
     const loginPass = document.getElementById('loginPass');
     const loginError = document.getElementById('loginError');
+    const loginLoading = document.getElementById('loginLoading');
+    const logoutBtn = document.getElementById('logoutBtn');
     const validUser = 'Alexandre';
     const validPass = 'test';
 
@@ -1133,14 +1098,41 @@
         event.preventDefault();
         const userValue = loginUser?.value.trim();
         const passValue = loginPass?.value.trim();
+        const submitButton = loginForm.querySelector('button[type="submit"]');
 
-        if (userValue === validUser && passValue === validPass) {
-          loginError.textContent = '';
-          osShell?.classList.add('desktop-visible');
-          loginForm.reset();
-        } else {
-          loginError.textContent = 'Identifiant ou mot de passe incorrect.';
+        loginError.textContent = '';
+        loginLoading?.classList.add('active');
+        loginUser?.setAttribute('disabled', 'true');
+        loginPass?.setAttribute('disabled', 'true');
+        if (submitButton) {
+          submitButton.setAttribute('disabled', 'true');
         }
+
+        setTimeout(() => {
+          const isValid = userValue === validUser && passValue === validPass;
+          loginLoading?.classList.remove('active');
+          loginUser?.removeAttribute('disabled');
+          loginPass?.removeAttribute('disabled');
+          if (submitButton) {
+            submitButton.removeAttribute('disabled');
+          }
+
+          if (isValid) {
+            loginError.textContent = '';
+            osShell?.classList.add('desktop-visible');
+            loginForm.reset();
+          } else {
+            loginError.textContent = 'Identifiant ou mot de passe incorrect.';
+          }
+        }, 1400);
+      });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        osShell?.classList.remove('desktop-visible');
+        loginError.textContent = '';
+        loginLoading?.classList.remove('active');
       });
     }
 
