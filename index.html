@@ -132,37 +132,7 @@
     }
 
     .background {
-      position: fixed;
-      inset: 0;
-      z-index: -3;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .background::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(6, 9, 14, 0.18), transparent 55%),
-                  radial-gradient(circle at 80% 15%, rgba(6, 8, 12, 0.16), transparent 45%),
-                  linear-gradient(140deg, rgba(4, 6, 10, 0.42), rgba(4, 6, 10, 0.08));
-      mix-blend-mode: multiply;
-    }
-
-    .background picture,
-    .background img {
-      width: 100vw;
-      height: 100vh;
-      display: block;
-    }
-
-    .background img {
-      object-fit: cover;
-      transform: translateZ(0);
-      filter: none;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: optimizeQuality;
-      will-change: transform;
+      display: none;
     }
 
 
@@ -365,6 +335,20 @@
     .window-controls {
       display: flex;
       gap: 0.4rem;
+    }
+
+    .window-action {
+      border: none;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .window-action:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
     .window-dot {
@@ -979,18 +963,6 @@
   </style>
 </head>
 <body>
-  <div class="background" aria-hidden="true">
-    <picture>
-      <source srcset="https://i.postimg.cc/52HqTH4C/Alex-4.png" media="(min-width: 2400px)">
-      <img
-        src="https://i.postimg.cc/52HqTH4C/Alex-4.png"
-        srcset="https://i.postimg.cc/52HqTH4C/Alex-4.png 1920w, https://i.postimg.cc/52HqTH4C/Alex-4.png 2560w, https://i.postimg.cc/52HqTH4C/Alex-4.png 3200w, https://i.postimg.cc/52HqTH4C/Alex-4.png 3840w"
-        sizes="100vw"
-        alt=""
-        loading="eager"
-        decoding="async">
-    </picture>
-  </div>
   <div class="laptop">
     <div class="laptop__lid">
       <div class="laptop__camera" aria-hidden="true"></div>
@@ -1049,13 +1021,13 @@
                 </div>
               </div>
 
-              <div class="desktop-window" id="templatesWindow">
+              <div class="desktop-window hidden" id="templatesWindow">
                 <div class="window-titlebar">
                   <h2>Catalogue des modèles</h2>
-                  <div class="window-controls" aria-hidden="true">
-                    <span class="window-dot"></span>
-                    <span class="window-dot"></span>
-                    <span class="window-dot"></span>
+                  <div class="window-controls">
+                    <button class="window-action" type="button" id="closeTemplates">Fermer</button>
+                    <span class="window-dot" aria-hidden="true"></span>
+                    <span class="window-dot" aria-hidden="true"></span>
                   </div>
                 </div>
                 <div class="workspace__main">
@@ -1180,6 +1152,8 @@
     const desktopScreen = document.getElementById('desktopScreen');
     const loginError = document.getElementById('loginError');
     const openTemplates = document.getElementById('openTemplates');
+    const closeTemplates = document.getElementById('closeTemplates');
+    const templatesWindow = document.getElementById('templatesWindow');
 
     if (loginForm && loginScreen && desktopScreen) {
       loginForm.addEventListener('submit', event => {
@@ -1194,6 +1168,9 @@
             loginError.textContent = '';
           }
           showSection('documents');
+          if (templatesWindow) {
+            templatesWindow.classList.remove('hidden');
+          }
         } else {
           if (loginError) {
             loginError.textContent = "Identifiants incorrects. Veuillez réessayer.";
@@ -1205,7 +1182,18 @@
     if (openTemplates) {
       openTemplates.addEventListener('click', () => {
         showSection('documents');
+        if (templatesWindow) {
+          templatesWindow.classList.remove('hidden');
+        }
         document.getElementById('templateSelect')?.focus();
+      });
+    }
+
+    if (closeTemplates) {
+      closeTemplates.addEventListener('click', () => {
+        if (templatesWindow) {
+          templatesWindow.classList.add('hidden');
+        }
       });
     }
 
