@@ -2446,6 +2446,20 @@ const SFX = (() => {
     click(880, 0.03);
     setTimeout(()=>click(660, 0.03), 60);
   }
+  function notify(){
+    init();
+    if(disabled || !ctx) return;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(880, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.08);
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.16, ctx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.16);
+    o.connect(g); g.connect(master);
+    o.start(); o.stop(ctx.currentTime + 0.18);
+  }
   function error(){
     init();
     if(disabled || !ctx) return;
@@ -2483,7 +2497,7 @@ const SFX = (() => {
     if(disabled || !ctx) return;
     master.gain.value = Math.max(0, Math.min(1, v));
   }
-  return {click, open, close, error, tap, send, ambience, setVolume};
+  return {click, open, close, error, tap, send, notify, ambience, setVolume};
 })();
 
 /* ---- state ---- */
@@ -2512,17 +2526,17 @@ function toast(msg="Ouverture…"){
   setTimeout(()=>t.classList.remove("show"), 1100);
 }
 let notifyTimer = null;
-function showNotification(sender, text, scopeValue, recipientValue){
+function showNotification(sender, text, scopeValue, recipientValue, options = {}){
   const notify = $("#notify");
   if(!notify) return;
   const title = $("#notifyTitle");
   const meta = $("#notifyMeta");
   const icon = notify.querySelector(".notify__icon");
   const scopeLabel = scopeValue === "private"
-    ? `Privé → ${recipientValue}`
+    ? "Message privé"
     : scopeValue === "group"
-      ? `Groupe → ${recipientValue}`
-      : "Global";
+      ? "Message groupe"
+      : "Message";
   if (title) title.textContent = `${sender} • ${text.slice(0, 36)}${text.length > 36 ? "…" : ""}`;
   if (meta) meta.textContent = scopeLabel;
   if (icon) {
@@ -2534,6 +2548,9 @@ function showNotification(sender, text, scopeValue, recipientValue){
     icon.style.padding = "6px 8px";
   }
   notify.classList.add("show");
+  if (!options.silent) {
+    try{ SFX.notify(); }catch(e){}
+  }
   if (notifyTimer) clearTimeout(notifyTimer);
   notifyTimer = setTimeout(()=>notify.classList.remove("show"), 2800);
 }
@@ -2793,7 +2810,15 @@ function doLogin(){
       try{try{SFX.open();}catch(e){}}catch(e){}
       $("#login").classList.add("hidden");
       $("#desktop").classList.remove("hidden");
-      toast(`Bienvenue, ${state.username}`);
+      const queued = loadTelegramNotifications();
+      if (queued.length) {
+        queued.forEach((item, idx)=>{
+          setTimeout(()=>{
+            showNotification(item.sender || "Agent", item.text || "", item.scope || "group", item.recipient || TELEGRAM_GROUP);
+          }, 500 + idx * 700);
+        });
+        saveTelegramNotifications([]);
+      }
 
       // reset inputs for next time
       $("#user").value = "";
@@ -4245,6 +4270,7 @@ const TELEGRAM_MESSAGES_KEY = "marshal.telegram.messages";
 const TELEGRAM_UNREAD_KEY = "marshal.telegram.unread";
 const TELEGRAM_UNREAD_MAP_KEY = "marshal.telegram.unread.map";
 const TELEGRAM_PINNED_KEY = "marshal.telegram.pinned";
+const TELEGRAM_NOTIFY_KEY = "marshal.telegram.notifications";
 const TELEGRAM_GROUP = "Marchal Service";
 
 function loadTelegramMessages(){
@@ -4308,6 +4334,20 @@ function loadTelegramPinned(){
 
 function saveTelegramPinned(pinned){
   localStorage.setItem(TELEGRAM_PINNED_KEY, JSON.stringify(pinned));
+}
+
+function loadTelegramNotifications(){
+  try{
+    const raw = localStorage.getItem(TELEGRAM_NOTIFY_KEY);
+    const data = raw ? JSON.parse(raw) : [];
+    return Array.isArray(data) ? data : [];
+  }catch(e){
+    return [];
+  }
+}
+
+function saveTelegramNotifications(items){
+  localStorage.setItem(TELEGRAM_NOTIFY_KEY, JSON.stringify(items));
 }
 
 function updateTelegramBadge(count){
@@ -4651,11 +4691,12 @@ function telegramApp(){
       border-radius:8px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.05);
-      color: rgba(229,231,235,.7);
+      color: rgba(229,231,235,.75);
       display:grid;
       place-items:center;
       cursor:pointer;
       flex:0 0 auto;
+      font-size:13px;
     }
     .pin-btn.active{
       color:#f5d76e;
@@ -5001,6 +5042,9 @@ function telegramApp(){
         pinned: pinnedSet.has(normalizeName(name))
       })).sort((a,b)=>{
         if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+        const timeA = a.last ? a.last.ts : 0;
+        const timeB = b.last ? b.last.ts : 0;
+        if (timeA !== timeB) return timeB - timeA;
         const nameA = formatTelegramName(a.name);
         const nameB = formatTelegramName(b.name);
         return nameA.localeCompare(nameB, "fr", {sensitivity:"base"});
@@ -5031,7 +5075,7 @@ function telegramApp(){
           </div>
           <div class="preview">${last ? (last.text || "") : "Aucun message"}</div>
         </div>
-        <span class="${pinClass}" role="button" tabindex="0" data-pin="${name}" title="Épingler">📌</span>
+        <span class="${pinClass}" role="button" tabindex="0" data-pin="${name}" title="Épingler">📍</span>
         ${badge}
       `;
       const pinButton = row.querySelector("[data-pin]");
@@ -5158,7 +5202,13 @@ function telegramApp(){
     saveTelegramMessages(messages);
     if(normalizeName(name) !== normalizeName(currentUserName())){
       rebuildUnreadMap();
-      try{ showNotification(name, text, scope, recipient); }catch(e){}
+      if (state.loggedIn) {
+        try{ showNotification(name, text, scope, recipient); }catch(e){}
+      } else {
+        const queue = loadTelegramNotifications();
+        queue.push({ sender: name, text, scope, recipient, ts: Date.now() });
+        saveTelegramNotifications(queue);
+      }
     }
   };
 
@@ -5442,7 +5492,13 @@ window.addEventListener("storage", (event) => {
       const key = last.scope === "group" ? TELEGRAM_GROUP : (last.recipient || "Inconnu");
       map[key] = (Number(map[key]) || 0) + 1;
       saveTelegramUnreadMap(map);
-      try{ showNotification(last.name || "Agent", last.text || "", last.scope || "group", last.recipient || TELEGRAM_GROUP); }catch(e){}
+      if (state.loggedIn) {
+        try{ showNotification(last.name || "Agent", last.text || "", last.scope || "group", last.recipient || TELEGRAM_GROUP); }catch(e){}
+      } else {
+        const queue = loadTelegramNotifications();
+        queue.push({ sender: last.name || "Agent", text: last.text || "", scope: last.scope || "group", recipient: last.recipient || TELEGRAM_GROUP, ts: Date.now() });
+        saveTelegramNotifications(queue);
+      }
     }
   }catch(e){}
 });
