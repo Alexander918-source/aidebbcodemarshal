@@ -848,13 +848,14 @@
   opacity:0;
   transform: scale(.98);
 }
-    .window.maximized{
-      left: 12px !important;
-      top: 12px !important;
-      width: calc(100% - 24px) !important;
-      height: calc(100% - 76px) !important;
-      border-radius: 18px;
-    }
+.window.maximized{
+  left: 12px !important;
+  top: 12px !important;
+  width: calc(100% - 24px) !important;
+  height: calc(100% - 76px) !important;
+  border-radius: 18px;
+  background: rgba(6,9,16,.98);
+}
     .titlebar{
       height: 44px;
       display:flex;
@@ -2473,6 +2474,10 @@
                 <div style="font-size:1.4rem; letter-spacing:.04em" id="clockBig">--:--</div>
                 <div class="muted" id="dateLine">—</div>
               </div>
+              <div class="row">
+                <div class="muted">Calendrier</div>
+                <button class="btn" id="calendarOpen" type="button">Ouvrir</button>
+              </div>
               <div class="card">
                 <div style="font-weight:900; letter-spacing:.02em">Infos</div>
                 <div class="muted" id="infoLine">Système prêt.</div>
@@ -2758,10 +2763,13 @@ renderCalendar();
 const calendarModal = $("#calendarModal");
 const calendarClose = $("#calendarClose");
 if (calendarModal && calendarClose) {
-  $("#clockBtn").addEventListener("click", (e) => {
-    e.stopPropagation();
-    calendarModal.classList.toggle("show");
-  });
+  const calendarOpen = $("#calendarOpen");
+  if (calendarOpen) {
+    calendarOpen.addEventListener("click", (e) => {
+      e.stopPropagation();
+      calendarModal.classList.toggle("show");
+    });
+  }
   calendarClose.addEventListener("click", () => calendarModal.classList.remove("show"));
 }
 
