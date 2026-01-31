@@ -4324,6 +4324,17 @@ function formatTelegramDay(ts){
   return d.toLocaleDateString("fr-FR",{weekday:"long", day:"2-digit", month:"long"});
 }
 
+function formatTelegramName(name){
+  if (!name) return "Agent";
+  return name
+    .split(/\s+/)
+    .map(part => part.split("'").map(piece => {
+      if (!piece) return piece;
+      return piece[0].toUpperCase() + piece.slice(1).toLowerCase();
+    }).join("'"))
+    .join(" ");
+}
+
 const TELEGRAM_CONTACTS = [
   TELEGRAM_GROUP,
   "Scot Jhonson",
@@ -4689,6 +4700,58 @@ function telegramApp(){
       flex:0 0 auto;
     }
     .send:disabled{opacity:.35; cursor:not-allowed;}
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,.55);
+      z-index:40;
+    }
+    .modal.show{display:flex;}
+    .modal-card{
+      width:min(420px, 92%);
+      background: rgba(12,16,26,.96);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:18px;
+      padding:16px;
+      display:grid;
+      gap:12px;
+      box-shadow: 0 24px 70px rgba(0,0,0,.6);
+    }
+    .modal-card h4{
+      margin:0;
+      font-size:1rem;
+      letter-spacing:.04em;
+    }
+    .modal-card p{
+      margin:0;
+      color: rgba(229,231,235,.7);
+      font-size:.85rem;
+    }
+    .modal-card textarea{
+      width:100%;
+      min-height:90px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:#e5e7eb;
+      padding:10px 12px;
+      font-size:14px;
+      font-family:inherit;
+      resize:vertical;
+    }
+    .modal-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:8px;
+    }
+    .modal-actions .ghost{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:#e5e7eb;
+    }
 
     @media (max-width: 720px){
       .sidebar{width:100%; max-width:none; border-right:none;}
@@ -4753,6 +4816,18 @@ function telegramApp(){
         </div>
       </div>
     </section>
+
+    <div class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-card">
+        <h4>Action</h4>
+        <p></p>
+        <textarea class="modal-input" placeholder="Modifier le message"></textarea>
+        <div class="modal-actions">
+          <button class="btn ghost" type="button" data-modal="cancel">Annuler</button>
+          <button class="btn primary" type="button" data-modal="confirm">Confirmer</button>
+        </div>
+      </div>
+    </div>
   `;
 
   shadow.append(style, root);
@@ -4770,7 +4845,13 @@ function telegramApp(){
     log: root.querySelector(".log"),
     back: root.querySelector(".back"),
     ta: root.querySelector("textarea"),
-    send: root.querySelector(".send")
+    send: root.querySelector(".send"),
+    modal: root.querySelector(".modal"),
+    modalTitle: root.querySelector(".modal-card h4"),
+    modalBody: root.querySelector(".modal-card p"),
+    modalInput: root.querySelector(".modal-input"),
+    modalCancel: root.querySelector("[data-modal='cancel']"),
+    modalConfirm: root.querySelector("[data-modal='confirm']")
   };
 
   let active = TELEGRAM_CONTACTS[0];
@@ -4786,6 +4867,31 @@ function telegramApp(){
     if (!parts.length) return "Agent";
     if (parts.length === 1) return parts[0];
     return `${parts[0]} ${parts[1][0]}.`;
+  };
+
+  const showModal = ({title, body, value, showInput, confirmLabel, onConfirm})=>{
+    if (!els.modal) return;
+    els.modalTitle.textContent = title || "Action";
+    els.modalBody.textContent = body || "";
+    els.modalInput.value = value || "";
+    els.modalInput.style.display = showInput ? "block" : "none";
+    els.modalConfirm.textContent = confirmLabel || "Confirmer";
+    els.modal.classList.add("show");
+    els.modal.setAttribute("aria-hidden", "false");
+    if (showInput) {
+      setTimeout(() => els.modalInput.focus(), 0);
+    }
+    const close = ()=>{
+      els.modal.classList.remove("show");
+      els.modal.setAttribute("aria-hidden", "true");
+      els.modalConfirm.onclick = null;
+      els.modalCancel.onclick = null;
+    };
+    els.modalCancel.onclick = close;
+    els.modalConfirm.onclick = ()=>{
+      if (onConfirm) onConfirm(els.modalInput.value);
+      close();
+    };
   };
 
   const convoFor = (contact)=>{
@@ -4807,11 +4913,14 @@ function telegramApp(){
   const renderList = ()=>{
     const q = normalizeName(els.search.value);
     els.list.innerHTML = "";
-    const ordered = TELEGRAM_CONTACTS.map((name, index)=>({
-      name,
-      index,
-      last: lastFor(name)
-    })).sort((a,b)=>{
+    const currentName = normalizeName(currentUserName());
+    const ordered = TELEGRAM_CONTACTS
+      .filter(name => name === TELEGRAM_GROUP || normalizeName(name) !== currentName)
+      .map((name, index)=>({
+        name,
+        index,
+        last: lastFor(name)
+      })).sort((a,b)=>{
       if (a.name === TELEGRAM_GROUP && b.name !== TELEGRAM_GROUP) return -1;
       if (b.name === TELEGRAM_GROUP && a.name !== TELEGRAM_GROUP) return 1;
       const timeA = a.last ? a.last.ts : 0;
@@ -4830,14 +4939,15 @@ function telegramApp(){
       const row = document.createElement("button");
       row.type="button";
       row.className = "row" + (name===active ? " active" : "");
+      const displayName = formatTelegramName(name);
       const tag = name === TELEGRAM_GROUP ? "<span class='tag'>GROUPE</span>" : "";
       const unread = Number(unreadMap[name] || 0);
       const badge = unread > 0 ? `<span class="row-badge">${unread}</span>` : "";
       row.innerHTML = `
-        <div class="avatar" aria-hidden="true">${initials(name)}${tag}</div>
+        <div class="avatar" aria-hidden="true">${initials(displayName)}${tag}</div>
         <div class="meta">
           <div class="topline">
-            <div class="name">${name}</div>
+            <div class="name">${displayName}</div>
             <div class="time">${last ? formatTelegramTime(last.ts) : ""}</div>
           </div>
           <div class="preview">${last ? (last.text || "") : "Aucun message"}</div>
@@ -4859,7 +4969,8 @@ function telegramApp(){
   };
 
   const renderLog = ()=>{
-    els.title.textContent = active;
+    const titleName = active === TELEGRAM_GROUP ? active : formatTelegramName(active);
+    els.title.textContent = titleName;
     els.scope.textContent = active === TELEGRAM_GROUP ? "GROUPE" : "Privé";
     els.log.innerHTML = "";
     const conv = convoFor(active);
@@ -4884,7 +4995,7 @@ function telegramApp(){
       const isOut = normalizeName(m.name) === normalizeName(state.username);
       const msg = document.createElement("div");
       msg.className = "msg " + (isOut ? "out" : "in");
-      const senderName = isOut ? "Vous" : shortName(m.name || "Agent");
+      const senderName = isOut ? "Vous" : shortName(formatTelegramName(m.name || "Agent"));
       const actions = isOut ? `
         <div class="msg-actions" role="group" aria-label="Actions du message">
           <button type="button" data-msg-action="edit" data-msg-id="${m.id}" title="Modifier">✎</button>
@@ -4953,17 +5064,24 @@ function telegramApp(){
       toast("Action impossible");
       return;
     }
-    const next = window.prompt("Modifier le message", entry.text || "");
-    if(next === null) return;
-    const trimmed = next.trim();
-    if(!trimmed){
-      toast("Message vide ignoré");
-      return;
-    }
-    entry.text = trimmed;
-    entry.edited = true;
-    saveTelegramMessages(messages);
-    renderAll();
+    showModal({
+      title: "Modifier le message",
+      body: "Met à jour le contenu avant de confirmer.",
+      value: entry.text || "",
+      showInput: true,
+      confirmLabel: "Enregistrer",
+      onConfirm: (value)=>{
+        const trimmed = (value || "").trim();
+        if(!trimmed){
+          toast("Message vide ignoré");
+          return;
+        }
+        entry.text = trimmed;
+        entry.edited = true;
+        saveTelegramMessages(messages);
+        renderAll();
+      }
+    });
   };
 
   const deleteMessage = (id)=>{
@@ -4974,10 +5092,17 @@ function telegramApp(){
       toast("Action impossible");
       return;
     }
-    if(!window.confirm("Supprimer ce message ?")) return;
-    messages.splice(index, 1);
-    saveTelegramMessages(messages);
-    renderAll();
+    showModal({
+      title: "Supprimer le message",
+      body: "Cette action est définitive.",
+      showInput: false,
+      confirmLabel: "Supprimer",
+      onConfirm: ()=>{
+        messages.splice(index, 1);
+        saveTelegramMessages(messages);
+        renderAll();
+      }
+    });
   };
 
   const send = ()=>{
@@ -5021,6 +5146,14 @@ function telegramApp(){
     }
   });
   els.send.addEventListener("click", send);
+  if (els.modal) {
+    els.modal.addEventListener("click", (event)=>{
+      if (event.target === els.modal) {
+        els.modal.classList.remove("show");
+        els.modal.setAttribute("aria-hidden", "true");
+      }
+    });
+  }
 
   els.back.addEventListener("click", ()=>{
     els.app.classList.remove("showThread");
