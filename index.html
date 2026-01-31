@@ -5410,7 +5410,6 @@ function openApp(appId){
     return;
   }
 
-  toast("Ouverture…");
   try{try{SFX.open();}catch(e){}}catch(e){}
 
   const onClose = ()=>appWindows.delete(appId);
