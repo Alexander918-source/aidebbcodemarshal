@@ -1781,6 +1781,7 @@ if (calendarModal && calendarClose) {
 }
 
 const powerBtn = $("#powerBtn");
+const powerScreen = $("#powerScreen");
 const powerLed = $("#powerLed");
 const bootScreen = $("#bootScreen");
 const bootBar = $("#bootBar");
@@ -1797,7 +1798,10 @@ const bootSteps = [
 
 if (powerBtn) {
   let powerTimer = null;
+  let isBooting = false;
   const startBoot = () => {
+    if (isBooting) return;
+    isBooting = true;
     try{SFX.open();}catch(e){}
     $("#powerScreen").classList.add("hidden");
     bootScreen.classList.remove("hidden");
@@ -1835,10 +1839,19 @@ if (powerBtn) {
     }
   };
 
-  powerBtn.addEventListener("pointerdown", () => {
-    powerLed?.classList.add("active");
+  const queueBoot = () => {
     clearPowerTimer();
     powerTimer = setTimeout(startBoot, 700);
+  };
+
+  powerBtn.addEventListener("pointerdown", () => {
+    powerLed?.classList.add("active");
+    queueBoot();
+  });
+
+  powerBtn.addEventListener("click", () => {
+    clearPowerTimer();
+    startBoot();
   });
 
   powerBtn.addEventListener("click", () => {
@@ -1854,6 +1867,20 @@ if (powerBtn) {
   powerBtn.addEventListener("pointerleave", () => {
     powerLed?.classList.remove("active");
     clearPowerTimer();
+  });
+
+  if (powerScreen) {
+    powerScreen.addEventListener("click", (event) => {
+      if (event.target === powerBtn) return;
+      startBoot();
+    });
+  }
+
+  powerBtn.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      startBoot();
+    }
   });
 }
 
