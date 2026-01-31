@@ -410,6 +410,41 @@
       min-width: 86px;
       text-align:center;
     }
+    .calendar-modal{
+      position:absolute;
+      right:12px;
+      bottom:64px;
+      width: 320px;
+      background: rgba(10,14,22,.9);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      box-shadow: 0 22px 70px rgba(0,0,0,.6);
+      padding:14px;
+      display:none;
+      z-index:35;
+      backdrop-filter: blur(10px);
+    }
+    .calendar-modal.show{
+      display:block;
+      animation:fade .18s ease;
+    }
+    .calendar-modal header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+      font-weight:800;
+      letter-spacing:.03em;
+      color:rgba(255,255,255,.86);
+    }
+    .calendar-modal button{
+      width:28px;height:28px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:rgba(255,255,255,.86);
+      cursor:pointer;
+    }
     #calendarGrid{
       display:grid;
       grid-template-columns: repeat(7, 1fr);
@@ -566,6 +601,34 @@
       font-size:.84rem;
       font-weight:700;
       color:rgba(255,255,255,.9);
+    }
+    .lock-screen{
+      position:absolute;
+      inset:0;
+      background: radial-gradient(circle at 30% 10%, rgba(20,35,70,.45), rgba(3,4,9,.98) 65%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:12px;
+      z-index:22;
+      color:rgba(255,255,255,.85);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    .lock-screen .lock-time{
+      font-size:2.6rem;
+      letter-spacing:.2em;
+    }
+    .lock-screen .lock-date{
+      font-size:.85rem;
+      color:rgba(255,255,255,.55);
+    }
+    .lock-screen .swipe-indicator{
+      margin-top:22px;
+      font-size:.75rem;
+      color:rgba(255,255,255,.45);
+      letter-spacing:.2em;
+      text-transform:uppercase;
     }
 
     /* Windows */
@@ -799,15 +862,15 @@
               <span>UEFI Secure Boot</span>
               <span id="bootStatus">POST...</span>
             </div>
-            <div class="boot-line">
-              <span>Marshal Service Device</span>
-              <span>BIOS v3.4</span>
-            </div>
+          <div class="boot-line">
+            <span>Device Firmware</span>
+            <span>BIOS v3.4</span>
+          </div>
             <div class="boot-progress" aria-hidden="true"><span id="bootBar"></span></div>
-            <div class="boot-line">
-              <span>Module TPM</span>
-              <span id="bootStep">Initialisation...</span>
-            </div>
+          <div class="boot-line">
+            <span>Module TPM</span>
+            <span id="bootStep">Initialisation...</span>
+          </div>
             <div class="boot-lines" id="bootLines"></div>
           </div>
         </section>
@@ -836,6 +899,12 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <section class="lock-screen hidden" id="lockScreen">
+        <div class="lock-time" id="lockTime">--:--</div>
+        <div class="lock-date" id="lockDate">—</div>
+        <div class="swipe-indicator">Balayez vers le haut</div>
       </section>
 
       <!-- DESKTOP -->
@@ -959,10 +1028,6 @@
                 <div class="muted" id="dateLine">—</div>
               </div>
               <div class="card">
-                <div class="muted" style="margin-bottom:6px">Calendrier</div>
-                <div id="calendarGrid"></div>
-              </div>
-              <div class="card">
                 <div style="font-weight:900; letter-spacing:.02em">Infos</div>
                 <div class="muted" id="infoLine">Système prêt.</div>
               </div>
@@ -976,8 +1041,8 @@
                 <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="">
               </div>
               <div>
-                <h3>Marshal Service</h3>
-                <p>Tablette opérationnelle • Accès interne</p>
+                <h3>Tablette sécurisée</h3>
+                <p>Accès interne</p>
               </div>
             </div>
             <div class="start-search">
@@ -1000,7 +1065,19 @@
                 <span class="tile-icon">🔒</span>
                 <span>Verrouiller</span>
               </button>
+              <button class="start-tile" type="button" data-start-app="poweroff">
+                <span class="tile-icon">⏻</span>
+                <span>Éteindre</span>
+              </button>
             </div>
+          </div>
+
+          <div class="calendar-modal" id="calendarModal" role="dialog" aria-label="Calendrier">
+            <header>
+              <span>Calendrier</span>
+              <button type="button" id="calendarClose">✕</button>
+            </header>
+            <div id="calendarGrid"></div>
           </div>
 
         </div>
@@ -1130,6 +1207,10 @@ function tickClock(){
   const days = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
   const months = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
   $("#dateLine").textContent = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  const lockTime = $("#lockTime");
+  const lockDate = $("#lockDate");
+  if (lockTime) lockTime.textContent = `${hh}:${mm}`;
+  if (lockDate) lockDate.textContent = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 tickClock(); setInterval(tickClock, 30000);
 
@@ -1167,6 +1248,16 @@ function renderCalendar(){
 }
 
 renderCalendar();
+
+const calendarModal = $("#calendarModal");
+const calendarClose = $("#calendarClose");
+if (calendarModal && calendarClose) {
+  $("#clockBtn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    calendarModal.classList.toggle("show");
+  });
+  calendarClose.addEventListener("click", () => calendarModal.classList.remove("show"));
+}
 
 const powerBtn = $("#powerBtn");
 const powerLed = $("#powerLed");
@@ -1367,6 +1458,9 @@ document.addEventListener("click", (e)=>{
   if(startMenu && !startMenu.contains(e.target) && !$("#startBtn").contains(e.target)) {
     startMenu.classList.remove("show");
   }
+  if (calendarModal && !calendarModal.contains(e.target) && !$("#clockBtn").contains(e.target)) {
+    calendarModal.classList.remove("show");
+  }
 });
 
 /* ---- toggles & sliders ---- */
@@ -1418,9 +1512,8 @@ SFX.setVolume(state.volume);
 function lock(){
   try{SFX.close();}catch(e){}
   $("#desktop").classList.add("hidden");
-  $("#login").classList.remove("hidden");
-  $("#login").classList.add("fade");
-  setLoginStatus("Session verrouillée");
+  $("#lockScreen").classList.remove("hidden");
+  $("#lockScreen").classList.add("fade");
 }
 function logout(){
   try{SFX.close();}catch(e){}
@@ -1454,9 +1547,35 @@ $$("[data-start-app]").forEach((btn) => {
       lock();
       return;
     }
+    if (target === "poweroff") {
+      $("#desktop").classList.add("hidden");
+      $("#login").classList.add("hidden");
+      $("#lockScreen").classList.add("hidden");
+      $("#powerScreen").classList.remove("hidden");
+      return;
+    }
     openApp(target);
   });
 });
+
+const lockScreen = $("#lockScreen");
+if (lockScreen) {
+  lockScreen.addEventListener("touchstart", (event) => {
+    lockScreen.dataset.touchStart = String(event.touches[0].clientY);
+  });
+  lockScreen.addEventListener("touchend", (event) => {
+    const startY = Number(lockScreen.dataset.touchStart || 0);
+    const endY = event.changedTouches[0].clientY;
+    if (startY - endY > 80) {
+      lockScreen.classList.add("hidden");
+      $("#login").classList.remove("hidden");
+    }
+  });
+  lockScreen.addEventListener("wheel", () => {
+    lockScreen.classList.add("hidden");
+    $("#login").classList.remove("hidden");
+  });
+}
 
 /* ---- icon dragging ---- */
 const deskArea = $("#deskArea");
