@@ -1917,17 +1917,17 @@
 
 
 /* ===== SecureMsg window full-bleed (fix scroll/space) ===== */
-.window[data-app="securemsg"] .content{
+.window[data-app="telegram"] .content{
   padding:0 !important;
   overflow:hidden !important;
 }
-.window[data-app="securemsg"] .content > *{
+.window[data-app="telegram"] .content > *{
   height:100% !important;
 }
 
 
 /* ===== HARD LAYOUT FIX: Securemsg window must not scroll/pad (prevents composer collapse) ===== */
-.window[data-app="securemsg"] .content{
+.window[data-app="telegram"] .content{
   padding:0 !important;
   overflow:hidden !important;
   display:flex !important;
@@ -1935,7 +1935,7 @@
   height:100% !important;
   min-height:0 !important;
 }
-.window[data-app="securemsg"] .content > .secure-msg{
+.window[data-app="telegram"] .content > .secure-msg{
   flex:1 1 auto !important;
   min-height:0 !important;
   height:100% !important;
@@ -1967,14 +1967,14 @@
 .window .content{min-height:0;}
 
 /* Ensure shadow-based messenger fills the window and doesn't inherit grid from .secure-msg */
-.secure-msg.imsg{
+.secure-msg.telegram{
   display:flex !important;
   flex-direction:column;
   width:100%;
   height:100%;
-  min-height:0;
+  min-height:0 !important;
 }
-.secure-msg.imsg .imsg-host{
+.secure-msg.telegram .tg-host{
   flex:1 1 auto;
   min-height:0;
   width:100%;
@@ -2084,11 +2084,11 @@
               <span>Agenda</span>
             </div>
 
-            <div class="app-icon" data-app="securemsg" style="left:18px; top:360px;">
+            <div class="app-icon" data-app="telegram" style="left:18px; top:360px;">
               <div class="tile" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M4 6h16v10H7l-3 3V6Z"/><path d="M8 10h8"/><path d="M8 13h5"/></svg>
               </div>
-              <span>Messagerie</span>
+              <span>Telegram</span>
             </div>
           </div>
 
@@ -2216,9 +2216,9 @@
                 <span class="tile-icon">🌐</span>
                 <span>Intranet</span>
               </button>
-              <button class="start-tile" type="button" data-start-app="securemsg">
+              <button class="start-tile" type="button" data-start-app="telegram">
                 <span class="tile-icon">🛰️</span>
-                <span>Messagerie</span>
+                <span>Telegram</span>
               </button>
               <button class="start-tile" type="button" data-start-app="lock">
                 <span class="tile-icon">🔒</span>
@@ -2354,7 +2354,11 @@ function showNotification(sender, text, scopeValue, recipientValue){
   if(!notify) return;
   const title = $("#notifyTitle");
   const meta = $("#notifyMeta");
-  const scopeLabel = scopeValue === "private" ? `Privé → ${recipientValue}` : "Global";
+  const scopeLabel = scopeValue === "private"
+    ? `Privé → ${recipientValue}`
+    : scopeValue === "group"
+      ? `Groupe → ${recipientValue}`
+      : "Global";
   if (title) title.textContent = `${sender} • ${text.slice(0, 36)}${text.length > 36 ? "…" : ""}`;
   if (meta) meta.textContent = scopeLabel;
   notify.classList.add("show");
@@ -3993,11 +3997,11 @@ function embedApp(url, title){
   return wrap;
 }
 
-const SECURE_MESSAGES_KEY = "marshal.secure.messages";
+const TELEGRAM_MESSAGES_KEY = "marshal.telegram.messages";
 
-function loadSecureMessages(){
+function loadTelegramMessages(){
   try{
-    const raw = localStorage.getItem(SECURE_MESSAGES_KEY);
+    const raw = localStorage.getItem(TELEGRAM_MESSAGES_KEY);
     const data = raw ? JSON.parse(raw) : [];
     return Array.isArray(data) ? data : [];
   }catch(e){
@@ -4005,20 +4009,30 @@ function loadSecureMessages(){
   }
 }
 
-function saveSecureMessages(messages){
-  localStorage.setItem(SECURE_MESSAGES_KEY, JSON.stringify(messages));
+function saveTelegramMessages(messages){
+  localStorage.setItem(TELEGRAM_MESSAGES_KEY, JSON.stringify(messages));
 }
 
-function formatSecureTimestamp(ts){
+function formatTelegramTime(ts){
   const d = new Date(ts);
-  return d.toLocaleString("fr-FR", {hour:"2-digit", minute:"2-digit", day:"2-digit", month:"2-digit"});
+  return d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
 }
 
 function normalizeName(value){
   return (value || "").trim().toLowerCase();
 }
 
-const SECURE_AGENTS = [
+function formatTelegramDay(ts){
+  const d = new Date(ts);
+  return d.toLocaleDateString("fr-FR",{weekday:"long", day:"2-digit", month:"long"});
+}
+
+const TELEGRAM_CONTACTS = [
+  "Groupe opérationnel",
+  "Scot Jhonson",
+  "Alex Ace",
+  "Franck Harris",
+  "Johnson Witerson",
   "John Fisheer",
   "Claudas",
   "Marquis Hines",
@@ -4036,10 +4050,9 @@ const SECURE_AGENTS = [
 
 
 
-function secureMessengerApp(){
-  // Shadow-DOM iMessage rebuild (isolated, no CSS conflicts)
+function telegramApp(){
   const host = document.createElement("div");
-  host.className = "secure-msg imsg-host";
+  host.className = "tg-host";
   host.style.height = "100%";
   host.style.minHeight = "0";
 
@@ -4053,40 +4066,33 @@ function secureMessengerApp(){
       height:100%;
       min-height:0;
       display:flex;
-      border-radius:20px;
+      border-radius:18px;
       overflow:hidden;
-      background: #f2f2f7;
-      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-      color: #111827;
-      border:1px solid rgba(0,0,0,.08);
+      background: #f6f7fb;
+      font-family: "Roboto", system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+      color:#111827;
+      border:1px solid rgba(15,23,42,.08);
     }
     .sidebar{
-      width: 320px;
-      min-width: 280px;
-      max-width: 360px;
+      width:320px;
+      min-width:260px;
+      max-width:360px;
       display:flex;
       flex-direction:column;
       min-height:0;
-      background:
-        linear-gradient(180deg, #fbfbfd, #f2f2f7);
-      border-right:1px solid rgba(0,0,0,.08);
+      background: #f0f2f7;
+      border-right:1px solid rgba(15,23,42,.08);
     }
     .sbTop{
-      padding:10px 12px 8px;
+      padding:12px 14px 10px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      backdrop-filter: blur(16px);
-      background: rgba(250,250,252,.75);
-      border-bottom:1px solid rgba(0,0,0,.06);
+      background: #ffffff;
+      border-bottom:1px solid rgba(15,23,42,.08);
     }
     .sbTitle{display:flex; align-items:center; gap:10px; min-width:0;}
-    .wifiDot{
-      width:10px; height:10px; border-radius:3px;
-      background: #34c759;
-      box-shadow: 0 0 12px rgba(52,199,89,.45);
-    }
     .sbTitle strong{
       font-size:15px;
       font-weight:800;
@@ -4095,37 +4101,46 @@ function secureMessengerApp(){
       overflow:hidden;
       text-overflow:ellipsis;
     }
+    .tgBadge{
+      width:30px;height:30px;border-radius:10px;
+      display:grid;place-items:center;
+      background: rgba(42,171,238,.16);
+      color:#2aabee;
+      font-weight:900;
+    }
     .sbActions{display:flex; gap:8px;}
     .iconBtn{
       width:32px; height:32px; border-radius:10px;
-      border:1px solid rgba(0,0,0,.12);
-      background: rgba(255,255,255,.7);
-      color: rgba(15,23,42,.9);
+      border:1px solid rgba(15,23,42,.12);
+      background:#fff;
+      color:#0f172a;
       cursor:pointer;
       display:grid;
       place-items:center;
       user-select:none;
     }
-    .iconBtn:hover{border-color: rgba(10,132,255,.45)}
+    .iconBtn:hover{border-color: rgba(42,171,238,.6)}
     .search{
       padding:10px 12px 12px;
-      border-bottom:1px solid rgba(0,0,0,.05);
+      border-bottom:1px solid rgba(15,23,42,.06);
     }
     .search input{
       width:100%;
-      padding:9px 10px;
+      padding:9px 12px;
       border-radius:12px;
-      border:1px solid rgba(0,0,0,.08);
-      background: #e9e9ed;
-      color: #111827;
+      border:1px solid rgba(15,23,42,.08);
+      background:#fff;
+      color:#0f172a;
       outline:none;
       font-size:13px;
     }
-    .search input::placeholder{color: rgba(60,60,67,.6)}
+    .search input::placeholder{color: rgba(15,23,42,.5)}
     .list{
       overflow:auto;
       min-height:0;
       padding:8px;
+      display:grid;
+      gap:8px;
     }
     .row{
       width:100%;
@@ -4134,36 +4149,40 @@ function secureMessengerApp(){
       padding:10px;
       border-radius:14px;
       border:1px solid transparent;
-      background: rgba(255,255,255,.9);
+      background: #fff;
       cursor:pointer;
       text-align:left;
       color: inherit;
     }
-    .row:hover{background: rgba(242,242,247,.9)}
+    .row:hover{background: #eef4ff}
     .row.active{
-      background: rgba(10,132,255,.14);
-      border-color: rgba(10,132,255,.25);
+      background: rgba(42,171,238,.18);
+      border-color: rgba(42,171,238,.35);
     }
     .avatar{
-      width:42px; height:42px; border-radius:999px;
-      background: radial-gradient(circle at 30% 30%, #ffffff, rgba(10,132,255,.12));
-      border:1px solid rgba(0,0,0,.08);
+      width:42px; height:42px; border-radius:14px;
+      background: rgba(42,171,238,.16);
+      border:1px solid rgba(42,171,238,.2);
       display:grid; place-items:center;
       font-weight:800; font-size:13px;
-      position:relative;
       flex:0 0 auto;
+      color:#0f172a;
+      position:relative;
     }
-    .badge{
-      position:absolute; right:-2px; top:-2px;
-      width:10px; height:10px; border-radius:50%;
-      background:#34c759;
-      border:2px solid rgba(0,0,0,.75);
+    .tag{
+      position:absolute; right:-4px; top:-4px;
+      background:#2aabee;
+      color:#fff;
+      font-size:9px;
+      font-weight:700;
+      padding:2px 4px;
+      border-radius:8px;
     }
     .meta{min-width:0; flex:1 1 auto; display:grid; gap:4px;}
     .topline{display:flex; justify-content:space-between; gap:8px; align-items:center;}
     .name{font-weight:800; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .time{font-size:11px; color: rgba(60,60,67,.6); flex:0 0 auto;}
-    .preview{font-size:12px; color: rgba(60,60,67,.72); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .time{font-size:11px; color: rgba(15,23,42,.55); flex:0 0 auto;}
+    .preview{font-size:12px; color: rgba(15,23,42,.6); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
     .thread{
       flex:1 1 auto;
@@ -4171,27 +4190,24 @@ function secureMessengerApp(){
       min-height:0;
       display:flex;
       flex-direction:column;
-      background:
-        radial-gradient(circle at 30% 0%, rgba(10,132,255,.08), transparent 55%),
-        linear-gradient(180deg, #f9f9fb, #f2f2f7);
+      background: linear-gradient(180deg, #f9fbff, #edf2f9);
     }
     .thTop{
-      padding:10px 12px;
+      padding:12px 16px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      backdrop-filter: blur(18px);
-      background: rgba(250,250,252,.78);
-      border-bottom:1px solid rgba(0,0,0,.06);
+      background:#fff;
+      border-bottom:1px solid rgba(15,23,42,.08);
     }
     .leftTop{display:flex; align-items:center; gap:10px; min-width:0;}
     .back{
       display:none;
       width:34px; height:34px;
       border-radius:12px;
-      border:1px solid rgba(0,0,0,.12);
-      background: rgba(255,255,255,.75);
+      border:1px solid rgba(15,23,42,.12);
+      background: #fff;
       color: rgba(15,23,42,.9);
       cursor:pointer;
       place-items:center;
@@ -4201,7 +4217,7 @@ function secureMessengerApp(){
       font-weight:900; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
     .titleBlock .sub{
-      font-size:11px; color: rgba(60,60,67,.6);
+      font-size:11px; color: rgba(15,23,42,.55);
       letter-spacing:.12em; text-transform:uppercase;
     }
     .actions{display:flex; gap:8px;}
@@ -4209,7 +4225,7 @@ function secureMessengerApp(){
       flex:1 1 auto;
       min-height:0;
       overflow:auto;
-      padding:14px 14px 10px;
+      padding:16px;
       display:flex;
       flex-direction:column;
       gap:10px;
@@ -4217,11 +4233,11 @@ function secureMessengerApp(){
     .day{
       align-self:center;
       font-size:11px;
-      color: rgba(60,60,67,.6);
+      color: rgba(15,23,42,.55);
       padding:6px 10px;
       border-radius:999px;
-      background: rgba(229,229,234,.8);
-      border:1px solid rgba(0,0,0,.06);
+      background: rgba(255,255,255,.75);
+      border:1px solid rgba(15,23,42,.08);
       margin:2px 0 6px;
     }
     .msg{max-width:78%; display:flex; flex-direction:column; gap:4px;}
@@ -4234,29 +4250,28 @@ function secureMessengerApp(){
       line-height:1.35;
       white-space:pre-wrap;
       word-break:break-word;
-      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+      box-shadow: 0 10px 22px rgba(15,23,42,.08);
     }
     .in .bubble{
-      background: #e5e5ea;
-      border:1px solid rgba(0,0,0,.05);
-      color: #111827;
+      background: #fff;
+      border:1px solid rgba(15,23,42,.08);
+      color: #0f172a;
     }
     .out .bubble{
-      background: linear-gradient(180deg, #0a84ff, #007aff);
-      border:1px solid rgba(0,0,0,.05);
+      background: linear-gradient(180deg, #2aabee, #209dd9);
+      border:1px solid rgba(15,23,42,.08);
       color: #fff;
     }
     .stamp{
       font-size:11px;
-      color: rgba(60,60,67,.6);
+      color: rgba(15,23,42,.5);
       padding:0 4px;
     }
     .out .stamp{color: rgba(15,23,42,.5);}
     .composeWrap{
-      padding:10px 12px 12px;
-      border-top:1px solid rgba(0,0,0,.06);
-      background: rgba(250,250,252,.8);
-      backdrop-filter: blur(18px);
+      padding:12px 14px;
+      border-top:1px solid rgba(15,23,42,.08);
+      background: #fff;
     }
     .compose{
       display:flex;
@@ -4265,27 +4280,27 @@ function secureMessengerApp(){
     }
     .pillBtn{
       width:36px; height:36px;
-      border-radius:999px;
-      border:1px solid rgba(0,0,0,.12);
-      background: rgba(255,255,255,.75);
+      border-radius:12px;
+      border:1px solid rgba(15,23,42,.12);
+      background: #f1f5f9;
       display:grid; place-items:center;
       cursor:pointer;
       user-select:none;
-      color: rgba(15,23,42,.9);
+      color: rgba(15,23,42,.8);
       flex:0 0 auto;
     }
-    .pillBtn:hover{border-color: rgba(10,132,255,.45)}
+    .pillBtn:hover{border-color: rgba(42,171,238,.6)}
     textarea{
       flex:1 1 auto;
       min-width:0;
       max-width:100%;
-      height:38px;
-      max-height:132px;
-      padding:9px 12px;
-      border-radius:18px;
-      border:1px solid rgba(0,0,0,.12);
-      background: #fff;
-      color: #111827;
+      height:40px;
+      max-height:140px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(15,23,42,.12);
+      background: #f8fafc;
+      color: #0f172a;
       outline:none;
       font-size:14px;
       line-height:1.35;
@@ -4293,12 +4308,12 @@ function secureMessengerApp(){
       overflow:hidden;
       font-family:inherit;
     }
-    textarea::placeholder{color: rgba(60,60,67,.6)}
+    textarea::placeholder{color: rgba(15,23,42,.5)}
     .send{
       width:40px; height:40px;
-      border-radius:999px;
+      border-radius:12px;
       border:none;
-      background: rgba(0,122,255,1);
+      background: #2aabee;
       color:white;
       font-weight:900;
       cursor:pointer;
@@ -4317,7 +4332,7 @@ function secureMessengerApp(){
     }
     .list::-webkit-scrollbar,.log::-webkit-scrollbar{width:10px}
     .list::-webkit-scrollbar-thumb,.log::-webkit-scrollbar-thumb{
-      background: rgba(0,0,0,.12);
+      background: rgba(15,23,42,.12);
       border-radius:999px;
       border:3px solid rgba(0,0,0,0);
       background-clip: padding-box;
@@ -4330,11 +4345,11 @@ function secureMessengerApp(){
     <aside class="sidebar" aria-label="Conversations">
       <div class="sbTop">
         <div class="sbTitle">
-          <span class="wifiDot" title="Connecté"></span>
-          <strong>Messages</strong>
+          <span class="tgBadge">TG</span>
+          <strong>Telegram</strong>
         </div>
         <div class="sbActions">
-          <button class="iconBtn" data-act="new" title="Nouveau">✎</button>
+          <button class="iconBtn" data-act="new" title="Nouveau">＋</button>
           <button class="iconBtn" data-act="info" title="Infos">ⓘ</button>
         </div>
       </div>
@@ -4350,13 +4365,13 @@ function secureMessengerApp(){
           <button class="back" type="button" aria-label="Retour">‹</button>
           <div class="titleBlock">
             <div class="title" data-title>—</div>
-            <div class="sub">iMessage</div>
+            <div class="sub" data-scope>Privé</div>
           </div>
         </div>
         <div class="actions">
           <button class="iconBtn" data-act="call" title="Appel">📞</button>
           <button class="iconBtn" data-act="video" title="Vidéo">🎥</button>
-          <button class="iconBtn" data-act="lock" title="Sécurité">🔒</button>
+          <button class="iconBtn" data-act="more" title="Options">⋯</button>
         </div>
       </div>
 
@@ -4364,10 +4379,10 @@ function secureMessengerApp(){
 
       <div class="composeWrap">
         <div class="compose">
-          <button class="pillBtn" type="button" data-act="plus" title="Plus">+</button>
-          <button class="pillBtn" type="button" data-act="cam" title="Caméra">📷</button>
-          <textarea rows="1" placeholder="iMessage" aria-label="iMessage"></textarea>
-          <button class="send" type="button" disabled aria-label="Envoyer">↑</button>
+          <button class="pillBtn" type="button" data-act="plus" title="Plus">＋</button>
+          <button class="pillBtn" type="button" data-act="clip" title="Joindre">📎</button>
+          <textarea rows="1" placeholder="Message" aria-label="Message"></textarea>
+          <button class="send" type="button" disabled aria-label="Envoyer">➤</button>
         </div>
       </div>
     </section>
@@ -4375,70 +4390,32 @@ function secureMessengerApp(){
 
   shadow.append(style, root);
 
-  const SECURE_MESSAGES_KEY = "marshal.secure.messages";
-  const load = () => {
-    try{
-      const raw = localStorage.getItem(SECURE_MESSAGES_KEY);
-      const data = raw ? JSON.parse(raw) : [];
-      return Array.isArray(data) ? data : [];
-    }catch(e){ return []; }
-  };
-  const save = (arr) => localStorage.setItem(SECURE_MESSAGES_KEY, JSON.stringify(arr));
-
-  const normalizeName = (v)=> (v||"").trim().toLowerCase();
-  const formatTime = (ts)=>{
-    const d = new Date(ts);
-    return d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-  };
-  const formatDay = (ts)=>{
-    const d = new Date(ts);
-    return d.toLocaleDateString("fr-FR",{weekday:"long", day:"2-digit", month:"long"});
-  };
-
-  const contacts = [
-    "Groupe opérationnel",
-    "Scot Jhonson",
-    "Alex Ace",
-    "Franck Harris",
-    "Johnson Witerson",
-    "John Fisheer",
-    "Marquis Hines",
-    "Alexy Peterson",
-    "Matthew Tuccon",
-    "Jackson Stanton",
-    "Ethan Davis",
-    "Rowan Sullivan",
-    "Bryan O'Connor",
-    "Jay Crooks",
-    "Davis Harper",
-    "Perceval",
-    "John Labour"
-  ];
+  const messages = loadTelegramMessages();
 
   const els = {
     app: root,
     list: root.querySelector(".list"),
     search: root.querySelector(".search input"),
     title: root.querySelector("[data-title]"),
+    scope: root.querySelector("[data-scope]"),
     log: root.querySelector(".log"),
     back: root.querySelector(".back"),
     ta: root.querySelector("textarea"),
     send: root.querySelector(".send")
   };
 
-  let messages = load();
-  let active = contacts[0];
+  let active = TELEGRAM_CONTACTS[0];
 
   const initials = (name)=>{
     const parts = (name||"").split(/\s+/).filter(Boolean);
     const ini = parts.slice(0,2).map(p=>p[0]).join("").toUpperCase();
-    return ini || "MS";
+    return ini || "TG";
   };
 
   const convoFor = (contact)=>{
     const ck = normalizeName(contact);
     return messages.filter(m=>{
-      if(contact === "Groupe opérationnel") return m.scope === "global";
+      if(contact === "Groupe opérationnel") return m.scope === "group";
       if(m.scope !== "private") return false;
       const byRec = normalizeName(m.recipient) === ck;
       const bySender = normalizeName(m.name) === ck;
@@ -4454,17 +4431,18 @@ function secureMessengerApp(){
   const renderList = ()=>{
     const q = normalizeName(els.search.value);
     els.list.innerHTML = "";
-    contacts.filter(c=>normalizeName(c).includes(q)).forEach(c=>{
+    TELEGRAM_CONTACTS.filter(c=>normalizeName(c).includes(q)).forEach(c=>{
       const last = lastFor(c);
       const row = document.createElement("button");
       row.type="button";
       row.className = "row" + (c===active ? " active" : "");
+      const tag = c === "Groupe opérationnel" ? "<span class='tag'>GROUPE</span>" : "";
       row.innerHTML = `
-        <div class="avatar" aria-hidden="true">${initials(c)}<span class="badge"></span></div>
+        <div class="avatar" aria-hidden="true">${initials(c)}${tag}</div>
         <div class="meta">
           <div class="topline">
             <div class="name">${c}</div>
-            <div class="time">${last ? formatTime(last.ts) : ""}</div>
+            <div class="time">${last ? formatTelegramTime(last.ts) : ""}</div>
           </div>
           <div class="preview">${last ? (last.text || "") : "Aucun message"}</div>
         </div>
@@ -4481,6 +4459,7 @@ function secureMessengerApp(){
 
   const renderLog = ()=>{
     els.title.textContent = active;
+    els.scope.textContent = active === "Groupe opérationnel" ? "GROUPE" : "Privé";
     els.log.innerHTML = "";
     const conv = convoFor(active);
     if(!conv.length){
@@ -4493,7 +4472,7 @@ function secureMessengerApp(){
     }
     let lastDay = "";
     conv.forEach(m=>{
-      const dayKey = formatDay(m.ts);
+      const dayKey = formatTelegramDay(m.ts);
       if(dayKey !== lastDay){
         lastDay = dayKey;
         const d = document.createElement("div");
@@ -4504,7 +4483,7 @@ function secureMessengerApp(){
       const isOut = normalizeName(m.name) === normalizeName(state.username);
       const msg = document.createElement("div");
       msg.className = "msg " + (isOut ? "out" : "in");
-      msg.innerHTML = `<div class="bubble"></div><div class="stamp">${formatTime(m.ts)}</div>`;
+      msg.innerHTML = `<div class="bubble"></div><div class="stamp">${formatTelegramTime(m.ts)}</div>`;
       msg.querySelector(".bubble").textContent = m.text || "";
       els.log.append(msg);
     });
@@ -4518,7 +4497,7 @@ function secureMessengerApp(){
 
   const autosize = ()=>{
     els.ta.style.height = "auto";
-    els.ta.style.height = Math.min(els.ta.scrollHeight, 132) + "px";
+    els.ta.style.height = Math.min(els.ta.scrollHeight, 140) + "px";
   };
 
   const addMessage = (name, text, scope, recipient)=>{
@@ -4531,7 +4510,7 @@ function secureMessengerApp(){
       ts: Date.now()
     };
     messages.push(entry);
-    save(messages);
+    saveTelegramMessages(messages);
     try{ showNotification(name, text, scope, recipient); }catch(e){}
   };
 
@@ -4539,8 +4518,8 @@ function secureMessengerApp(){
     const txt = (els.ta.value || "").trim();
     if(!txt) return;
     const name = state.username !== "—" ? state.username : "Agent";
-    const scope = active === "Groupe opérationnel" ? "global" : "private";
-    const recipient = scope === "global" ? "Tous les agents" : active;
+    const scope = active === "Groupe opérationnel" ? "group" : "private";
+    const recipient = active;
     addMessage(name, txt, scope, recipient);
     els.ta.value = "";
     autosize();
@@ -4570,16 +4549,10 @@ function secureMessengerApp(){
 
   root.querySelectorAll("[data-act]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
-      const a = btn.getAttribute("data-act");
-      if(a === "plus" || a === "cam" || a === "new" || a === "info"){
-        try{ toast("Fonction iMessage"); }catch(e){}
-        return;
-      }
-      try{ toast("Canal sécurisé"); }catch(e){}
+      try{ toast("Fonction Telegram"); }catch(e){}
     });
   });
 
-  // default active
   active = "Groupe opérationnel";
   renderAll();
   autosize();
@@ -4650,8 +4623,8 @@ function openApp(appId){
     const win = createWindow({appId, title:"Intranet", subtitle:"Marshal Service", contentNode: embedApp("https://dcso.forumpro.fr", "Intranet Marshal Service"), onClose});
     appWindows.set(appId, win);
   }
-  if(appId==="securemsg"){
-    const win = createWindow({appId, title:"Messagerie", subtitle:"Chiffrement AES-256", contentNode: (function(){ const c=document.createElement("div"); c.className="secure-msg imsg"; c.appendChild(secureMessengerApp()); return c; })(), onClose});
+  if(appId==="telegram"){
+    const win = createWindow({appId, title:"Telegram", subtitle:"Messagerie sécurisée", contentNode: (function(){ const c=document.createElement("div"); c.className="secure-msg telegram"; c.appendChild(telegramApp()); return c; })(), onClose});
     appWindows.set(appId, win);
   }
 }
@@ -4681,12 +4654,12 @@ function updateWeather(){
 updateWeather();
 
 window.addEventListener("storage", (event) => {
-  if (event.key !== SECURE_MESSAGES_KEY || !event.newValue) return;
+  if (event.key !== TELEGRAM_MESSAGES_KEY || !event.newValue) return;
   try{
     const entries = JSON.parse(event.newValue);
     if (!Array.isArray(entries) || !entries.length) return;
     const last = entries[entries.length - 1];
-    showNotification(last.name || "Agent", last.text || "", last.scope || "global", last.recipient || "Tous les agents");
+    showNotification(last.name || "Agent", last.text || "", last.scope || "group", last.recipient || "Groupe opérationnel");
   }catch(e){}
 });
 </script>
