@@ -758,10 +758,10 @@
     }
     .secure-msg{
       display:grid;
-      grid-template-columns: 240px 1fr;
+      grid-template-columns: 260px 1fr;
       gap:12px;
       height:100%;
-      min-height: 360px;
+      min-height: 380px;
     }
     .secure-msg__sidebar{
       display:grid;
@@ -771,6 +771,7 @@
       border-radius: 14px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(6,8,14,.92);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
     }
     .secure-msg__sidebar h3{
       margin:0;
@@ -801,7 +802,8 @@
       color:rgba(255,255,255,.85);
       padding:8px 10px;
       display:grid;
-      gap:4px;
+      grid-template-columns: auto 1fr;
+      gap:10px;
       cursor:pointer;
       text-align:left;
     }
@@ -809,6 +811,36 @@
       border-color: rgba(58,210,159,.35);
       background: rgba(12,20,20,.8);
       color:#e9fff5;
+    }
+    .secure-msg__avatar{
+      width:34px;
+      height:34px;
+      border-radius: 10px;
+      background: rgba(58,210,159,.16);
+      border:1px solid rgba(58,210,159,.22);
+      display:grid;
+      place-items:center;
+      font-size:.75rem;
+      font-weight:700;
+      color:#c5ffee;
+      letter-spacing:.06em;
+      position:relative;
+    }
+    .secure-msg__status{
+      position:absolute;
+      right:-3px;
+      bottom:-3px;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#31d39c;
+      border:2px solid rgba(6,8,14,.9);
+      box-shadow:0 0 8px rgba(49,211,156,.5);
+    }
+    .secure-msg__contact-body{
+      display:grid;
+      gap:4px;
+      min-width:0;
     }
     .secure-msg__contact-name{
       font-size:.78rem;
@@ -855,6 +887,26 @@
       letter-spacing:.1em;
       text-transform:uppercase;
     }
+    .secure-msg__chat-actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .secure-msg__icon-btn{
+      width:34px;
+      height:34px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(10,14,20,.85);
+      display:grid;
+      place-items:center;
+      color:rgba(255,255,255,.8);
+      cursor:pointer;
+    }
+    .secure-msg__icon-btn:hover{
+      border-color: rgba(58,210,159,.35);
+      color:#e9fff5;
+    }
     .secure-msg__chat-self{
       font-size:.72rem;
       color:rgba(255,255,255,.6);
@@ -864,7 +916,7 @@
     .secure-msg__chat-log{
       border-radius: 14px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(8,10,16,.94);
+      background: linear-gradient(180deg, rgba(9,12,18,.96), rgba(7,10,16,.92));
       padding:12px;
       overflow:auto;
       display:grid;
@@ -888,11 +940,29 @@
       border:1px solid rgba(255,255,255,.08);
       color:#eaf6ff;
       box-shadow: 0 10px 24px rgba(0,0,0,.35);
+      position:relative;
+    }
+    .secure-msg__bubble::after{
+      content:"";
+      position:absolute;
+      left:-6px;
+      bottom:10px;
+      width:0;
+      height:0;
+      border-top:6px solid transparent;
+      border-bottom:6px solid transparent;
+      border-right:6px solid rgba(18,22,32,.92);
     }
     .secure-msg__message.outgoing .secure-msg__bubble{
       background: rgba(20,40,32,.95);
       border-color: rgba(58,210,159,.25);
       color:#eafff3;
+    }
+    .secure-msg__message.outgoing .secure-msg__bubble::after{
+      left:auto;
+      right:-6px;
+      border-right:none;
+      border-left:6px solid rgba(20,40,32,.95);
     }
     .secure-msg__time{
       font-size:.7rem;
@@ -912,7 +982,7 @@
     }
     .secure-msg__composer{
       display:grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr auto auto;
       gap:10px;
       align-items:end;
       padding:10px 12px;
@@ -934,6 +1004,28 @@
     .secure-msg__composer-actions{
       display:grid;
       gap:8px;
+    }
+    .secure-msg__send{
+      width:44px;
+      height:44px;
+      border-radius: 50%;
+      border:none;
+      background: linear-gradient(135deg, rgba(58,210,159,.9), rgba(41,154,120,.9));
+      color:#07150f;
+      display:grid;
+      place-items:center;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: 0 12px 24px rgba(58,210,159,.25);
+    }
+    .secure-msg__attach{
+      width:44px;
+      height:44px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(10,14,20,.85);
+      color:rgba(255,255,255,.75);
+      cursor:pointer;
     }
     @media (max-width: 860px){
       .secure-msg{
@@ -2926,11 +3018,6 @@ function renderTemplate(templateId) {
       if (field.maxLength && field.type !== 'textarea') {
         input.maxLength = field.maxLength;
       }
-
-      input.addEventListener('change', handleTemplateSelectChange);
-    } else {
-      input = document.createElement('input');
-      input.type = field.inputType || 'text';
     }
     input.autocomplete = 'off';
 
@@ -3176,9 +3263,24 @@ function secureMessengerApp(){
   const chatMeta = document.createElement("span");
   chatMeta.textContent = "AES-256 • TLS 1.3";
   chatTitle.append(chatName, chatMeta);
+  const chatActions = document.createElement("div");
+  chatActions.className = "secure-msg__chat-actions";
+  const callBtn = document.createElement("button");
+  callBtn.type = "button";
+  callBtn.className = "secure-msg__icon-btn";
+  callBtn.innerHTML = "📞";
+  const videoBtn = document.createElement("button");
+  videoBtn.type = "button";
+  videoBtn.className = "secure-msg__icon-btn";
+  videoBtn.innerHTML = "🎥";
+  const lockBtn = document.createElement("button");
+  lockBtn.type = "button";
+  lockBtn.className = "secure-msg__icon-btn";
+  lockBtn.innerHTML = "🔒";
   const chatSelf = document.createElement("div");
   chatSelf.className = "secure-msg__chat-self";
-  chatHeader.append(chatTitle, chatSelf);
+  chatActions.append(callBtn, videoBtn, lockBtn);
+  chatHeader.append(chatTitle, chatSelf, chatActions);
 
   const log = document.createElement("div");
   log.className = "secure-msg__chat-log";
@@ -3187,18 +3289,22 @@ function secureMessengerApp(){
   form.className = "secure-msg__composer";
   const messageField = document.createElement("textarea");
   messageField.placeholder = "Écrire un message…";
+  const attachBtn = document.createElement("button");
+  attachBtn.type = "button";
+  attachBtn.className = "secure-msg__attach";
+  attachBtn.innerHTML = "📎";
   const composerActions = document.createElement("div");
   composerActions.className = "secure-msg__composer-actions";
   const sendBtn = document.createElement("button");
   sendBtn.type = "submit";
-  sendBtn.className = "btn primary";
-  sendBtn.textContent = "Envoyer";
+  sendBtn.className = "secure-msg__send";
+  sendBtn.textContent = "➤";
   const saveBtn = document.createElement("button");
   saveBtn.type = "button";
   saveBtn.className = "btn";
   saveBtn.textContent = "Exporter";
   composerActions.append(sendBtn, saveBtn);
-  form.append(messageField, composerActions);
+  form.append(messageField, attachBtn, composerActions);
 
   main.append(chatHeader, log, form);
   wrap.append(sidebar, main);
@@ -3206,6 +3312,11 @@ function secureMessengerApp(){
   const contacts = ["Groupe opérationnel", ...SECURE_AGENTS];
   let activeContact = contacts[0];
   const messages = loadSecureMessages();
+  const getInitials = (name) => {
+    const parts = (name || "").trim().split(/\s+/);
+    const initials = parts.slice(0, 2).map((part) => part[0]).join("");
+    return initials.toUpperCase() || "MS";
+  };
 
   const getConversationMessages = (contact) => {
     const contactKey = normalizeName(contact);
@@ -3232,6 +3343,15 @@ function secureMessengerApp(){
         if (name === activeContact) button.classList.add("active");
         const convo = getConversationMessages(name);
         const last = convo[convo.length - 1];
+        const avatar = document.createElement("div");
+        avatar.className = "secure-msg__avatar";
+        avatar.textContent = getInitials(name);
+        const status = document.createElement("span");
+        status.className = "secure-msg__status";
+        avatar.append(status);
+
+        const body = document.createElement("div");
+        body.className = "secure-msg__contact-body";
         const label = document.createElement("div");
         label.className = "secure-msg__contact-name";
         const labelText = document.createElement("span");
@@ -3242,7 +3362,8 @@ function secureMessengerApp(){
         const preview = document.createElement("div");
         preview.className = "secure-msg__contact-preview";
         preview.textContent = last ? last.text : "Aucun message";
-        button.append(label, preview);
+        body.append(label, preview);
+        button.append(avatar, body);
         button.addEventListener("click", () => {
           activeContact = name;
           render();
@@ -3328,6 +3449,12 @@ function secureMessengerApp(){
   });
 
   search.addEventListener("input", renderContacts);
+  attachBtn.addEventListener("click", () => {
+    toast("Pièce jointe bloquée");
+  });
+  [callBtn, videoBtn, lockBtn].forEach((btn) => {
+    btn.addEventListener("click", () => toast("Canal sécurisé"));
+  });
   render();
 
   return wrap;
