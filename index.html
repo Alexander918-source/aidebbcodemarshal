@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>DCSO • Tablet OS</title>
+  <title>Marshal Service • Tablet OS</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/fLY8FVvB/BADGE-(1).png"/>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -272,6 +272,12 @@
       display:flex; align-items:center; gap:10px;
       min-width: 260px;
     }
+    .start-label{
+      font-weight:800;
+      letter-spacing:.03em;
+      color:rgba(255,255,255,.85);
+      font-size:.82rem;
+    }
     .start{
       width:34px;height:34px;border-radius:12px;
       display:grid; place-items:center;
@@ -373,6 +379,90 @@
     .slider{
       width:100%;
       accent-color: var(--gold);
+    }
+
+    /* Start menu */
+    .start-menu{
+      position:absolute;
+      left:12px;
+      bottom:64px;
+      width: 360px;
+      background: rgba(9,13,22,.92);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 20px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.65);
+      overflow:hidden;
+      display:none;
+      z-index:35;
+      backdrop-filter: blur(10px);
+    }
+    .start-menu.show{display:block; animation:fade .18s ease}
+    .start-header{
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .start-header .logo{
+      width:44px;height:44px;
+    }
+    .start-header h3{
+      margin:0;
+      font-family:Cinzel,serif;
+      font-size:1rem;
+      letter-spacing:.06em;
+    }
+    .start-header p{
+      margin:2px 0 0;
+      font-size:.78rem;
+      color:var(--muted);
+    }
+    .start-search{
+      padding:12px 16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .start-search input{
+      width:100%;
+      padding:.65rem .9rem;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(10,13,20,.62);
+      color:var(--text);
+    }
+    .start-apps{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:10px;
+      padding:12px 16px 16px;
+    }
+    .start-tile{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:10px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      transition: border-color .15s ease, transform .15s ease;
+    }
+    .start-tile:hover{
+      transform: translateY(-1px);
+      border-color: rgba(212,175,55,.35);
+    }
+    .start-tile .tile-icon{
+      width:34px;height:34px;
+      border-radius: 10px;
+      display:grid;
+      place-items:center;
+      background: rgba(12,16,26,.7);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .start-tile span{
+      font-size:.84rem;
+      font-weight:700;
+      color:rgba(255,255,255,.9);
     }
 
     /* Windows */
@@ -593,8 +683,8 @@
           <div class="logo" aria-hidden="true">
             <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="">
           </div>
-          <div class="power-title">DCSO TABLET</div>
-          <div class="power-subtitle">Appuyez pour allumer</div>
+          <div class="power-title">Marshal Service</div>
+          <div class="power-subtitle">Tablette sécurisée · Appuyez pour allumer</div>
           <button class="power-btn" id="powerBtn" type="button" aria-label="Allumer la tablette">
             <svg viewBox="0 0 24 24"><path d="M12 2v8"/><path d="M7.5 4.5a8 8 0 1 0 9 0"/></svg>
           </button>
@@ -606,11 +696,11 @@
         <div class="login-card">
           <div class="login-top">
             <div class="logo">
-              <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="DCSO"/>
+              <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="Marshal Service"/>
             </div>
             <div class="login-title">
-              <h1>Portail DCSO</h1>
-              <p>Poste opérationnel • Accès interne</p>
+              <h1>Portail Marshal Service</h1>
+              <p>Poste opérationnel • Accès interne sécurisé</p>
             </div>
           </div>
 
@@ -652,7 +742,7 @@
               <div class="tile" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0-9-9"/><path d="M3 12h18"/><path d="M12 3a12 12 0 0 1 0 18"/><path d="M12 3a12 12 0 0 0 0 18"/></svg>
               </div>
-              <span>DCSO</span>
+              <span>Intranet</span>
             </div>
 
             <div class="app-icon" data-app="agenda">
@@ -673,6 +763,7 @@
                 <path d="M4 6h16M4 12h16M4 18h10"/>
               </svg>
             </div>
+            <div class="start-label">Démarrer</div>
             <div class="userchip" title="Utilisateur connecté">
               <span style="opacity:.9">👮</span>
               <span>Connecté: <b id="userName">—</b></span>
@@ -691,7 +782,7 @@
           </div>
 
           <!-- Quick panel -->
-          <div class="panel" id="trayPanel" role="dialog" aria-label="Raccourcis">
+          <div class="panel" id="trayPanel" role="dialog" aria-label="Centre rapide">
             <header>
               <span>Centre rapide</span>
               <button type="button" data-close="tray">✕</button>
@@ -699,7 +790,7 @@
             <div class="body">
               <div class="row">
                 <div>
-                  <div style="font-weight:900; letter-spacing:.02em">Réseau</div>
+                  <div style="font-weight:900; letter-spacing:.02em">Réseau sécurisé</div>
                   <div class="muted" id="netLine">Wi‑Fi: connecté • IP: — • Ping: —</div>
                 </div>
                 <div class="pill" id="weatherPill">⛅  --°C</div>
@@ -759,6 +850,40 @@
                 <div style="font-weight:900; letter-spacing:.02em">Infos</div>
                 <div class="muted" id="infoLine">Système prêt.</div>
               </div>
+            </div>
+          </div>
+
+          <!-- Start menu -->
+          <div class="start-menu" id="startMenu" role="dialog" aria-label="Menu démarrer">
+            <div class="start-header">
+              <div class="logo" aria-hidden="true">
+                <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="">
+              </div>
+              <div>
+                <h3>Marshal Service</h3>
+                <p>Tablette opérationnelle • Accès interne</p>
+              </div>
+            </div>
+            <div class="start-search">
+              <input type="text" placeholder="Rechercher une application, un dossier..." aria-label="Rechercher">
+            </div>
+            <div class="start-apps">
+              <button class="start-tile" type="button" data-start-app="report">
+                <span class="tile-icon">🗂️</span>
+                <span>Templates</span>
+              </button>
+              <button class="start-tile" type="button" data-start-app="agenda">
+                <span class="tile-icon">📅</span>
+                <span>Agenda</span>
+              </button>
+              <button class="start-tile" type="button" data-start-app="dcso">
+                <span class="tile-icon">🌐</span>
+                <span>Intranet</span>
+              </button>
+              <button class="start-tile" type="button" data-start-app="lock">
+                <span class="tile-icon">🔒</span>
+                <span>Verrouiller</span>
+              </button>
             </div>
           </div>
 
@@ -998,6 +1123,9 @@ document.addEventListener("click", (e)=>{
   const insideClock = clock.contains(e.target) || $("#clockBtn").contains(e.target);
   if(!insideTray) tray.classList.remove("show");
   if(!insideClock) clock.classList.remove("show");
+  if(startMenu && !startMenu.contains(e.target) && !$("#startBtn").contains(e.target)) {
+    startMenu.classList.remove("show");
+  }
 });
 
 /* ---- toggles & sliders ---- */
@@ -1063,6 +1191,31 @@ function logout(){
 }
 $("#btnLock").addEventListener("click", lock);
 $("#btnLogout").addEventListener("click", logout);
+
+/* ---- start menu ---- */
+const startBtn = $("#startBtn");
+const startMenu = $("#startMenu");
+if (startBtn && startMenu) {
+  startBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    startMenu.classList.toggle("show");
+    $("#trayPanel").classList.remove("show");
+    $("#clockPanel").classList.remove("show");
+    try{SFX.click(540);}catch(e){}
+  });
+}
+
+$$("[data-start-app]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const target = btn.dataset.startApp;
+    startMenu?.classList.remove("show");
+    if (target === "lock") {
+      lock();
+      return;
+    }
+    openApp(target);
+  });
+});
 
 /* ---- windows system ---- */
 function bringToFront(win){
@@ -2300,7 +2453,7 @@ function openApp(appId){
     appWindows.set(appId, win);
   }
   if(appId==="dcso"){
-    const win = createWindow({appId, title:"DCSO", subtitle:"Forum", contentNode: embedApp("https://dcso.forumpro.fr", "Davidson County Sheriff Office"), onClose});
+    const win = createWindow({appId, title:"Intranet", subtitle:"Marshal Service", contentNode: embedApp("https://dcso.forumpro.fr", "Intranet Marshal Service"), onClose});
     appWindows.set(appId, win);
   }
 }
