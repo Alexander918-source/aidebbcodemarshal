@@ -340,6 +340,20 @@
     }
     .app-icon svg{width:26px;height:26px; fill:none; stroke:rgba(255,255,255,.9); stroke-width:1.8}
     .app-icon span{font-size:.78rem; text-align:center; line-height:1.15; color:rgba(255,255,255,.85)}
+    .agent-tag{
+      position:absolute;
+      left:18px;
+      bottom:18px;
+      font-size:.78rem;
+      color:rgba(255,255,255,.65);
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      z-index:3;
+    }
+    .agent-tag b{
+      color:rgba(255,255,255,.9);
+      font-weight:800;
+    }
 
     /* Taskbar */
     .taskbar{
@@ -935,6 +949,7 @@
           </div>
 
           <div class="toast" id="toast">Ouverture…</div>
+          <div class="agent-tag">Agent <span id="agentName">—</span></div>
         </div>
 
         <div class="taskbar">
@@ -1412,6 +1427,13 @@ function doLogin(){
     if(ok){
       state.username = user || "Utilisateur";
       $("#userName").textContent = state.username;
+      const agentName = $("#agentName");
+      if (agentName) {
+        const parts = state.username.split(" ").filter(Boolean);
+        const firstName = parts.shift() || "";
+        const rest = parts.join(" ");
+        agentName.innerHTML = `<b>${firstName}</b>${rest ? " " + rest : ""}`;
+      }
       setLoginStatus("Accès autorisé • Session active", true);
       try{try{SFX.open();}catch(e){}}catch(e){}
       $("#login").classList.add("hidden");
