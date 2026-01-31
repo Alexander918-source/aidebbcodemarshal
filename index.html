@@ -688,22 +688,28 @@
     }
 
     /* Windows */
-    .window{
-      position:absolute;
-      width: 680px;
-      height: 440px;
-      max-width: calc(100% - 26px);
-      max-height: calc(100% - 86px);
-      background: rgba(12,16,26,.92);
-      border:1px solid rgba(255,255,255,.14);
-      border-radius: 16px;
-      box-shadow: 0 30px 90px rgba(0,0,0,.7);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      transform: translateZ(0);
-      z-index: 10;
-    }
+.window{
+  position:absolute;
+  width: 680px;
+  height: 440px;
+  max-width: calc(100% - 26px);
+  max-height: calc(100% - 86px);
+  background: rgba(12,16,26,.92);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  box-shadow: 0 30px 90px rgba(0,0,0,.7);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transform: translateZ(0);
+  z-index: 10;
+  opacity:1;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.window.opening{
+  opacity:0;
+  transform: scale(.98);
+}
     .window.maximized{
       left: 12px !important;
       top: 12px !important;
@@ -2398,6 +2404,7 @@ function showNotification(sender, text, scopeValue, recipientValue){
   if(!notify) return;
   const title = $("#notifyTitle");
   const meta = $("#notifyMeta");
+  const icon = notify.querySelector(".notify__icon");
   const scopeLabel = scopeValue === "private"
     ? `Privé → ${recipientValue}`
     : scopeValue === "group"
@@ -2405,6 +2412,14 @@ function showNotification(sender, text, scopeValue, recipientValue){
       : "Global";
   if (title) title.textContent = `${sender} • ${text.slice(0, 36)}${text.length > 36 ? "…" : ""}`;
   if (meta) meta.textContent = scopeLabel;
+  if (icon) {
+    const parts = (sender || "").split(/\s+/).filter(Boolean);
+    const initials = parts.slice(0, 2).map(p=>p[0]).join("").toUpperCase() || "TG";
+    icon.textContent = initials;
+    icon.style.background = "rgba(42,171,238,.2)";
+    icon.style.borderRadius = "12px";
+    icon.style.padding = "6px 8px";
+  }
   notify.classList.add("show");
   if (notifyTimer) clearTimeout(notifyTimer);
   notifyTimer = setTimeout(()=>notify.classList.remove("show"), 2800);
@@ -2827,6 +2842,27 @@ document.addEventListener("keydown", (event) => {
 /* ---- icon dragging ---- */
 const deskArea = $("#deskArea");
 const iconsWrap = $("#icons");
+const ICON_POSITIONS_KEY = "marshal.icon.positions";
+function loadIconPositions(){
+  try{
+    const raw = localStorage.getItem(ICON_POSITIONS_KEY);
+    const data = raw ? JSON.parse(raw) : {};
+    return data && typeof data === "object" ? data : {};
+  }catch(e){
+    return {};
+  }
+}
+function saveIconPositions(map){
+  localStorage.setItem(ICON_POSITIONS_KEY, JSON.stringify(map));
+}
+const iconPositions = loadIconPositions();
+$$(".app-icon").forEach((icon) => {
+  const key = icon.dataset.app || "";
+  if (key && iconPositions[key]) {
+    icon.style.left = iconPositions[key].left;
+    icon.style.top = iconPositions[key].top;
+  }
+});
 const setIconEdit = (on)=>{
   if (!iconsWrap) return;
   iconsWrap.classList.toggle("icon-edit", on);
@@ -2877,6 +2913,13 @@ $$(".app-icon").forEach((icon) => {
 
   icon.addEventListener("pointerup", () => {
     icon.dataset.dragging = "false";
+    if (iconsWrap?.classList.contains("icon-edit") && icon.dataset.moved === "true") {
+      const key = icon.dataset.app || "";
+      if (key) {
+        iconPositions[key] = { left: icon.style.left, top: icon.style.top };
+        saveIconPositions(iconPositions);
+      }
+    }
   });
 });
 
@@ -2889,7 +2932,7 @@ function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 function createWindow({appId, title, subtitle, contentNode, onClose}){
   const desk = $("#deskArea");
   const win = document.createElement("div");
-  win.className = "window fade";
+  win.className = "window fade opening";
   if(appId) win.dataset.app = appId;
   win.style.left = "140px";
   win.style.top  = "90px";
@@ -2962,6 +3005,7 @@ function createWindow({appId, title, subtitle, contentNode, onClose}){
   bar.addEventListener("pointerup", ()=>dragging=false);
 
   desk.appendChild(win);
+  requestAnimationFrame(()=>win.classList.remove("opening"));
   return win;
 }
 
@@ -4062,6 +4106,8 @@ function embedApp(url, title){
 
 const TELEGRAM_MESSAGES_KEY = "marshal.telegram.messages";
 const TELEGRAM_UNREAD_KEY = "marshal.telegram.unread";
+const TELEGRAM_UNREAD_MAP_KEY = "marshal.telegram.unread.map";
+const TELEGRAM_GROUP = "Marchal Service";
 
 function loadTelegramMessages(){
   try{
@@ -4091,6 +4137,25 @@ function saveTelegramUnread(count){
   const next = Math.max(0, Number(count) || 0);
   localStorage.setItem(TELEGRAM_UNREAD_KEY, String(next));
   updateTelegramBadge(next);
+}
+
+function loadTelegramUnreadMap(){
+  try{
+    const raw = localStorage.getItem(TELEGRAM_UNREAD_MAP_KEY);
+    const data = raw ? JSON.parse(raw) : {};
+    return data && typeof data === "object" ? data : {};
+  }catch(e){
+    return {};
+  }
+}
+
+function saveTelegramUnreadMap(map){
+  localStorage.setItem(TELEGRAM_UNREAD_MAP_KEY, JSON.stringify(map));
+  const total = Object.values(map).reduce((acc, value)=>{
+    const num = Number(value) || 0;
+    return acc + (num > 0 ? num : 0);
+  }, 0);
+  saveTelegramUnread(total);
 }
 
 function updateTelegramBadge(count){
@@ -4123,7 +4188,7 @@ function formatTelegramDay(ts){
 }
 
 const TELEGRAM_CONTACTS = [
-  "Groupe opérationnel",
+  TELEGRAM_GROUP,
   "Scot Jhonson",
   "Alex Ace",
   "Franck Harris",
@@ -4214,6 +4279,27 @@ function telegramApp(){
       user-select:none;
     }
     .iconBtn:hover{border-color: rgba(42,171,238,.6)}
+    .filters{
+      display:flex;
+      gap:8px;
+      padding:10px 12px 0;
+    }
+    .filter-btn{
+      flex:1 1 auto;
+      padding:6px 8px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(226,232,240,.85);
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .filter-btn.active{
+      background: rgba(42,171,238,.2);
+      color:#e5f3ff;
+      border-color: rgba(42,171,238,.45);
+    }
     .search{
       padding:10px 12px 12px;
       border-bottom:1px solid rgba(15,23,42,.06);
@@ -4277,6 +4363,18 @@ function telegramApp(){
     .name{font-weight:800; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
     .time{font-size:11px; color: rgba(229,231,235,.6); flex:0 0 auto;}
     .preview{font-size:12px; color: rgba(229,231,235,.62); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .row-badge{
+      min-width:18px;
+      height:18px;
+      padding:0 6px;
+      border-radius:999px;
+      background:#ff3b30;
+      color:#fff;
+      font-size:10px;
+      font-weight:800;
+      display:grid;
+      place-items:center;
+    }
 
     .thread{
       flex:1 1 auto;
@@ -4452,6 +4550,11 @@ function telegramApp(){
           <button class="iconBtn" data-act="info" title="Infos">ⓘ</button>
         </div>
       </div>
+      <div class="filters" role="tablist" aria-label="Filtres">
+        <button class="filter-btn active" type="button" data-filter="all">Tout</button>
+        <button class="filter-btn" type="button" data-filter="private">Privé</button>
+        <button class="filter-btn" type="button" data-filter="group">Groupe</button>
+      </div>
       <div class="search">
         <input type="text" placeholder="Rechercher" aria-label="Rechercher">
       </div>
@@ -4485,6 +4588,7 @@ function telegramApp(){
   shadow.append(style, root);
 
   const messages = loadTelegramMessages();
+  const unreadMap = loadTelegramUnreadMap();
   updateTelegramBadge(loadTelegramUnread());
 
   const els = {
@@ -4500,6 +4604,7 @@ function telegramApp(){
   };
 
   let active = TELEGRAM_CONTACTS[0];
+  let activeFilter = "all";
 
   const initials = (name)=>{
     const parts = (name||"").split(/\s+/).filter(Boolean);
@@ -4516,7 +4621,7 @@ function telegramApp(){
   const convoFor = (contact)=>{
     const ck = normalizeName(contact);
     return messages.filter(m=>{
-      if(contact === "Groupe opérationnel") return m.scope === "group";
+      if(contact === TELEGRAM_GROUP) return m.scope === "group";
       if(m.scope !== "private") return false;
       const byRec = normalizeName(m.recipient) === ck;
       const bySender = normalizeName(m.name) === ck;
@@ -4537,16 +4642,27 @@ function telegramApp(){
       index,
       last: lastFor(name)
     })).sort((a,b)=>{
+      if (a.name === TELEGRAM_GROUP && b.name !== TELEGRAM_GROUP) return -1;
+      if (b.name === TELEGRAM_GROUP && a.name !== TELEGRAM_GROUP) return 1;
       const timeA = a.last ? a.last.ts : 0;
       const timeB = b.last ? b.last.ts : 0;
       if (timeA !== timeB) return timeB - timeA;
       return a.index - b.index;
     });
-    ordered.filter(c=>normalizeName(c.name).includes(q)).forEach(({name, last})=>{
+    ordered
+      .filter(c=>normalizeName(c.name).includes(q))
+      .filter(c=>{
+        if (activeFilter === "all") return true;
+        if (activeFilter === "group") return c.name === TELEGRAM_GROUP;
+        return c.name !== TELEGRAM_GROUP;
+      })
+      .forEach(({name, last})=>{
       const row = document.createElement("button");
       row.type="button";
       row.className = "row" + (name===active ? " active" : "");
-      const tag = name === "Groupe opérationnel" ? "<span class='tag'>GROUPE</span>" : "";
+      const tag = name === TELEGRAM_GROUP ? "<span class='tag'>GROUPE</span>" : "";
+      const unread = Number(unreadMap[name] || 0);
+      const badge = unread > 0 ? `<span class="row-badge">${unread}</span>` : "";
       row.innerHTML = `
         <div class="avatar" aria-hidden="true">${initials(name)}${tag}</div>
         <div class="meta">
@@ -4556,9 +4672,14 @@ function telegramApp(){
           </div>
           <div class="preview">${last ? (last.text || "") : "Aucun message"}</div>
         </div>
+        ${badge}
       `;
       row.addEventListener("click", ()=>{
         active = name;
+        if (unreadMap[name]) {
+          delete unreadMap[name];
+          saveTelegramUnreadMap(unreadMap);
+        }
         renderAll();
         els.ta.focus();
         els.app.classList.add("showThread");
@@ -4569,7 +4690,7 @@ function telegramApp(){
 
   const renderLog = ()=>{
     els.title.textContent = active;
-    els.scope.textContent = active === "Groupe opérationnel" ? "GROUPE" : "Privé";
+    els.scope.textContent = active === TELEGRAM_GROUP ? "GROUPE" : "Privé";
     els.log.innerHTML = "";
     const conv = convoFor(active);
     if(!conv.length){
@@ -4625,7 +4746,9 @@ function telegramApp(){
     messages.push(entry);
     saveTelegramMessages(messages);
     if(normalizeName(name) !== normalizeName(currentUserName())){
-      saveTelegramUnread(loadTelegramUnread() + 1);
+      const key = scope === "group" ? TELEGRAM_GROUP : recipient;
+      unreadMap[key] = (Number(unreadMap[key]) || 0) + 1;
+      saveTelegramUnreadMap(unreadMap);
     }
     try{ showNotification(name, text, scope, recipient); }catch(e){}
   };
@@ -4634,7 +4757,7 @@ function telegramApp(){
     const txt = (els.ta.value || "").trim();
     if(!txt) return;
     const name = currentUserName();
-    const scope = active === "Groupe opérationnel" ? "group" : "private";
+    const scope = active === TELEGRAM_GROUP ? "group" : "private";
     const recipient = active;
     addMessage(name, txt, scope, recipient);
     els.ta.value = "";
@@ -4669,10 +4792,21 @@ function telegramApp(){
     });
   });
 
-  active = "Groupe opérationnel";
+  root.querySelectorAll("[data-filter]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      activeFilter = btn.dataset.filter || "all";
+      root.querySelectorAll("[data-filter]").forEach((b)=>b.classList.toggle("active", b === btn));
+      renderList();
+    });
+  });
+
+  active = TELEGRAM_GROUP;
+  if (unreadMap[active]) {
+    delete unreadMap[active];
+  }
   renderAll();
   autosize();
-  saveTelegramUnread(0);
+  saveTelegramUnreadMap(unreadMap);
 
   return host;
 }
@@ -4771,16 +4905,28 @@ function updateWeather(){
 updateWeather();
 updateTelegramBadge(loadTelegramUnread());
 
+function updateNetworkStatus(){
+  const ping = rand(12, 42);
+  const ip = `10.0.${rand(1, 9)}.${rand(10, 240)}`;
+  const wifi = state.wifi ? "connecté" : "hors ligne";
+  $("#netLine").textContent = `Wi‑Fi: ${wifi} • IP: ${ip} • Ping: ${ping}ms`;
+}
+updateNetworkStatus();
+setInterval(updateNetworkStatus, 5000);
+
 window.addEventListener("storage", (event) => {
   if (event.key !== TELEGRAM_MESSAGES_KEY || !event.newValue) return;
   try{
     const entries = JSON.parse(event.newValue);
     if (!Array.isArray(entries) || !entries.length) return;
     const last = entries[entries.length - 1];
-    showNotification(last.name || "Agent", last.text || "", last.scope || "group", last.recipient || "Groupe opérationnel");
+    showNotification(last.name || "Agent", last.text || "", last.scope || "group", last.recipient || TELEGRAM_GROUP);
     const currentUser = state.username !== "—" ? state.username : "Agent";
     if (normalizeName(last.name) !== normalizeName(currentUser)) {
-      saveTelegramUnread(loadTelegramUnread() + 1);
+      const map = loadTelegramUnreadMap();
+      const key = last.scope === "group" ? TELEGRAM_GROUP : (last.recipient || "Inconnu");
+      map[key] = (Number(map[key]) || 0) + 1;
+      saveTelegramUnreadMap(map);
     }
   }catch(e){}
 });
