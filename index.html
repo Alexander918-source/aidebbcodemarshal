@@ -2631,7 +2631,10 @@ const bootSteps = [
 
 if (powerBtn) {
   let powerTimer = null;
+  let booting = false;
   const startBoot = () => {
+    if (booting) return;
+    booting = true;
     try{SFX.open();}catch(e){}
     $("#powerScreen").classList.add("hidden");
     bootScreen.classList.remove("hidden");
@@ -2654,6 +2657,7 @@ if (powerBtn) {
         setTimeout(() => {
           bootScreen.classList.add("hidden");
           $("#login").classList.remove("hidden");
+          booting = false;
         }, 420);
         return;
       }
@@ -2683,6 +2687,13 @@ if (powerBtn) {
   powerBtn.addEventListener("pointerleave", () => {
     powerLed?.classList.remove("active");
     clearPowerTimer();
+  });
+
+  powerBtn.addEventListener("click", () => {
+    powerLed?.classList.add("active");
+    clearPowerTimer();
+    startBoot();
+    setTimeout(() => powerLed?.classList.remove("active"), 250);
   });
 }
 
@@ -4963,31 +4974,6 @@ function telegramApp(){
       toast("Action impossible");
       return;
     }
-    if(!window.confirm("Supprimer ce message ?")) return;
-    messages.splice(index, 1);
-    saveTelegramMessages(messages);
-    renderAll();
-  };
-
-  const editMessage = (id)=>{
-    const entry = messages.find(m=>m.id === id);
-    if(!entry) return;
-    const next = window.prompt("Modifier le message", entry.text || "");
-    if(next === null) return;
-    const trimmed = next.trim();
-    if(!trimmed){
-      toast("Message vide ignoré");
-      return;
-    }
-    entry.text = trimmed;
-    entry.edited = true;
-    saveTelegramMessages(messages);
-    renderAll();
-  };
-
-  const deleteMessage = (id)=>{
-    const index = messages.findIndex(m=>m.id === id);
-    if(index < 0) return;
     if(!window.confirm("Supprimer ce message ?")) return;
     messages.splice(index, 1);
     saveTelegramMessages(messages);
