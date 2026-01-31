@@ -372,13 +372,24 @@
       text-transform: uppercase;
       z-index:3;
     }
+    .corner-clock{
+      position:absolute;
+      right:18px;
+      bottom:44px;
+      font-size:.74rem;
+      color:rgba(255,255,255,.78);
+      letter-spacing:.06em;
+      text-transform: uppercase;
+      z-index:3;
+      font-variant-numeric: tabular-nums;
+    }
     .copyright{
       position:absolute;
       right:18px;
       bottom:18px;
-      font-size:.72rem;
-      color:rgba(255,255,255,.6);
-      letter-spacing:.08em;
+      font-size:.58rem;
+      color:rgba(255,255,255,.55);
+      letter-spacing:.1em;
       text-transform: uppercase;
       z-index:3;
     }
@@ -1150,11 +1161,39 @@
     }
     .template-select{
       display:grid;
+      gap:12px;
+      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      padding:14px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,.25);
+    }
+    .template-select-head{
+      display:flex;
+      align-items:center;
       gap:10px;
-      background: rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 16px;
-      padding:12px;
+    }
+    .template-select-head .chip{
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      background: rgba(212,175,55,.18);
+      border:1px solid rgba(212,175,55,.45);
+      display:grid;
+      place-items:center;
+      font-size:1rem;
+    }
+    .template-select-head .texts{
+      display:grid;
+      gap:2px;
+    }
+    .template-select-head .texts strong{
+      font-size:.92rem;
+      letter-spacing:.04em;
+    }
+    .template-select-head .texts span{
+      font-size:.75rem;
+      color: rgba(255,255,255,.6);
     }
     .template-description{
       color: rgba(255,255,255,.68);
@@ -1165,13 +1204,14 @@
       appearance:none;
       border-radius: 12px;
       border:1px solid rgba(255,255,255,.12);
-      padding:.7rem 2.4rem .7rem .9rem;
+      padding:.75rem 2.6rem .75rem .95rem;
       background:
-        linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 10px center no-repeat;
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 12px center no-repeat;
       color:var(--text);
       font-weight:700;
       letter-spacing:.02em;
+      box-shadow: inset 0 0 12px rgba(0,0,0,.25);
     }
     .template-select select:focus{
       outline:none;
@@ -2034,6 +2074,65 @@
   min-height:0;
   width:100%;
 }
+.secure-msg.telegram .telegram-boot{
+  flex:1 1 auto;
+  display:grid;
+  place-items:center;
+  padding:18px;
+  background: radial-gradient(circle at 40% 20%, rgba(42,171,238,.12), rgba(4,6,12,.96) 65%);
+}
+.telegram-boot-card{
+  width:min(420px, 100%);
+  background: rgba(6,9,16,.9);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius: 20px;
+  padding:18px;
+  display:grid;
+  gap:12px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.6);
+}
+.telegram-boot-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.telegram-boot-header .tg-badge{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background: rgba(42,171,238,.2);
+  border:1px solid rgba(42,171,238,.4);
+}
+.telegram-boot-title{
+  font-weight:800;
+  letter-spacing:.06em;
+}
+.telegram-boot-sub{
+  font-size:.78rem;
+  color:rgba(255,255,255,.6);
+}
+.telegram-boot-progress{
+  height:8px;
+  border-radius:999px;
+  background: rgba(255,255,255,.08);
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);
+}
+.telegram-boot-progress span{
+  display:block;
+  height:100%;
+  width:0%;
+  background: linear-gradient(135deg, rgba(42,171,238,.6), rgba(42,171,238,.95));
+  transition: width .3s ease;
+}
+.telegram-boot-lines{
+  display:grid;
+  gap:6px;
+  font-size:.74rem;
+  color:rgba(255,255,255,.62);
+}
 
 </style>
 </head>
@@ -2150,6 +2249,7 @@
 
           <div class="toast" id="toast">Ouverture…</div>
           <div class="agent-tag">AGENT <span id="agentName">—</span></div>
+          <div class="corner-clock" id="cornerClock">--/--/---- --:--:--</div>
           <div class="copyright">Développé par Alexandre.</div>
         </div>
 
@@ -2342,6 +2442,10 @@ const SFX = (() => {
   function open(){ click(620, 0.05); }
   function close(){ click(420, 0.055); }
   function tap(){ click(720, 0.02); }
+  function send(){
+    click(880, 0.03);
+    setTimeout(()=>click(660, 0.03), 60);
+  }
   function error(){
     init();
     if(disabled || !ctx) return;
@@ -2379,7 +2483,7 @@ const SFX = (() => {
     if(disabled || !ctx) return;
     master.gain.value = Math.max(0, Math.min(1, v));
   }
-  return {click, open, close, error, tap, ambience, setVolume};
+  return {click, open, close, error, tap, send, ambience, setVolume};
 })();
 
 /* ---- state ---- */
@@ -2447,17 +2551,23 @@ function tickClock(){
   const d = new Date();
   const hh = String(d.getHours()).padStart(2,"0");
   const mm = String(d.getMinutes()).padStart(2,"0");
+  const ss = String(d.getSeconds()).padStart(2,"0");
   $("#clock").textContent = `${hh}:${mm}`;
   $("#clockBig").textContent = `${hh}:${mm}`;
   const days = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
   const months = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
   $("#dateLine").textContent = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  const corner = $("#cornerClock");
+  if (corner) {
+    const dateValue = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
+    corner.textContent = `${dateValue} ${hh}:${mm}:${ss}`;
+  }
   const lockTime = $("#lockTime");
   const lockDate = $("#lockDate");
   if (lockTime) lockTime.textContent = `${hh}:${mm}`;
   if (lockDate) lockDate.textContent = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
-tickClock(); setInterval(tickClock, 30000);
+tickClock(); setInterval(tickClock, 1000);
 
 function renderCalendar(){
   const grid = $("#calendarGrid");
@@ -2521,7 +2631,10 @@ const bootSteps = [
 
 if (powerBtn) {
   let powerTimer = null;
+  let booting = false;
   const startBoot = () => {
+    if (booting) return;
+    booting = true;
     try{SFX.open();}catch(e){}
     $("#powerScreen").classList.add("hidden");
     bootScreen.classList.remove("hidden");
@@ -2544,6 +2657,7 @@ if (powerBtn) {
         setTimeout(() => {
           bootScreen.classList.add("hidden");
           $("#login").classList.remove("hidden");
+          booting = false;
         }, 420);
         return;
       }
@@ -2573,6 +2687,13 @@ if (powerBtn) {
   powerBtn.addEventListener("pointerleave", () => {
     powerLed?.classList.remove("active");
     clearPowerTimer();
+  });
+
+  powerBtn.addEventListener("click", () => {
+    powerLed?.classList.add("active");
+    clearPowerTimer();
+    startBoot();
+    setTimeout(() => powerLed?.classList.remove("active"), 250);
   });
 }
 
@@ -4036,6 +4157,13 @@ function reportApp(){
     <h2>Templates</h2>
     <div class="template-panel">
       <div class="template-select">
+        <div class="template-select-head">
+          <div class="chip" aria-hidden="true">🧩</div>
+          <div class="texts">
+            <strong>Catalogue sécurisé</strong>
+            <span>Sélectionne une catégorie de template</span>
+          </div>
+        </div>
         <label for="templateSelect">Catégorie template</label>
         <select id="templateSelect"></select>
       </div>
@@ -4194,6 +4322,17 @@ function normalizeName(value){
 function formatTelegramDay(ts){
   const d = new Date(ts);
   return d.toLocaleDateString("fr-FR",{weekday:"long", day:"2-digit", month:"long"});
+}
+
+function formatTelegramName(name){
+  if (!name) return "Agent";
+  return name
+    .split(/\s+/)
+    .map(part => part.split("'").map(piece => {
+      if (!piece) return piece;
+      return piece[0].toUpperCase() + piece.slice(1).toLowerCase();
+    }).join("'"))
+    .join(" ");
 }
 
 const TELEGRAM_CONTACTS = [
@@ -4458,6 +4597,39 @@ function telegramApp(){
       word-break:break-word;
       box-shadow: 0 10px 22px rgba(15,23,42,.08);
     }
+    .bubble-wrap{
+      display:flex;
+      align-items:flex-end;
+      gap:6px;
+    }
+    .msg.out .bubble-wrap{
+      flex-direction:row-reverse;
+    }
+    .msg-actions{
+      display:flex;
+      gap:4px;
+      opacity:0;
+      transition: opacity .15s ease;
+    }
+    .msg:hover .msg-actions{
+      opacity:1;
+    }
+    .msg-actions button{
+      width:24px;
+      height:24px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.15);
+      background: rgba(15,23,42,.5);
+      color:#e2e8f0;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      font-size:12px;
+    }
+    .msg-actions button:hover{
+      border-color: rgba(42,171,238,.6);
+      color:#fff;
+    }
     .in .bubble{
       background: rgba(255,255,255,.08);
       border:1px solid rgba(255,255,255,.12);
@@ -4528,6 +4700,58 @@ function telegramApp(){
       flex:0 0 auto;
     }
     .send:disabled{opacity:.35; cursor:not-allowed;}
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,.55);
+      z-index:40;
+    }
+    .modal.show{display:flex;}
+    .modal-card{
+      width:min(420px, 92%);
+      background: rgba(12,16,26,.96);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:18px;
+      padding:16px;
+      display:grid;
+      gap:12px;
+      box-shadow: 0 24px 70px rgba(0,0,0,.6);
+    }
+    .modal-card h4{
+      margin:0;
+      font-size:1rem;
+      letter-spacing:.04em;
+    }
+    .modal-card p{
+      margin:0;
+      color: rgba(229,231,235,.7);
+      font-size:.85rem;
+    }
+    .modal-card textarea{
+      width:100%;
+      min-height:90px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:#e5e7eb;
+      padding:10px 12px;
+      font-size:14px;
+      font-family:inherit;
+      resize:vertical;
+    }
+    .modal-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:8px;
+    }
+    .modal-actions .ghost{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:#e5e7eb;
+    }
 
     @media (max-width: 720px){
       .sidebar{width:100%; max-width:none; border-right:none;}
@@ -4592,6 +4816,18 @@ function telegramApp(){
         </div>
       </div>
     </section>
+
+    <div class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-card">
+        <h4>Action</h4>
+        <p></p>
+        <textarea class="modal-input" placeholder="Modifier le message"></textarea>
+        <div class="modal-actions">
+          <button class="btn ghost" type="button" data-modal="cancel">Annuler</button>
+          <button class="btn primary" type="button" data-modal="confirm">Confirmer</button>
+        </div>
+      </div>
+    </div>
   `;
 
   shadow.append(style, root);
@@ -4609,7 +4845,13 @@ function telegramApp(){
     log: root.querySelector(".log"),
     back: root.querySelector(".back"),
     ta: root.querySelector("textarea"),
-    send: root.querySelector(".send")
+    send: root.querySelector(".send"),
+    modal: root.querySelector(".modal"),
+    modalTitle: root.querySelector(".modal-card h4"),
+    modalBody: root.querySelector(".modal-card p"),
+    modalInput: root.querySelector(".modal-input"),
+    modalCancel: root.querySelector("[data-modal='cancel']"),
+    modalConfirm: root.querySelector("[data-modal='confirm']")
   };
 
   let active = TELEGRAM_CONTACTS[0];
@@ -4625,6 +4867,31 @@ function telegramApp(){
     if (!parts.length) return "Agent";
     if (parts.length === 1) return parts[0];
     return `${parts[0]} ${parts[1][0]}.`;
+  };
+
+  const showModal = ({title, body, value, showInput, confirmLabel, onConfirm})=>{
+    if (!els.modal) return;
+    els.modalTitle.textContent = title || "Action";
+    els.modalBody.textContent = body || "";
+    els.modalInput.value = value || "";
+    els.modalInput.style.display = showInput ? "block" : "none";
+    els.modalConfirm.textContent = confirmLabel || "Confirmer";
+    els.modal.classList.add("show");
+    els.modal.setAttribute("aria-hidden", "false");
+    if (showInput) {
+      setTimeout(() => els.modalInput.focus(), 0);
+    }
+    const close = ()=>{
+      els.modal.classList.remove("show");
+      els.modal.setAttribute("aria-hidden", "true");
+      els.modalConfirm.onclick = null;
+      els.modalCancel.onclick = null;
+    };
+    els.modalCancel.onclick = close;
+    els.modalConfirm.onclick = ()=>{
+      if (onConfirm) onConfirm(els.modalInput.value);
+      close();
+    };
   };
 
   const convoFor = (contact)=>{
@@ -4646,11 +4913,14 @@ function telegramApp(){
   const renderList = ()=>{
     const q = normalizeName(els.search.value);
     els.list.innerHTML = "";
-    const ordered = TELEGRAM_CONTACTS.map((name, index)=>({
-      name,
-      index,
-      last: lastFor(name)
-    })).sort((a,b)=>{
+    const currentName = normalizeName(currentUserName());
+    const ordered = TELEGRAM_CONTACTS
+      .filter(name => name === TELEGRAM_GROUP || normalizeName(name) !== currentName)
+      .map((name, index)=>({
+        name,
+        index,
+        last: lastFor(name)
+      })).sort((a,b)=>{
       if (a.name === TELEGRAM_GROUP && b.name !== TELEGRAM_GROUP) return -1;
       if (b.name === TELEGRAM_GROUP && a.name !== TELEGRAM_GROUP) return 1;
       const timeA = a.last ? a.last.ts : 0;
@@ -4669,14 +4939,15 @@ function telegramApp(){
       const row = document.createElement("button");
       row.type="button";
       row.className = "row" + (name===active ? " active" : "");
+      const displayName = formatTelegramName(name);
       const tag = name === TELEGRAM_GROUP ? "<span class='tag'>GROUPE</span>" : "";
       const unread = Number(unreadMap[name] || 0);
       const badge = unread > 0 ? `<span class="row-badge">${unread}</span>` : "";
       row.innerHTML = `
-        <div class="avatar" aria-hidden="true">${initials(name)}${tag}</div>
+        <div class="avatar" aria-hidden="true">${initials(displayName)}${tag}</div>
         <div class="meta">
           <div class="topline">
-            <div class="name">${name}</div>
+            <div class="name">${displayName}</div>
             <div class="time">${last ? formatTelegramTime(last.ts) : ""}</div>
           </div>
           <div class="preview">${last ? (last.text || "") : "Aucun message"}</div>
@@ -4698,7 +4969,8 @@ function telegramApp(){
   };
 
   const renderLog = ()=>{
-    els.title.textContent = active;
+    const titleName = active === TELEGRAM_GROUP ? active : formatTelegramName(active);
+    els.title.textContent = titleName;
     els.scope.textContent = active === TELEGRAM_GROUP ? "GROUPE" : "Privé";
     els.log.innerHTML = "";
     const conv = convoFor(active);
@@ -4723,9 +4995,34 @@ function telegramApp(){
       const isOut = normalizeName(m.name) === normalizeName(state.username);
       const msg = document.createElement("div");
       msg.className = "msg " + (isOut ? "out" : "in");
-      const senderName = isOut ? "Vous" : shortName(m.name || "Agent");
-      msg.innerHTML = `<div class="sender">${senderName}</div><div class="bubble"></div><div class="stamp">${formatTelegramTime(m.ts)}</div>`;
+      const showSender = active === TELEGRAM_GROUP;
+      const senderName = isOut ? "Vous" : shortName(formatTelegramName(m.name || "Agent"));
+      const senderMarkup = showSender ? `<div class="sender">${senderName}</div>` : "";
+      const actions = isOut ? `
+        <div class="msg-actions" role="group" aria-label="Actions du message">
+          <button type="button" data-msg-action="edit" data-msg-id="${m.id}" title="Modifier">✎</button>
+          <button type="button" data-msg-action="delete" data-msg-id="${m.id}" title="Supprimer">🗑</button>
+        </div>
+      ` : "";
+      const editedLabel = m.edited ? " • modifié" : "";
+      msg.innerHTML = `
+        ${senderMarkup}
+        <div class="bubble-wrap">
+          <div class="bubble"></div>
+          ${actions}
+        </div>
+        <div class="stamp">${formatTelegramTime(m.ts)}${editedLabel}</div>
+      `;
       msg.querySelector(".bubble").textContent = m.text || "";
+      msg.querySelectorAll("[data-msg-action]").forEach(btn=>{
+        btn.addEventListener("click", (event)=>{
+          event.stopPropagation();
+          const action = btn.dataset.msgAction;
+          const id = btn.dataset.msgId;
+          if (action === "edit") editMessage(id);
+          if (action === "delete") deleteMessage(id);
+        });
+      });
       els.log.append(msg);
     });
     els.log.scrollTop = els.log.scrollHeight;
@@ -4759,7 +5056,55 @@ function telegramApp(){
       unreadMap[key] = (Number(unreadMap[key]) || 0) + 1;
       saveTelegramUnreadMap(unreadMap);
     }
-    try{ showNotification(name, text, scope, recipient); }catch(e){}
+    // notifications disabled for send events
+  };
+
+  const editMessage = (id)=>{
+    const entry = messages.find(m=>m.id === id);
+    if(!entry) return;
+    if (normalizeName(entry.name) !== normalizeName(currentUserName())) {
+      toast("Action impossible");
+      return;
+    }
+    showModal({
+      title: "Modifier le message",
+      body: "Met à jour le contenu avant de confirmer.",
+      value: entry.text || "",
+      showInput: true,
+      confirmLabel: "Enregistrer",
+      onConfirm: (value)=>{
+        const trimmed = (value || "").trim();
+        if(!trimmed){
+          toast("Message vide ignoré");
+          return;
+        }
+        entry.text = trimmed;
+        entry.edited = true;
+        saveTelegramMessages(messages);
+        renderAll();
+      }
+    });
+  };
+
+  const deleteMessage = (id)=>{
+    const index = messages.findIndex(m=>m.id === id);
+    if(index < 0) return;
+    const entry = messages[index];
+    if (normalizeName(entry.name) !== normalizeName(currentUserName())) {
+      toast("Action impossible");
+      return;
+    }
+    showModal({
+      title: "Supprimer le message",
+      body: "Cette action est définitive.",
+      showInput: false,
+      confirmLabel: "Supprimer",
+      onConfirm: ()=>{
+        messages.splice(index, 1);
+        saveTelegramMessages(messages);
+        renderAll();
+      }
+    });
   };
 
   const send = ()=>{
@@ -4768,7 +5113,12 @@ function telegramApp(){
     const name = currentUserName();
     const scope = active === TELEGRAM_GROUP ? "group" : "private";
     const recipient = active;
+    if (scope === "private" && normalizeName(recipient) === normalizeName(name)) {
+      toast("Impossible de s'envoyer un message");
+      return;
+    }
     addMessage(name, txt, scope, recipient);
+    try{ SFX.send(); }catch(e){}
     els.ta.value = "";
     autosize();
     setSendState();
@@ -4798,6 +5148,14 @@ function telegramApp(){
     }
   });
   els.send.addEventListener("click", send);
+  if (els.modal) {
+    els.modal.addEventListener("click", (event)=>{
+      if (event.target === els.modal) {
+        els.modal.classList.remove("show");
+        els.modal.setAttribute("aria-hidden", "true");
+      }
+    });
+  }
 
   els.back.addEventListener("click", ()=>{
     els.app.classList.remove("showThread");
@@ -4826,6 +5184,43 @@ function telegramApp(){
   saveTelegramUnreadMap(unreadMap);
 
   return host;
+}
+
+function telegramBoot(){
+  const wrap = document.createElement("div");
+  wrap.className = "secure-msg telegram";
+  wrap.innerHTML = `
+    <div class="telegram-boot">
+      <div class="telegram-boot-card">
+        <div class="telegram-boot-header">
+          <div class="tg-badge">✈️</div>
+          <div>
+            <div class="telegram-boot-title">Telegram sécurisé</div>
+            <div class="telegram-boot-sub">Initialisation du canal chiffré…</div>
+          </div>
+        </div>
+        <div class="telegram-boot-progress"><span></span></div>
+        <div class="telegram-boot-lines">
+          <div>Handshake TLS • En cours…</div>
+          <div>Montage des clés privées</div>
+          <div>Synchronisation des discussions</div>
+        </div>
+      </div>
+    </div>
+  `;
+  const bar = wrap.querySelector(".telegram-boot-progress span");
+  let pct = 0;
+  const timer = setInterval(()=>{
+    pct = Math.min(100, pct + rand(6, 14));
+    if (bar) bar.style.width = pct + "%";
+    if (pct >= 100) clearInterval(timer);
+  }, 260);
+  setTimeout(()=>{
+    clearInterval(timer);
+    const app = telegramApp();
+    wrap.replaceChildren(app);
+  }, 3200);
+  return wrap;
 }
 
 
@@ -4892,7 +5287,7 @@ function openApp(appId){
       appWindows.set(appId, win);
     }
     if(appId==="telegram"){
-      const win = createWindow({appId, title:"Telegram", subtitle:"Messagerie sécurisée", contentNode: (function(){ const c=document.createElement("div"); c.className="secure-msg telegram"; c.appendChild(telegramApp()); return c; })(), onClose});
+      const win = createWindow({appId, title:"Telegram", subtitle:"Messagerie sécurisée", contentNode: telegramBoot(), onClose});
       appWindows.set(appId, win);
     }
   };
@@ -4939,7 +5334,6 @@ window.addEventListener("storage", (event) => {
     const entries = JSON.parse(event.newValue);
     if (!Array.isArray(entries) || !entries.length) return;
     const last = entries[entries.length - 1];
-    showNotification(last.name || "Agent", last.text || "", last.scope || "group", last.recipient || TELEGRAM_GROUP);
     const currentUser = state.username !== "—" ? state.username : "Agent";
     if (normalizeName(last.name) !== normalizeName(currentUser)) {
       const map = loadTelegramUnreadMap();
