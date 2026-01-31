@@ -1339,7 +1339,7 @@
       <section class="power-screen fade" id="powerScreen">
         <div class="power-card">
           <div class="power-title">Tablette sécurisée</div>
-          <div class="power-subtitle">Maintenir pour allumer</div>
+          <div class="power-subtitle">Cliquer ou maintenir pour allumer</div>
           <div class="power-led" id="powerLed" aria-hidden="true"></div>
           <button class="power-btn" id="powerBtn" type="button" aria-label="Allumer la tablette">
             <svg viewBox="0 0 24 24"><path d="M12 2v8"/><path d="M7.5 4.5a8 8 0 1 0 9 0"/></svg>
@@ -1839,6 +1839,11 @@ if (powerBtn) {
     powerLed?.classList.add("active");
     clearPowerTimer();
     powerTimer = setTimeout(startBoot, 700);
+  });
+
+  powerBtn.addEventListener("click", () => {
+    clearPowerTimer();
+    startBoot();
   });
 
   powerBtn.addEventListener("pointerup", () => {
