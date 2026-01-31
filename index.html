@@ -317,6 +317,13 @@
       height:100%;
       z-index:2;
     }
+    .icons.icon-edit .app-icon{
+      animation: wiggle .2s ease-in-out infinite;
+    }
+    @keyframes wiggle{
+      0%, 100%{ transform: rotate(-0.6deg); }
+      50%{ transform: rotate(0.6deg); }
+    }
     .app-icon{
       display:grid;
       justify-items:center;
@@ -2819,9 +2826,28 @@ document.addEventListener("keydown", (event) => {
 
 /* ---- icon dragging ---- */
 const deskArea = $("#deskArea");
+const iconsWrap = $("#icons");
+const setIconEdit = (on)=>{
+  if (!iconsWrap) return;
+  iconsWrap.classList.toggle("icon-edit", on);
+  iconsWrap.dataset.iconEdit = on ? "true" : "false";
+  try{ toast(on ? "Mode édition" : "Disposition verrouillée"); }catch(e){}
+};
+if (deskArea) {
+  deskArea.addEventListener("click", (event) => {
+    if (!iconsWrap?.classList.contains("icon-edit")) return;
+    if (event.target.closest(".app-icon")) return;
+    setIconEdit(false);
+  });
+}
 $$(".app-icon").forEach((icon) => {
+  icon.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    setIconEdit(true);
+  });
   icon.addEventListener("pointerdown", (e) => {
     if (e.button !== 0) return;
+    if (!iconsWrap?.classList.contains("icon-edit")) return;
     icon.setPointerCapture(e.pointerId);
     icon.dataset.dragging = "true";
     icon.dataset.moved = "false";
@@ -4103,7 +4129,6 @@ const TELEGRAM_CONTACTS = [
   "Franck Harris",
   "Johnson Witerson",
   "John Fisheer",
-  "Claudas",
   "Marquis Hines",
   "Alexy Peterson",
   "Matthew Tuccon",
@@ -4113,7 +4138,6 @@ const TELEGRAM_CONTACTS = [
   "Bryan O'Connor",
   "Jay Crooks",
   "Davis Harper",
-  "Perceval",
   "John Labour"
 ];
 
@@ -4482,6 +4506,12 @@ function telegramApp(){
     const ini = parts.slice(0,2).map(p=>p[0]).join("").toUpperCase();
     return ini || "TG";
   };
+  const shortName = (name)=>{
+    const parts = (name||"").split(/\s+/).filter(Boolean);
+    if (!parts.length) return "Agent";
+    if (parts.length === 1) return parts[0];
+    return `${parts[0]} ${parts[1][0]}.`;
+  };
 
   const convoFor = (contact)=>{
     const ck = normalizeName(contact);
@@ -4502,24 +4532,33 @@ function telegramApp(){
   const renderList = ()=>{
     const q = normalizeName(els.search.value);
     els.list.innerHTML = "";
-    TELEGRAM_CONTACTS.filter(c=>normalizeName(c).includes(q)).forEach(c=>{
-      const last = lastFor(c);
+    const ordered = TELEGRAM_CONTACTS.map((name, index)=>({
+      name,
+      index,
+      last: lastFor(name)
+    })).sort((a,b)=>{
+      const timeA = a.last ? a.last.ts : 0;
+      const timeB = b.last ? b.last.ts : 0;
+      if (timeA !== timeB) return timeB - timeA;
+      return a.index - b.index;
+    });
+    ordered.filter(c=>normalizeName(c.name).includes(q)).forEach(({name, last})=>{
       const row = document.createElement("button");
       row.type="button";
-      row.className = "row" + (c===active ? " active" : "");
-      const tag = c === "Groupe opérationnel" ? "<span class='tag'>GROUPE</span>" : "";
+      row.className = "row" + (name===active ? " active" : "");
+      const tag = name === "Groupe opérationnel" ? "<span class='tag'>GROUPE</span>" : "";
       row.innerHTML = `
-        <div class="avatar" aria-hidden="true">${initials(c)}${tag}</div>
+        <div class="avatar" aria-hidden="true">${initials(name)}${tag}</div>
         <div class="meta">
           <div class="topline">
-            <div class="name">${c}</div>
+            <div class="name">${name}</div>
             <div class="time">${last ? formatTelegramTime(last.ts) : ""}</div>
           </div>
           <div class="preview">${last ? (last.text || "") : "Aucun message"}</div>
         </div>
       `;
       row.addEventListener("click", ()=>{
-        active = c;
+        active = name;
         renderAll();
         els.ta.focus();
         els.app.classList.add("showThread");
@@ -4554,7 +4593,7 @@ function telegramApp(){
       const isOut = normalizeName(m.name) === normalizeName(state.username);
       const msg = document.createElement("div");
       msg.className = "msg " + (isOut ? "out" : "in");
-      const senderName = isOut ? "Vous" : (m.name || "Agent");
+      const senderName = isOut ? "Vous" : shortName(m.name || "Agent");
       msg.innerHTML = `<div class="sender">${senderName}</div><div class="bubble"></div><div class="stamp">${formatTelegramTime(m.ts)}</div>`;
       msg.querySelector(".bubble").textContent = m.text || "";
       els.log.append(msg);
