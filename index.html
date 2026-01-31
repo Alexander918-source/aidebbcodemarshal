@@ -4995,7 +4995,9 @@ function telegramApp(){
       const isOut = normalizeName(m.name) === normalizeName(state.username);
       const msg = document.createElement("div");
       msg.className = "msg " + (isOut ? "out" : "in");
+      const showSender = active === TELEGRAM_GROUP;
       const senderName = isOut ? "Vous" : shortName(formatTelegramName(m.name || "Agent"));
+      const senderMarkup = showSender ? `<div class="sender">${senderName}</div>` : "";
       const actions = isOut ? `
         <div class="msg-actions" role="group" aria-label="Actions du message">
           <button type="button" data-msg-action="edit" data-msg-id="${m.id}" title="Modifier">✎</button>
@@ -5004,7 +5006,7 @@ function telegramApp(){
       ` : "";
       const editedLabel = m.edited ? " • modifié" : "";
       msg.innerHTML = `
-        <div class="sender">${senderName}</div>
+        ${senderMarkup}
         <div class="bubble-wrap">
           <div class="bubble"></div>
           ${actions}
