@@ -960,10 +960,6 @@
               </svg>
             </div>
             <div class="start-label">Démarrer</div>
-            <div class="userchip" title="Utilisateur connecté">
-              <span style="opacity:.9">👮</span>
-              <span>Connecté: <b id="userName">—</b></span>
-            </div>
           </div>
 
         <div class="task-right">
@@ -1545,6 +1541,11 @@ function logout(){
   $("#pass").value = "";
   setLoginStatus("Déconnecté");
 }
+function unlockToLogin(){
+  $("#lockScreen").classList.add("hidden");
+  $("#login").classList.remove("hidden");
+  $("#login").classList.add("fade");
+}
 $("#btnLock").addEventListener("click", lock);
 $("#btnLogout").addEventListener("click", logout);
 
@@ -1589,15 +1590,19 @@ if (lockScreen) {
     const startY = Number(lockScreen.dataset.touchStart || 0);
     const endY = event.changedTouches[0].clientY;
     if (startY - endY > 80) {
-      lockScreen.classList.add("hidden");
-      $("#login").classList.remove("hidden");
+      unlockToLogin();
     }
   });
   lockScreen.addEventListener("wheel", () => {
-    lockScreen.classList.add("hidden");
-    $("#login").classList.remove("hidden");
+    unlockToLogin();
   });
 }
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") return;
+  if (!$("#lockScreen").classList.contains("hidden")) {
+    unlockToLogin();
+  }
+});
 
 /* ---- icon dragging ---- */
 const deskArea = $("#deskArea");
