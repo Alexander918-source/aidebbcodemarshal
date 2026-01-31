@@ -756,6 +756,83 @@
       color: rgba(255,255,255,.78);
       font-size:.78rem;
     }
+    .secure-msg{
+      display:grid;
+      gap:12px;
+      height:100%;
+    }
+    .secure-msg__header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      font-size:.85rem;
+      color:rgba(255,255,255,.7);
+    }
+    .secure-msg__header strong{
+      color:rgba(255,255,255,.92);
+      font-size:.95rem;
+      letter-spacing:.04em;
+    }
+    .secure-msg__log{
+      flex:1;
+      min-height:180px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(2,4,8,.9);
+      color: #b6f1c4;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:.82rem;
+      padding:12px;
+      overflow:auto;
+      display:grid;
+      gap:10px;
+    }
+    .secure-msg__line{
+      display:grid;
+      gap:6px;
+    }
+    .secure-msg__meta{
+      color:rgba(182,241,196,.75);
+      font-size:.72rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .secure-msg__text{
+      color:#e5ffed;
+      line-height:1.45;
+      white-space:pre-wrap;
+    }
+    .secure-msg__form{
+      display:grid;
+      gap:10px;
+    }
+    .secure-msg__row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .secure-msg__form input,
+    .secure-msg__form textarea{
+      width:100%;
+      border-radius: 10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(6,8,14,.9);
+      color:rgba(255,255,255,.9);
+      padding:10px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:.82rem;
+    }
+    .secure-msg__form textarea{
+      min-height:90px;
+      resize:vertical;
+    }
+    .secure-msg__actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
 
     .template-panel{
       display:grid;
@@ -915,7 +992,7 @@
         </div>
       </section>
 
-      <section class="lock-screen hidden" id="lockScreen">
+      <section class="lock-screen hidden" id="lockScreen" tabindex="0">
         <div class="lock-time" id="lockTime">--:--</div>
         <div class="lock-date" id="lockDate">—</div>
         <div class="swipe-indicator">Balayez vers le haut</div>
@@ -946,10 +1023,17 @@
               </div>
               <span>Agenda</span>
             </div>
+
+            <div class="app-icon" data-app="securemsg" style="left:18px; top:360px;">
+              <div class="tile" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 6h16v10H7l-3 3V6Z"/><path d="M8 10h8"/><path d="M8 13h5"/></svg>
+              </div>
+              <span>Messagerie</span>
+            </div>
           </div>
 
           <div class="toast" id="toast">Ouverture…</div>
-          <div class="agent-tag">Agent <span id="agentName">—</span></div>
+          <div class="agent-tag">AGENT <span id="agentName">—</span></div>
         </div>
 
         <div class="taskbar">
@@ -1072,6 +1156,10 @@
                 <span class="tile-icon">🌐</span>
                 <span>Intranet</span>
               </button>
+              <button class="start-tile" type="button" data-start-app="securemsg">
+                <span class="tile-icon">🛰️</span>
+                <span>Messagerie</span>
+              </button>
               <button class="start-tile" type="button" data-start-app="lock">
                 <span class="tile-icon">🔒</span>
                 <span>Verrouiller</span>
@@ -1183,7 +1271,8 @@ const state = {
   ambience: false,
   brightness: 1.0,
   volume: 0.70,
-  username: "—"
+  username: "—",
+  loggedIn: false
 };
 
 /* ---- helpers ---- */
@@ -1422,7 +1511,11 @@ function doLogin(){
     const ok = credentials.get(normalize(user)) === normalize(pass);
     if(ok){
       state.username = user || "Utilisateur";
-      $("#userName").textContent = state.username;
+      state.loggedIn = true;
+      const userNameLabel = $("#userName");
+      if (userNameLabel) {
+        userNameLabel.textContent = state.username;
+      }
       const agentName = $("#agentName");
       if (agentName) {
         const parts = state.username.split(" ").filter(Boolean);
@@ -1532,19 +1625,25 @@ function lock(){
   $("#desktop").classList.add("hidden");
   $("#lockScreen").classList.remove("hidden");
   $("#lockScreen").classList.add("fade");
+  $("#lockScreen").focus({preventScroll:true});
 }
 function logout(){
   try{SFX.close();}catch(e){}
+  state.loggedIn = false;
   $("#desktop").classList.add("hidden");
   $("#login").classList.remove("hidden");
   $("#login").classList.add("fade");
   $("#pass").value = "";
   setLoginStatus("Déconnecté");
 }
-function unlockToLogin(){
+function unlockScreen(){
   $("#lockScreen").classList.add("hidden");
-  $("#login").classList.remove("hidden");
-  $("#login").classList.add("fade");
+  if(state.loggedIn){
+    $("#desktop").classList.remove("hidden");
+  }else{
+    $("#login").classList.remove("hidden");
+    $("#login").classList.add("fade");
+  }
 }
 $("#btnLock").addEventListener("click", lock);
 $("#btnLogout").addEventListener("click", logout);
@@ -1590,17 +1689,17 @@ if (lockScreen) {
     const startY = Number(lockScreen.dataset.touchStart || 0);
     const endY = event.changedTouches[0].clientY;
     if (startY - endY > 80) {
-      unlockToLogin();
+      unlockScreen();
     }
   });
   lockScreen.addEventListener("wheel", () => {
-    unlockToLogin();
+    unlockScreen();
   });
 }
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Enter") return;
   if (!$("#lockScreen").classList.contains("hidden")) {
-    unlockToLogin();
+    unlockScreen();
   }
 });
 
@@ -2821,6 +2920,152 @@ function embedApp(url, title){
   return wrap;
 }
 
+const SECURE_MESSAGES_KEY = "marshal.secure.messages";
+
+function loadSecureMessages(){
+  try{
+    const raw = localStorage.getItem(SECURE_MESSAGES_KEY);
+    const data = raw ? JSON.parse(raw) : [];
+    return Array.isArray(data) ? data : [];
+  }catch(e){
+    return [];
+  }
+}
+
+function saveSecureMessages(messages){
+  localStorage.setItem(SECURE_MESSAGES_KEY, JSON.stringify(messages));
+}
+
+function formatSecureTimestamp(ts){
+  const d = new Date(ts);
+  return d.toLocaleString("fr-FR", {hour:"2-digit", minute:"2-digit", day:"2-digit", month:"2-digit"});
+}
+
+function secureMessengerApp(){
+  const wrap = document.createElement("div");
+  wrap.className = "secure-msg";
+
+  const header = document.createElement("div");
+  header.className = "secure-msg__header";
+  const info = document.createElement("div");
+  info.innerHTML = `
+    <strong>Canal ultra-sécurisé</strong><br>
+    Flux partagé • Sans mot de passe • Sauvegarde locale active
+  `;
+  const status = document.createElement("div");
+  status.className = "pill";
+  status.textContent = "Journal synchronisé";
+  header.append(info, status);
+
+  const log = document.createElement("div");
+  log.className = "secure-msg__log";
+
+  const form = document.createElement("form");
+  form.className = "secure-msg__form";
+  const row = document.createElement("div");
+  row.className = "secure-msg__row";
+
+  const nameField = document.createElement("input");
+  nameField.type = "text";
+  nameField.placeholder = "Identifiant agent";
+  nameField.value = state.username !== "—" ? state.username : "Agent";
+
+  const channelField = document.createElement("input");
+  channelField.type = "text";
+  channelField.placeholder = "Canal partagé";
+  channelField.value = "Global";
+  channelField.disabled = true;
+
+  row.append(nameField, channelField);
+
+  const messageField = document.createElement("textarea");
+  messageField.placeholder = "Saisir un message confidentiel...";
+
+  const actions = document.createElement("div");
+  actions.className = "secure-msg__actions";
+  const saveBtn = document.createElement("button");
+  saveBtn.type = "button";
+  saveBtn.className = "btn";
+  saveBtn.textContent = "Sauvegarder";
+  const sendBtn = document.createElement("button");
+  sendBtn.type = "submit";
+  sendBtn.className = "btn primary";
+  sendBtn.textContent = "Envoyer";
+  actions.append(saveBtn, sendBtn);
+
+  form.append(row, messageField, actions);
+
+  wrap.append(header, log, form);
+
+  const messages = loadSecureMessages();
+
+  const render = () => {
+    log.innerHTML = "";
+    if(!messages.length){
+      const empty = document.createElement("div");
+      empty.className = "secure-msg__line";
+      empty.innerHTML = `
+        <div class="secure-msg__meta">Canal global</div>
+        <div class="secure-msg__text">Aucun message. Ce journal est partagé entre tous les agents connectés.</div>
+      `;
+      log.append(empty);
+      return;
+    }
+    messages.forEach((entry) => {
+      const line = document.createElement("div");
+      line.className = "secure-msg__line";
+      const meta = document.createElement("div");
+      meta.className = "secure-msg__meta";
+      meta.textContent = `${formatSecureTimestamp(entry.ts)} • ${entry.name}`;
+      const text = document.createElement("div");
+      text.className = "secure-msg__text";
+      text.textContent = entry.text;
+      line.append(meta, text);
+      log.append(line);
+    });
+  };
+
+  const addMessage = (name, text) => {
+    messages.push({
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+      name,
+      text,
+      ts: Date.now()
+    });
+    saveSecureMessages(messages);
+    render();
+    log.scrollTop = log.scrollHeight;
+  };
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const name = nameField.value.trim() || "Agent";
+    const text = messageField.value.trim();
+    if(!text){
+      messageField.focus();
+      return;
+    }
+    addMessage(name, text);
+    messageField.value = "";
+  });
+
+  saveBtn.addEventListener("click", () => {
+    const payload = JSON.stringify(messages, null, 2);
+    const blob = new Blob([payload], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "messagerie-securisee.json";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  render();
+  return wrap;
+}
+
 const appWindows = new Map();
 
 function closeApp(appId){
@@ -2878,6 +3123,10 @@ function openApp(appId){
   }
   if(appId==="dcso"){
     const win = createWindow({appId, title:"Intranet", subtitle:"Marshal Service", contentNode: embedApp("https://dcso.forumpro.fr", "Intranet Marshal Service"), onClose});
+    appWindows.set(appId, win);
+  }
+  if(appId==="securemsg"){
+    const win = createWindow({appId, title:"Messagerie", subtitle:"Canal ultra-sécurisé", contentNode: secureMessengerApp(), onClose});
     appWindows.set(appId, win);
   }
 }
