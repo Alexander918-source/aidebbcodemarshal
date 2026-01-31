@@ -4932,7 +4932,41 @@ function telegramApp(){
       unreadMap[key] = (Number(unreadMap[key]) || 0) + 1;
       saveTelegramUnreadMap(unreadMap);
     }
-    try{ showNotification(name, text, scope, recipient); }catch(e){}
+    // notifications disabled for send events
+  };
+
+  const editMessage = (id)=>{
+    const entry = messages.find(m=>m.id === id);
+    if(!entry) return;
+    if (normalizeName(entry.name) !== normalizeName(currentUserName())) {
+      toast("Action impossible");
+      return;
+    }
+    const next = window.prompt("Modifier le message", entry.text || "");
+    if(next === null) return;
+    const trimmed = next.trim();
+    if(!trimmed){
+      toast("Message vide ignoré");
+      return;
+    }
+    entry.text = trimmed;
+    entry.edited = true;
+    saveTelegramMessages(messages);
+    renderAll();
+  };
+
+  const deleteMessage = (id)=>{
+    const index = messages.findIndex(m=>m.id === id);
+    if(index < 0) return;
+    const entry = messages[index];
+    if (normalizeName(entry.name) !== normalizeName(currentUserName())) {
+      toast("Action impossible");
+      return;
+    }
+    if(!window.confirm("Supprimer ce message ?")) return;
+    messages.splice(index, 1);
+    saveTelegramMessages(messages);
+    renderAll();
   };
 
   const editMessage = (id)=>{
@@ -4966,6 +5000,10 @@ function telegramApp(){
     const name = currentUserName();
     const scope = active === TELEGRAM_GROUP ? "group" : "private";
     const recipient = active;
+    if (scope === "private" && normalizeName(recipient) === normalizeName(name)) {
+      toast("Impossible de s'envoyer un message");
+      return;
+    }
     addMessage(name, txt, scope, recipient);
     try{ SFX.send(); }catch(e){}
     els.ta.value = "";
@@ -5175,7 +5213,6 @@ window.addEventListener("storage", (event) => {
     const entries = JSON.parse(event.newValue);
     if (!Array.isArray(entries) || !entries.length) return;
     const last = entries[entries.length - 1];
-    showNotification(last.name || "Agent", last.text || "", last.scope || "group", last.recipient || TELEGRAM_GROUP);
     const currentUser = state.username !== "—" ? state.username : "Agent";
     if (normalizeName(last.name) !== normalizeName(currentUser)) {
       const map = loadTelegramUnreadMap();
