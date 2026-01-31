@@ -4244,6 +4244,7 @@ function embedApp(url, title){
 const TELEGRAM_MESSAGES_KEY = "marshal.telegram.messages";
 const TELEGRAM_UNREAD_KEY = "marshal.telegram.unread";
 const TELEGRAM_UNREAD_MAP_KEY = "marshal.telegram.unread.map";
+const TELEGRAM_PINNED_KEY = "marshal.telegram.pinned";
 const TELEGRAM_GROUP = "Marchal Service";
 
 function loadTelegramMessages(){
@@ -4293,6 +4294,20 @@ function saveTelegramUnreadMap(map){
     return acc + (num > 0 ? num : 0);
   }, 0);
   saveTelegramUnread(total);
+}
+
+function loadTelegramPinned(){
+  try{
+    const raw = localStorage.getItem(TELEGRAM_PINNED_KEY);
+    const data = raw ? JSON.parse(raw) : [];
+    return Array.isArray(data) ? data : [];
+  }catch(e){
+    return [];
+  }
+}
+
+function saveTelegramPinned(pinned){
+  localStorage.setItem(TELEGRAM_PINNED_KEY, JSON.stringify(pinned));
 }
 
 function updateTelegramBadge(count){
@@ -4630,6 +4645,23 @@ function telegramApp(){
       border-color: rgba(42,171,238,.6);
       color:#fff;
     }
+    .pin-btn{
+      width:26px;
+      height:26px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(229,231,235,.7);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+    .pin-btn.active{
+      color:#f5d76e;
+      border-color: rgba(212,175,55,.6);
+      background: rgba(212,175,55,.12);
+    }
     .in .bubble{
       background: rgba(255,255,255,.08);
       border:1px solid rgba(255,255,255,.12);
@@ -4834,6 +4866,7 @@ function telegramApp(){
 
   const messages = loadTelegramMessages();
   const unreadMap = loadTelegramUnreadMap();
+  const pinnedSet = new Set(loadTelegramPinned().map(normalizeName));
   updateTelegramBadge(loadTelegramUnread());
 
   const els = {
@@ -4905,6 +4938,51 @@ function telegramApp(){
     }).sort((a,b)=>a.ts-b.ts);
   };
 
+  const unreadCountFor = (contact)=>{
+    const current = normalizeName(currentUserName());
+    if (contact === TELEGRAM_GROUP) {
+      return messages.filter(m=>m.scope === "group" && normalizeName(m.name) !== current && !m.read).length;
+    }
+    return convoFor(contact).filter(m=>normalizeName(m.name) !== current && !m.read).length;
+  };
+
+  const rebuildUnreadMap = ()=>{
+    const current = normalizeName(currentUserName());
+    const next = {};
+    TELEGRAM_CONTACTS.forEach((name)=>{
+      if (name !== TELEGRAM_GROUP && normalizeName(name) === current) return;
+      const count = unreadCountFor(name);
+      if (count > 0) next[name] = count;
+    });
+    Object.keys(unreadMap).forEach((key)=>delete unreadMap[key]);
+    Object.assign(unreadMap, next);
+    saveTelegramUnreadMap(unreadMap);
+  };
+
+  const markReadForActive = ()=>{
+    const current = normalizeName(currentUserName());
+    let changed = false;
+    messages.forEach((m)=>{
+      if (active === TELEGRAM_GROUP) {
+        if (m.scope === "group" && normalizeName(m.name) !== current && !m.read) {
+          m.read = true;
+          changed = true;
+        }
+        return;
+      }
+      if (m.scope !== "private") return;
+      const matches = normalizeName(m.recipient) === normalizeName(active) || normalizeName(m.name) === normalizeName(active);
+      if (matches && normalizeName(m.name) !== current && !m.read) {
+        m.read = true;
+        changed = true;
+      }
+    });
+    if (changed) {
+      saveTelegramMessages(messages);
+      rebuildUnreadMap();
+    }
+  };
+
   const lastFor = (contact)=>{
     const c = convoFor(contact);
     return c[c.length-1] || null;
@@ -4919,15 +4997,14 @@ function telegramApp(){
       .map((name, index)=>({
         name,
         index,
-        last: lastFor(name)
+        last: lastFor(name),
+        pinned: pinnedSet.has(normalizeName(name))
       })).sort((a,b)=>{
-      if (a.name === TELEGRAM_GROUP && b.name !== TELEGRAM_GROUP) return -1;
-      if (b.name === TELEGRAM_GROUP && a.name !== TELEGRAM_GROUP) return 1;
-      const timeA = a.last ? a.last.ts : 0;
-      const timeB = b.last ? b.last.ts : 0;
-      if (timeA !== timeB) return timeB - timeA;
-      return a.index - b.index;
-    });
+        if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+        const nameA = formatTelegramName(a.name);
+        const nameB = formatTelegramName(b.name);
+        return nameA.localeCompare(nameB, "fr", {sensitivity:"base"});
+      });
     ordered
       .filter(c=>normalizeName(c.name).includes(q))
       .filter(c=>{
@@ -4935,14 +5012,16 @@ function telegramApp(){
         if (activeFilter === "group") return c.name === TELEGRAM_GROUP;
         return c.name !== TELEGRAM_GROUP;
       })
-      .forEach(({name, last})=>{
-      const row = document.createElement("button");
-      row.type="button";
+      .forEach(({name, last, pinned})=>{
+      const row = document.createElement("div");
+      row.setAttribute("role", "button");
+      row.tabIndex = 0;
       row.className = "row" + (name===active ? " active" : "");
       const displayName = formatTelegramName(name);
       const tag = name === TELEGRAM_GROUP ? "<span class='tag'>GROUPE</span>" : "";
-      const unread = Number(unreadMap[name] || 0);
+      const unread = unreadCountFor(name);
       const badge = unread > 0 ? `<span class="row-badge">${unread}</span>` : "";
+      const pinClass = pinned ? "pin-btn active" : "pin-btn";
       row.innerHTML = `
         <div class="avatar" aria-hidden="true">${initials(displayName)}${tag}</div>
         <div class="meta">
@@ -4952,17 +5031,42 @@ function telegramApp(){
           </div>
           <div class="preview">${last ? (last.text || "") : "Aucun message"}</div>
         </div>
+        <span class="${pinClass}" role="button" tabindex="0" data-pin="${name}" title="Épingler">📌</span>
         ${badge}
       `;
+      const pinButton = row.querySelector("[data-pin]");
+      if (pinButton) {
+        pinButton.addEventListener("click", (event)=>{
+          event.stopPropagation();
+          const key = normalizeName(name);
+          if (pinnedSet.has(key)) {
+            pinnedSet.delete(key);
+          } else {
+            pinnedSet.add(key);
+          }
+          saveTelegramPinned(Array.from(pinnedSet));
+          renderList();
+        });
+        pinButton.addEventListener("keydown", (event)=>{
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            event.stopPropagation();
+            pinButton.click();
+          }
+        });
+      }
       row.addEventListener("click", ()=>{
         active = name;
-        if (unreadMap[name]) {
-          delete unreadMap[name];
-          saveTelegramUnreadMap(unreadMap);
-        }
+        markReadForActive();
         renderAll();
         els.ta.focus();
         els.app.classList.add("showThread");
+      });
+      row.addEventListener("keydown", (event)=>{
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          row.click();
+        }
       });
       els.list.append(row);
     });
@@ -5047,16 +5151,15 @@ function telegramApp(){
       text,
       scope,
       recipient,
-      ts: Date.now()
+      ts: Date.now(),
+      read: normalizeName(name) === normalizeName(currentUserName())
     };
     messages.push(entry);
     saveTelegramMessages(messages);
     if(normalizeName(name) !== normalizeName(currentUserName())){
-      const key = scope === "group" ? TELEGRAM_GROUP : recipient;
-      unreadMap[key] = (Number(unreadMap[key]) || 0) + 1;
-      saveTelegramUnreadMap(unreadMap);
+      rebuildUnreadMap();
+      try{ showNotification(name, text, scope, recipient); }catch(e){}
     }
-    // notifications disabled for send events
   };
 
   const editMessage = (id)=>{
@@ -5134,6 +5237,7 @@ function telegramApp(){
   };
 
   const renderAll = ()=>{
+    markReadForActive();
     renderList();
     renderLog();
     setSendState();
@@ -5176,9 +5280,7 @@ function telegramApp(){
   });
 
   active = TELEGRAM_GROUP;
-  if (unreadMap[active]) {
-    delete unreadMap[active];
-  }
+  rebuildUnreadMap();
   renderAll();
   autosize();
   saveTelegramUnreadMap(unreadMap);
@@ -5340,6 +5442,7 @@ window.addEventListener("storage", (event) => {
       const key = last.scope === "group" ? TELEGRAM_GROUP : (last.recipient || "Inconnu");
       map[key] = (Number(map[key]) || 0) + 1;
       saveTelegramUnreadMap(map);
+      try{ showNotification(last.name || "Agent", last.text || "", last.scope || "group", last.recipient || TELEGRAM_GROUP); }catch(e){}
     }
   }catch(e){}
 });
