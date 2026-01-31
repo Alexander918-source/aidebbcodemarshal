@@ -2926,6 +2926,11 @@ function renderTemplate(templateId) {
       if (field.maxLength && field.type !== 'textarea') {
         input.maxLength = field.maxLength;
       }
+
+      input.addEventListener('change', handleTemplateSelectChange);
+    } else {
+      input = document.createElement('input');
+      input.type = field.inputType || 'text';
     }
     input.autocomplete = 'off';
 
