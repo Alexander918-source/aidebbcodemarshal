@@ -758,165 +758,193 @@
     }
     .secure-msg{
       display:grid;
+      grid-template-columns: 240px 1fr;
       gap:12px;
       height:100%;
+      min-height: 360px;
     }
-    .secure-msg__header{
+    .secure-msg__sidebar{
+      display:grid;
+      grid-template-rows: auto auto 1fr;
+      gap:10px;
+      padding:10px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(6,8,14,.92);
+    }
+    .secure-msg__sidebar h3{
+      margin:0;
+      font-size:.8rem;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.6);
+    }
+    .secure-msg__search{
+      width:100%;
+      border-radius: 10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(8,12,18,.9);
+      color:rgba(255,255,255,.85);
+      padding:8px 10px;
+      font-size:.78rem;
+    }
+    .secure-msg__contacts{
+      display:grid;
+      gap:6px;
+      overflow:auto;
+      padding-right:4px;
+    }
+    .secure-msg__contact{
+      border-radius: 12px;
+      border:1px solid transparent;
+      background: rgba(12,16,24,.5);
+      color:rgba(255,255,255,.85);
+      padding:8px 10px;
+      display:grid;
+      gap:4px;
+      cursor:pointer;
+      text-align:left;
+    }
+    .secure-msg__contact.active{
+      border-color: rgba(58,210,159,.35);
+      background: rgba(12,20,20,.8);
+      color:#e9fff5;
+    }
+    .secure-msg__contact-name{
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
       display:flex;
       justify-content:space-between;
-      align-items:flex-start;
+      gap:8px;
+    }
+    .secure-msg__contact-preview{
+      font-size:.72rem;
+      color:rgba(255,255,255,.6);
+      overflow:hidden;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+    }
+    .secure-msg__main{
+      display:grid;
+      grid-template-rows: auto 1fr auto;
       gap:10px;
-      font-size:.85rem;
-      color:rgba(255,255,255,.7);
     }
-    .secure-msg__header strong{
-      color:rgba(255,255,255,.92);
-      font-size:.95rem;
-      letter-spacing:.04em;
-    }
-    .secure-msg__subline{
-      color:rgba(255,255,255,.55);
-      font-size:.75rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-top:4px;
-    }
-    .secure-msg__log{
-      flex:1;
-      min-height:180px;
-      border-radius: 12px;
+    .secure-msg__chat-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius: 14px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(8,10,16,.92);
-      color: #eaf6ff;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:.82rem;
+      background: rgba(6,8,14,.9);
+    }
+    .secure-msg__chat-title{
+      display:grid;
+      gap:4px;
+    }
+    .secure-msg__chat-title strong{
+      font-size:.9rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .secure-msg__chat-title span{
+      font-size:.72rem;
+      color:rgba(255,255,255,.6);
+      letter-spacing:.1em;
+      text-transform:uppercase;
+    }
+    .secure-msg__chat-self{
+      font-size:.72rem;
+      color:rgba(255,255,255,.6);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .secure-msg__chat-log{
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(8,10,16,.94);
       padding:12px;
       overflow:auto;
       display:grid;
-      gap:10px;
+      gap:12px;
     }
-    .secure-msg__line{
+    .secure-msg__message{
       display:grid;
-      gap:6px;
-      max-width: 92%;
+      gap:4px;
+      max-width: 78%;
     }
-    .secure-msg__line.outgoing{
+    .secure-msg__message.outgoing{
       justify-self:end;
       text-align:right;
     }
-    .secure-msg__meta{
-      color:rgba(168,188,210,.75);
-      font-size:.72rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
     .secure-msg__bubble{
-      border-radius: 14px;
+      border-radius: 16px;
       padding:10px 12px;
       line-height:1.45;
       white-space:pre-wrap;
-      background: rgba(18,22,32,.9);
+      background: rgba(18,22,32,.92);
       border:1px solid rgba(255,255,255,.08);
-      color:#e9f3ff;
+      color:#eaf6ff;
       box-shadow: 0 10px 24px rgba(0,0,0,.35);
     }
-    .secure-msg__line.outgoing .secure-msg__bubble{
-      background: rgba(18,36,30,.95);
-      border-color: rgba(58,210,159,.2);
+    .secure-msg__message.outgoing .secure-msg__bubble{
+      background: rgba(20,40,32,.95);
+      border-color: rgba(58,210,159,.25);
       color:#eafff3;
     }
-    .secure-msg__form{
-      display:grid;
-      gap:10px;
-    }
-    .secure-msg__row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    .secure-msg__form input,
-    .secure-msg__form textarea{
-      width:100%;
-      border-radius: 10px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(6,8,14,.9);
-      color:rgba(255,255,255,.9);
-      padding:10px 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:.82rem;
-    }
-    .secure-msg__form textarea{
-      min-height:90px;
-      resize:vertical;
-    }
-    .secure-msg__actions{
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
-      flex-wrap:wrap;
-    }
-    .secure-msg__filters{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .secure-msg__security{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .secure-msg__badge{
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(6,8,14,.9);
-      color:rgba(255,255,255,.7);
+    .secure-msg__time{
       font-size:.7rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      padding:6px 10px;
-    }
-    .secure-msg__chip{
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(6,8,14,.9);
-      color:rgba(255,255,255,.78);
-      font-size:.72rem;
+      color:rgba(168,188,210,.7);
       letter-spacing:.08em;
       text-transform:uppercase;
-      padding:6px 10px;
-      cursor:pointer;
     }
-    .secure-msg__chip.active{
-      border-color: rgba(58,210,159,.6);
-      color:#dfffee;
-      background: rgba(10,18,18,.9);
+    .secure-msg__empty{
+      color:rgba(255,255,255,.55);
+      font-size:.8rem;
+      text-align:center;
+      padding:24px 10px;
+      border-radius: 12px;
+      border:1px dashed rgba(255,255,255,.12);
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
-    .secure-msg__scope{
-      display:flex;
+    .secure-msg__composer{
+      display:grid;
+      grid-template-columns: 1fr auto;
       gap:10px;
-      align-items:center;
-      font-size:.74rem;
-      color:rgba(255,255,255,.65);
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .secure-msg__scope input{
-      margin:0;
-    }
-    .secure-msg__select{
-      width:100%;
-      border-radius: 10px;
+      align-items:end;
+      padding:10px 12px;
+      border-radius: 14px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(6,8,14,.9);
+    }
+    .secure-msg__composer textarea{
+      width:100%;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(10,14,20,.9);
       color:rgba(255,255,255,.9);
       padding:10px 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size:.82rem;
-      appearance:none;
+      resize:vertical;
+      min-height:70px;
     }
-    .secure-msg__recipient{
+    .secure-msg__composer-actions{
       display:grid;
       gap:8px;
+    }
+    @media (max-width: 860px){
+      .secure-msg{
+        grid-template-columns: 1fr;
+      }
+      .secure-msg__sidebar{
+        order:2;
+      }
+      .secure-msg__main{
+        order:1;
+      }
     }
     .notify{
       position:absolute;
@@ -1140,7 +1168,7 @@
           <div class="notify" id="notify">
             <div class="notify__icon">🛰️</div>
             <div class="notify__body">
-              <div class="notify__title" id="notifyTitle">Message sécurisé</div>
+              <div class="notify__title" id="notifyTitle">Nouveau message</div>
               <div class="notify__meta" id="notifyMeta">Canal global</div>
             </div>
           </div>
@@ -2898,6 +2926,11 @@ function renderTemplate(templateId) {
       if (field.maxLength && field.type !== 'textarea') {
         input.maxLength = field.maxLength;
       }
+
+      input.addEventListener('change', handleTemplateSelectChange);
+    } else {
+      input = document.createElement('input');
+      input.type = field.inputType || 'text';
     }
     input.autocomplete = 'off';
 
@@ -3120,140 +3153,137 @@ function secureMessengerApp(){
   const wrap = document.createElement("div");
   wrap.className = "secure-msg";
 
-  const header = document.createElement("div");
-  header.className = "secure-msg__header";
-  const info = document.createElement("div");
-  info.innerHTML = `
-    <strong>Messagerie sécurisée</strong><br>
-    <span class="secure-msg__subline">AES-256 • TLS 1.3 • Relais certifié</span>
-  `;
-  header.append(info);
+  const sidebar = document.createElement("div");
+  sidebar.className = "secure-msg__sidebar";
+  const sidebarTitle = document.createElement("h3");
+  sidebarTitle.textContent = "Contacts";
+  const search = document.createElement("input");
+  search.type = "text";
+  search.className = "secure-msg__search";
+  search.placeholder = "Rechercher";
+  const contactList = document.createElement("div");
+  contactList.className = "secure-msg__contacts";
 
-  const securityRow = document.createElement("div");
-  securityRow.className = "secure-msg__security";
-  ["AES-256", "TLS 1.3", "Forward Secrecy", "Relay EU"].forEach((label) => {
-    const badge = document.createElement("span");
-    badge.className = "secure-msg__badge";
-    badge.textContent = label;
-    securityRow.append(badge);
-  });
+  sidebar.append(sidebarTitle, search, contactList);
+
+  const main = document.createElement("div");
+  main.className = "secure-msg__main";
+  const chatHeader = document.createElement("div");
+  chatHeader.className = "secure-msg__chat-header";
+  const chatTitle = document.createElement("div");
+  chatTitle.className = "secure-msg__chat-title";
+  const chatName = document.createElement("strong");
+  const chatMeta = document.createElement("span");
+  chatMeta.textContent = "AES-256 • TLS 1.3";
+  chatTitle.append(chatName, chatMeta);
+  const chatSelf = document.createElement("div");
+  chatSelf.className = "secure-msg__chat-self";
+  chatHeader.append(chatTitle, chatSelf);
 
   const log = document.createElement("div");
-  log.className = "secure-msg__log";
-
-  const filters = document.createElement("div");
-  filters.className = "secure-msg__filters";
-  const allChip = document.createElement("button");
-  allChip.type = "button";
-  allChip.className = "secure-msg__chip active";
-  allChip.textContent = "Tous";
-  const globalChip = document.createElement("button");
-  globalChip.type = "button";
-  globalChip.className = "secure-msg__chip";
-  globalChip.textContent = "Global";
-  const privateChip = document.createElement("button");
-  privateChip.type = "button";
-  privateChip.className = "secure-msg__chip";
-  privateChip.textContent = "Privé";
-  filters.append(allChip, globalChip, privateChip);
+  log.className = "secure-msg__chat-log";
 
   const form = document.createElement("form");
-  form.className = "secure-msg__form";
-  const row = document.createElement("div");
-  row.className = "secure-msg__row";
-
-  const nameField = document.createElement("input");
-  nameField.type = "text";
-  nameField.placeholder = "Identifiant agent";
-  nameField.value = state.username !== "—" ? state.username : "Agent";
-
-  const channelField = document.createElement("input");
-  channelField.type = "text";
-  channelField.placeholder = "Canal partagé";
-  channelField.value = "Global";
-  channelField.disabled = true;
-
-  row.append(nameField, channelField);
-
-  const recipientWrap = document.createElement("div");
-  recipientWrap.className = "secure-msg__recipient";
-  const scope = document.createElement("div");
-  scope.className = "secure-msg__scope";
-  scope.innerHTML = `
-    <label><input type="radio" name="scope" value="global" checked> Global</label>
-    <label><input type="radio" name="scope" value="private"> Privé</label>
-  `;
-
-  const recipientSelect = document.createElement("select");
-  recipientSelect.className = "secure-msg__select";
-  const everyoneOption = document.createElement("option");
-  everyoneOption.value = "Tous les agents";
-  everyoneOption.textContent = "Tous les agents";
-  recipientSelect.append(everyoneOption);
-  SECURE_AGENTS.forEach((agent) => {
-    const opt = document.createElement("option");
-    opt.value = agent;
-    opt.textContent = agent;
-    recipientSelect.append(opt);
-  });
-
-  recipientWrap.append(scope, recipientSelect);
-
+  form.className = "secure-msg__composer";
   const messageField = document.createElement("textarea");
-  messageField.placeholder = "Saisir un message confidentiel...";
-
-  const actions = document.createElement("div");
-  actions.className = "secure-msg__actions";
-  const saveBtn = document.createElement("button");
-  saveBtn.type = "button";
-  saveBtn.className = "btn";
-  saveBtn.textContent = "Sauvegarder";
+  messageField.placeholder = "Écrire un message…";
+  const composerActions = document.createElement("div");
+  composerActions.className = "secure-msg__composer-actions";
   const sendBtn = document.createElement("button");
   sendBtn.type = "submit";
   sendBtn.className = "btn primary";
   sendBtn.textContent = "Envoyer";
-  actions.append(saveBtn, sendBtn);
+  const saveBtn = document.createElement("button");
+  saveBtn.type = "button";
+  saveBtn.className = "btn";
+  saveBtn.textContent = "Exporter";
+  composerActions.append(sendBtn, saveBtn);
+  form.append(messageField, composerActions);
 
-  form.append(row, recipientWrap, messageField, actions);
+  main.append(chatHeader, log, form);
+  wrap.append(sidebar, main);
 
-  wrap.append(header, securityRow, filters, log, form);
-
+  const contacts = ["Groupe opérationnel", ...SECURE_AGENTS];
+  let activeContact = contacts[0];
   const messages = loadSecureMessages();
-  let activeFilter = "all";
 
-  const render = () => {
-    log.innerHTML = "";
-    const filtered = messages.filter((entry) => {
-      if (activeFilter === "private") return entry.scope === "private";
-      if (activeFilter === "global") return entry.scope === "global";
-      return true;
+  const getConversationMessages = (contact) => {
+    const contactKey = normalizeName(contact);
+    return messages.filter((entry) => {
+      if (contact === "Groupe opérationnel") {
+        return entry.scope === "global";
+      }
+      if (entry.scope !== "private") return false;
+      const byRecipient = normalizeName(entry.recipient) === contactKey;
+      const bySender = normalizeName(entry.name) === contactKey;
+      return byRecipient || bySender;
     });
-    if(!filtered.length){
+  };
+
+  const renderContacts = () => {
+    const query = normalizeName(search.value);
+    contactList.innerHTML = "";
+    contacts
+      .filter((name) => normalizeName(name).includes(query))
+      .forEach((name) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "secure-msg__contact";
+        if (name === activeContact) button.classList.add("active");
+        const convo = getConversationMessages(name);
+        const last = convo[convo.length - 1];
+        const label = document.createElement("div");
+        label.className = "secure-msg__contact-name";
+        const labelText = document.createElement("span");
+        labelText.textContent = name.toLocaleUpperCase("fr-FR");
+        const labelTime = document.createElement("span");
+        labelTime.textContent = last ? formatSecureTimestamp(last.ts) : "";
+        label.append(labelText, labelTime);
+        const preview = document.createElement("div");
+        preview.className = "secure-msg__contact-preview";
+        preview.textContent = last ? last.text : "Aucun message";
+        button.append(label, preview);
+        button.addEventListener("click", () => {
+          activeContact = name;
+          render();
+        });
+        contactList.append(button);
+      });
+  };
+
+  const renderMessages = () => {
+    log.innerHTML = "";
+    const filtered = getConversationMessages(activeContact);
+    if (!filtered.length) {
       const empty = document.createElement("div");
-      empty.className = "secure-msg__line";
-      empty.innerHTML = `
-        <div class="secure-msg__meta">Journal chiffré</div>
-        <div class="secure-msg__bubble">Aucun message pour ce filtre.</div>
-      `;
+      empty.className = "secure-msg__empty";
+      empty.textContent = "Aucun message";
       log.append(empty);
       return;
     }
     filtered.forEach((entry) => {
       const line = document.createElement("div");
-      line.className = "secure-msg__line";
-      const isOutgoing = normalizeName(entry.name) === normalizeName(nameField.value || state.username);
+      line.className = "secure-msg__message";
+      const isOutgoing = normalizeName(entry.name) === normalizeName(state.username);
       if (isOutgoing) line.classList.add("outgoing");
+      const bubble = document.createElement("div");
+      bubble.className = "secure-msg__bubble";
+      bubble.textContent = entry.text;
       const meta = document.createElement("div");
-      meta.className = "secure-msg__meta";
+      meta.className = "secure-msg__time";
       const name = (entry.name || "Agent").toLocaleUpperCase("fr-FR");
-      const scopeLabel = entry.scope === "private" ? "Privé" : "Global";
-      meta.textContent = `${formatSecureTimestamp(entry.ts)} • ${name} • ${scopeLabel} → ${entry.recipient}`;
-      const text = document.createElement("div");
-      text.className = "secure-msg__bubble";
-      text.textContent = entry.text;
-      line.append(meta, text);
+      meta.textContent = isOutgoing ? formatSecureTimestamp(entry.ts) : `${name} • ${formatSecureTimestamp(entry.ts)}`;
+      line.append(bubble, meta);
       log.append(line);
     });
+    log.scrollTop = log.scrollHeight;
+  };
+
+  const render = () => {
+    chatName.textContent = activeContact.toLocaleUpperCase("fr-FR");
+    chatSelf.textContent = `Vous: ${(state.username || "Agent").toLocaleUpperCase("fr-FR")}`;
+    renderContacts();
+    renderMessages();
   };
 
   const addMessage = (name, text, scopeValue, recipientValue) => {
@@ -3267,20 +3297,19 @@ function secureMessengerApp(){
     });
     saveSecureMessages(messages);
     render();
-    log.scrollTop = log.scrollHeight;
     showNotification(name, text, scopeValue, recipientValue);
   };
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const name = nameField.value.trim() || "Agent";
     const text = messageField.value.trim();
-    const scopeValue = wrap.querySelector('input[name="scope"]:checked')?.value || "global";
-    const recipientValue = scopeValue === "private" ? recipientSelect.value : "Tous les agents";
-    if(!text){
+    if (!text) {
       messageField.focus();
       return;
     }
+    const name = state.username !== "—" ? state.username : "Agent";
+    const scopeValue = activeContact === "Groupe opérationnel" ? "global" : "private";
+    const recipientValue = scopeValue === "global" ? "Tous les agents" : activeContact;
     addMessage(name, text, scopeValue, recipientValue);
     messageField.value = "";
   });
@@ -3298,26 +3327,8 @@ function secureMessengerApp(){
     URL.revokeObjectURL(url);
   });
 
+  search.addEventListener("input", renderContacts);
   render();
-  const toggleFilter = (filterName) => {
-    activeFilter = filterName;
-    [allChip, globalChip, privateChip].forEach((chip) => chip.classList.remove("active"));
-    if (filterName === "all") allChip.classList.add("active");
-    if (filterName === "global") globalChip.classList.add("active");
-    if (filterName === "private") privateChip.classList.add("active");
-    render();
-  };
-  allChip.addEventListener("click", () => toggleFilter("all"));
-  globalChip.addEventListener("click", () => toggleFilter("global"));
-  privateChip.addEventListener("click", () => toggleFilter("private"));
-
-  scope.addEventListener("change", (event) => {
-    if (event.target.matches('input[name="scope"]')) {
-      const isPrivate = event.target.value === "private";
-      recipientSelect.disabled = !isPrivate;
-    }
-  });
-  recipientSelect.disabled = true;
 
   return wrap;
 }
