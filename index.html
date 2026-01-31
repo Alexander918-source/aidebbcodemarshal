@@ -101,58 +101,6 @@
       background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.05), rgba(2,3,7,.98) 70%);
       z-index:20;
     }
-    .hands-overlay{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      z-index:25;
-    }
-    .hands{
-      position:absolute;
-      bottom:-18px;
-      width:180px;
-      height:240px;
-      border-radius: 80px 80px 30px 30px;
-      background: linear-gradient(180deg, rgba(255,214,170,.28), rgba(120,70,40,.12));
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
-      transform: translateY(30px);
-      opacity:.65;
-    }
-    .hands.left{left:80px; transform: rotate(-6deg) translateY(34px);}
-    .hands.right{right:80px; transform: rotate(6deg) translateY(34px);}
-    .tap-finger{
-      position:absolute;
-      top:20px;
-      left:50%;
-      width:42px;
-      height:82px;
-      border-radius: 40px;
-      background: linear-gradient(180deg, rgba(255,224,190,.4), rgba(160,100,70,.18));
-      transform: translateX(-50%);
-      animation: tap 1.8s ease-in-out infinite;
-    }
-    .tap-finger::after{
-      content:"";
-      position:absolute;
-      bottom:-10px;
-      left:50%;
-      width:32px;
-      height:32px;
-      border-radius:50%;
-      border:1px solid rgba(212,175,55,.5);
-      opacity:.6;
-      transform: translateX(-50%) scale(.8);
-      animation: ripple 1.8s ease-in-out infinite;
-    }
-    .hands-overlay.login .tap-finger{animation-delay:.2s;}
-    @keyframes tap{
-      0%, 100%{ transform: translate(-50%, 0); }
-      50%{ transform: translate(-50%, 12px); }
-    }
-    @keyframes ripple{
-      0%, 100%{ transform: translateX(-50%) scale(.7); opacity:.6; }
-      50%{ transform: translateX(-50%) scale(1.1); opacity:.2; }
-    }
     .power-card{
       width:min(420px, 100%);
       background: rgba(4,6,10,.85);
@@ -2195,12 +2143,6 @@
 
       <!-- POWER -->
       <section class="power-screen fade" id="powerScreen">
-        <div class="hands-overlay power">
-          <div class="hands left"></div>
-          <div class="hands right">
-            <div class="tap-finger"></div>
-          </div>
-        </div>
         <div class="power-card">
           <div class="power-title">Marshal Service</div>
           <div class="power-subtitle">Maintenir pour allumer</div>
@@ -2233,12 +2175,6 @@
 
       <!-- LOGIN -->
       <section class="login fade hidden" id="login">
-        <div class="hands-overlay login">
-          <div class="hands left"></div>
-          <div class="hands right">
-            <div class="tap-finger"></div>
-          </div>
-        </div>
         <div class="login-card">
 
           <div class="form" id="loginForm">
