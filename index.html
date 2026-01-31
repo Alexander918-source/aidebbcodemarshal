@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Marshal Service • Tablet OS</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/fLY8FVvB/BADGE-(1).png"/>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
       --shell-w: 980px;
@@ -27,7 +27,7 @@
     html,body{height:100%}
     body{
       margin:0;
-      font-family:Manrope,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      font-family:Roboto,system-ui,-apple-system,Segoe UI,Arial;
       background: radial-gradient(circle at 20% 0%, #060911 0%, #020308 55%, #010103 100%);
       color:var(--text);
       display:grid;
@@ -138,7 +138,6 @@
       stroke-width:2.2;
     }
     .power-title{
-      font-family:Cinzel,serif;
       font-size:1.1rem;
       letter-spacing:.08em;
     }
@@ -258,7 +257,6 @@
     }
     .logo img{width:34px;height:34px; filter: drop-shadow(0 8px 14px rgba(0,0,0,.55));}
     .login-title h1{
-      font-family:Cinzel,serif;
       margin:0;
       font-size: 1.28rem;
       letter-spacing:.04em;
@@ -370,6 +368,16 @@
       bottom:18px;
       font-size:.78rem;
       color:rgba(255,255,255,.65);
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      z-index:3;
+    }
+    .copyright{
+      position:absolute;
+      right:18px;
+      bottom:18px;
+      font-size:.72rem;
+      color:rgba(255,255,255,.6);
       letter-spacing:.08em;
       text-transform: uppercase;
       z-index:3;
@@ -585,7 +593,6 @@
     }
     .start-header h3{
       margin:0;
-      font-family:Cinzel,serif;
       font-size:1rem;
       letter-spacing:.06em;
     }
@@ -767,7 +774,7 @@
       padding:14px;
       color: rgba(255,255,255,.88);
     }
-    .content h2{margin:0 0 10px; font-family:Cinzel,serif; letter-spacing:.03em}
+    .content h2{margin:0 0 10px; letter-spacing:.03em}
     .card{
       background: rgba(255,255,255,.04);
       border:1px solid rgba(255,255,255,.10);
@@ -2143,6 +2150,7 @@
 
           <div class="toast" id="toast">Ouverture…</div>
           <div class="agent-tag">AGENT <span id="agentName">—</span></div>
+          <div class="copyright">Développé par Alexandre.</div>
         </div>
 
         <div class="taskbar">
@@ -2228,7 +2236,7 @@
             </header>
             <div class="body">
               <div class="card">
-                <div style="font-family:Cinzel,serif; font-size:1.4rem; letter-spacing:.04em" id="clockBig">--:--</div>
+                <div style="font-size:1.4rem; letter-spacing:.04em" id="clockBig">--:--</div>
                 <div class="muted" id="dateLine">—</div>
               </div>
               <div class="card">
@@ -2333,6 +2341,7 @@ const SFX = (() => {
   }
   function open(){ click(620, 0.05); }
   function close(){ click(420, 0.055); }
+  function tap(){ click(720, 0.02); }
   function error(){
     init();
     if(disabled || !ctx) return;
@@ -2370,7 +2379,7 @@ const SFX = (() => {
     if(disabled || !ctx) return;
     master.gain.value = Math.max(0, Math.min(1, v));
   }
-  return {click, open, close, error, ambience, setVolume};
+  return {click, open, close, error, tap, ambience, setVolume};
 })();
 
 /* ---- state ---- */
@@ -4766,6 +4775,14 @@ function telegramApp(){
     renderAll();
   };
 
+  let lastTapAt = 0;
+  const playTap = ()=>{
+    const now = Date.now();
+    if (now - lastTapAt < 70) return;
+    lastTapAt = now;
+    try{ SFX.tap(); }catch(e){}
+  };
+
   const renderAll = ()=>{
     renderList();
     renderLog();
@@ -4773,7 +4790,7 @@ function telegramApp(){
   };
 
   els.search.addEventListener("input", renderList);
-  els.ta.addEventListener("input", ()=>{ autosize(); setSendState(); });
+  els.ta.addEventListener("input", ()=>{ autosize(); setSendState(); playTap(); });
   els.ta.addEventListener("keydown", (e)=>{
     if(e.key === "Enter" && !e.shiftKey){
       e.preventDefault();
@@ -4850,34 +4867,36 @@ function openApp(appId){
   try{try{SFX.open();}catch(e){}}catch(e){}
 
   const onClose = ()=>appWindows.delete(appId);
-
-  if(appId==="report"){
-    const win = createWindow({appId, title:"Templates", subtitle:"Catalogue", contentNode: reportApp(), onClose});
-    appWindows.set(appId, win);
-    templateSelect = win.querySelector('#templateSelect');
-    templateFields = win.querySelector('#templateFields');
-    templateDescription = win.querySelector('#templateDescription');
-    populateTemplateSelect();
-    const generateBtn = win.querySelector('#generateTemplateBtn');
-    if (generateBtn) {
-      generateBtn.addEventListener('click', generateDocumentBBCode);
+  const launch = ()=>{
+    if(appId==="report"){
+      const win = createWindow({appId, title:"Templates", subtitle:"Catalogue", contentNode: reportApp(), onClose});
+      appWindows.set(appId, win);
+      templateSelect = win.querySelector('#templateSelect');
+      templateFields = win.querySelector('#templateFields');
+      templateDescription = win.querySelector('#templateDescription');
+      populateTemplateSelect();
+      const generateBtn = win.querySelector('#generateTemplateBtn');
+      if (generateBtn) {
+        generateBtn.addEventListener('click', generateDocumentBBCode);
+      }
+      if (templateSelect) {
+        templateSelect.addEventListener('change', () => renderTemplate(templateSelect.value));
+      }
     }
-    if (templateSelect) {
-      templateSelect.addEventListener('change', () => renderTemplate(templateSelect.value));
+    if(appId==="agenda"){
+      const win = createWindow({appId, title:"Agenda", subtitle:"TeamUp", contentNode: embedApp("https://teamup.com/ksk6nbt76ryjonyw4o", "AGENDA (TeamUp)"), onClose});
+      appWindows.set(appId, win);
     }
-  }
-  if(appId==="agenda"){
-    const win = createWindow({appId, title:"Agenda", subtitle:"TeamUp", contentNode: embedApp("https://teamup.com/ksk6nbt76ryjonyw4o", "AGENDA (TeamUp)"), onClose});
-    appWindows.set(appId, win);
-  }
-  if(appId==="dcso"){
-    const win = createWindow({appId, title:"Intranet", subtitle:"Marshal Service", contentNode: embedApp("https://dcso.forumpro.fr", "Intranet Marshal Service"), onClose});
-    appWindows.set(appId, win);
-  }
-  if(appId==="telegram"){
-    const win = createWindow({appId, title:"Telegram", subtitle:"Messagerie sécurisée", contentNode: (function(){ const c=document.createElement("div"); c.className="secure-msg telegram"; c.appendChild(telegramApp()); return c; })(), onClose});
-    appWindows.set(appId, win);
-  }
+    if(appId==="dcso"){
+      const win = createWindow({appId, title:"Intranet", subtitle:"Marshal Service", contentNode: embedApp("https://dcso.forumpro.fr", "Intranet Marshal Service"), onClose});
+      appWindows.set(appId, win);
+    }
+    if(appId==="telegram"){
+      const win = createWindow({appId, title:"Telegram", subtitle:"Messagerie sécurisée", contentNode: (function(){ const c=document.createElement("div"); c.className="secure-msg telegram"; c.appendChild(telegramApp()); return c; })(), onClose});
+      appWindows.set(appId, win);
+    }
+  };
+  setTimeout(launch, 320);
 }
 
 /* bind icons (no inline onclick => works in stricter browsers) */
