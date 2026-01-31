@@ -69,6 +69,25 @@
       border:1px solid rgba(255,255,255,.12);
       overflow:hidden;
     }
+    .screen::before{
+      content:"";
+      position:absolute;
+      inset:-20%;
+      background: linear-gradient(120deg, rgba(255,255,255,.12), rgba(255,255,255,0) 40%);
+      opacity:.35;
+      transform: translateX(-10%);
+      pointer-events:none;
+      mix-blend-mode: screen;
+    }
+    .screen::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+      opacity:.08;
+      pointer-events:none;
+      mix-blend-mode: soft-light;
+    }
 
     /* Shared */
     .hidden{display:none !important}
@@ -126,6 +145,47 @@
     .power-subtitle{
       color:var(--muted);
       font-size:.85rem;
+    }
+    .boot-screen{
+      position:absolute;
+      inset:0;
+      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.05), rgba(5,8,14,.98) 70%);
+      display:grid;
+      align-content:center;
+      gap:16px;
+      padding:28px;
+      z-index:19;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:.78rem;
+      color:rgba(255,255,255,.78);
+    }
+    .boot-panel{
+      background: rgba(8,12,20,.82);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      padding:16px;
+      display:grid;
+      gap:10px;
+      box-shadow: 0 24px 70px rgba(0,0,0,.65);
+    }
+    .boot-line{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .boot-progress{
+      height:8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .boot-progress span{
+      display:block;
+      height:100%;
+      width:0%;
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      transition: width .35s ease;
     }
     .btn{
       appearance:none;border:1px solid var(--stroke2);
@@ -680,14 +740,30 @@
       <!-- POWER -->
       <section class="power-screen fade" id="powerScreen">
         <div class="power-card">
-          <div class="logo" aria-hidden="true">
-            <img src="https://i.postimg.cc/fLY8FVvB/BADGE_(1).png" alt="">
-          </div>
-          <div class="power-title">Marshal Service</div>
-          <div class="power-subtitle">Tablette sécurisée · Appuyez pour allumer</div>
+          <div class="power-title">Tablette sécurisée</div>
+          <div class="power-subtitle">Appuyez pour allumer</div>
           <button class="power-btn" id="powerBtn" type="button" aria-label="Allumer la tablette">
             <svg viewBox="0 0 24 24"><path d="M12 2v8"/><path d="M7.5 4.5a8 8 0 1 0 9 0"/></svg>
           </button>
+        </div>
+      </section>
+
+      <!-- BOOT -->
+      <section class="boot-screen hidden" id="bootScreen" aria-live="polite">
+        <div class="boot-panel">
+          <div class="boot-line">
+            <span>UEFI Secure Boot</span>
+            <span id="bootStatus">POST...</span>
+          </div>
+          <div class="boot-line">
+            <span>Marshal Service Device</span>
+            <span>BIOS v3.4</span>
+          </div>
+          <div class="boot-progress" aria-hidden="true"><span id="bootBar"></span></div>
+          <div class="boot-line">
+            <span>Module TPM</span>
+            <span id="bootStep">Initialisation...</span>
+          </div>
         </div>
       </section>
 
@@ -1018,11 +1094,40 @@ function tickClock(){
 tickClock(); setInterval(tickClock, 30000);
 
 const powerBtn = $("#powerBtn");
+const bootScreen = $("#bootScreen");
+const bootBar = $("#bootBar");
+const bootStatus = $("#bootStatus");
+const bootStep = $("#bootStep");
+const bootSteps = [
+  { status: "POST...", step: "Initialisation TPM" },
+  { status: "Mémoire OK", step: "Vérification intégrité" },
+  { status: "UEFI OK", step: "Chargement noyau" },
+  { status: "Sécurité OK", step: "Montage volumes chiffrés" },
+  { status: "Prêt", step: "Passage au login" }
+];
+
 if (powerBtn) {
   powerBtn.addEventListener("click", () => {
     try{SFX.open();}catch(e){}
     $("#powerScreen").classList.add("hidden");
-    $("#login").classList.remove("hidden");
+    bootScreen.classList.remove("hidden");
+    let idx = 0;
+    const advance = () => {
+      const progress = Math.min(100, Math.round((idx + 1) / bootSteps.length * 100));
+      if (bootStatus) bootStatus.textContent = bootSteps[idx].status;
+      if (bootStep) bootStep.textContent = bootSteps[idx].step;
+      if (bootBar) bootBar.style.width = `${progress}%`;
+      idx += 1;
+      if (idx >= bootSteps.length) {
+        setTimeout(() => {
+          bootScreen.classList.add("hidden");
+          $("#login").classList.remove("hidden");
+        }, 420);
+        return;
+      }
+      setTimeout(advance, 420);
+    };
+    setTimeout(advance, 280);
   });
 }
 
