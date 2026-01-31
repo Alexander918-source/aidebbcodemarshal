@@ -146,6 +146,18 @@
       color:var(--muted);
       font-size:.85rem;
     }
+    .power-led{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      margin:0 auto;
+      background: rgba(255,255,255,.2);
+      box-shadow: 0 0 6px rgba(255,255,255,.2);
+    }
+    .power-led.active{
+      background: #00c08b;
+      box-shadow: 0 0 12px rgba(0,192,139,.6);
+    }
     .boot-screen{
       position:absolute;
       inset:0;
@@ -186,6 +198,12 @@
       width:0%;
       background: linear-gradient(135deg, var(--gold2), var(--gold));
       transition: width .35s ease;
+    }
+    .boot-lines{
+      display:grid;
+      gap:6px;
+      font-size:.74rem;
+      color:rgba(255,255,255,.62);
     }
     .btn{
       appearance:none;border:1px solid var(--stroke2);
@@ -287,11 +305,9 @@
       padding:18px 18px 10px;
     }
     .icons{
-      display:grid;
-      grid-template-columns: repeat(auto-fill, 92px);
-      gap:18px;
-      align-content:start;
       position:relative;
+      width:100%;
+      height:100%;
       z-index:2;
     }
     .app-icon{
@@ -303,6 +319,8 @@
       cursor:pointer;
       color:rgba(255,255,255,.9);
       transition: background .15s ease, transform .15s ease;
+      position:absolute;
+      user-select:none;
     }
     .app-icon:hover{background: rgba(255,255,255,.06); transform: translateY(-1px)}
     .app-icon:active{transform: translateY(0)}
@@ -741,7 +759,8 @@
       <section class="power-screen fade" id="powerScreen">
         <div class="power-card">
           <div class="power-title">Tablette sécurisée</div>
-          <div class="power-subtitle">Appuyez pour allumer</div>
+          <div class="power-subtitle">Maintenir pour allumer</div>
+          <div class="power-led" id="powerLed" aria-hidden="true"></div>
           <button class="power-btn" id="powerBtn" type="button" aria-label="Allumer la tablette">
             <svg viewBox="0 0 24 24"><path d="M12 2v8"/><path d="M7.5 4.5a8 8 0 1 0 9 0"/></svg>
           </button>
@@ -750,22 +769,23 @@
 
       <!-- BOOT -->
       <section class="boot-screen hidden" id="bootScreen" aria-live="polite">
-        <div class="boot-panel">
-          <div class="boot-line">
-            <span>UEFI Secure Boot</span>
-            <span id="bootStatus">POST...</span>
+          <div class="boot-panel">
+            <div class="boot-line">
+              <span>UEFI Secure Boot</span>
+              <span id="bootStatus">POST...</span>
+            </div>
+            <div class="boot-line">
+              <span>Marshal Service Device</span>
+              <span>BIOS v3.4</span>
+            </div>
+            <div class="boot-progress" aria-hidden="true"><span id="bootBar"></span></div>
+            <div class="boot-line">
+              <span>Module TPM</span>
+              <span id="bootStep">Initialisation...</span>
+            </div>
+            <div class="boot-lines" id="bootLines"></div>
           </div>
-          <div class="boot-line">
-            <span>Marshal Service Device</span>
-            <span>BIOS v3.4</span>
-          </div>
-          <div class="boot-progress" aria-hidden="true"><span id="bootBar"></span></div>
-          <div class="boot-line">
-            <span>Module TPM</span>
-            <span id="bootStep">Initialisation...</span>
-          </div>
-        </div>
-      </section>
+        </section>
 
       <!-- LOGIN -->
       <section class="login fade hidden" id="login">
@@ -807,21 +827,21 @@
         <div class="wallpaper" aria-hidden="true"></div>
         <div class="desk-area" id="deskArea">
           <div class="icons" id="icons">
-            <div class="app-icon" data-app="report">
+            <div class="app-icon" data-app="report" style="left:18px; top:18px;">
               <div class="tile" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M7 3h7l3 3v15a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M8 12h8M8 16h8"/></svg>
               </div>
               <span>Templates</span>
             </div>
 
-            <div class="app-icon" data-app="dcso">
+            <div class="app-icon" data-app="dcso" style="left:18px; top:132px;">
               <div class="tile" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0-9-9"/><path d="M3 12h18"/><path d="M12 3a12 12 0 0 1 0 18"/><path d="M12 3a12 12 0 0 0 0 18"/></svg>
               </div>
               <span>Intranet</span>
             </div>
 
-            <div class="app-icon" data-app="agenda">
+            <div class="app-icon" data-app="agenda" style="left:18px; top:246px;">
               <div class="tile" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M8 3v3M16 3v3"/><path d="M4 7h16"/><path d="M5 7v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7"/><path d="M8 11h8M8 15h6"/></svg>
               </div>
@@ -1094,29 +1114,40 @@ function tickClock(){
 tickClock(); setInterval(tickClock, 30000);
 
 const powerBtn = $("#powerBtn");
+const powerLed = $("#powerLed");
 const bootScreen = $("#bootScreen");
 const bootBar = $("#bootBar");
 const bootStatus = $("#bootStatus");
 const bootStep = $("#bootStep");
+const bootLines = $("#bootLines");
 const bootSteps = [
-  { status: "POST...", step: "Initialisation TPM" },
-  { status: "Mémoire OK", step: "Vérification intégrité" },
-  { status: "UEFI OK", step: "Chargement noyau" },
-  { status: "Sécurité OK", step: "Montage volumes chiffrés" },
-  { status: "Prêt", step: "Passage au login" }
+  { status: "POST...", step: "Initialisation TPM", line: "TPM 2.0: OK" },
+  { status: "Mémoire OK", step: "Vérification intégrité", line: "RAM: 8192 MB" },
+  { status: "UEFI OK", step: "Chargement noyau", line: "Bootloader: signé" },
+  { status: "Sécurité OK", step: "Montage volumes chiffrés", line: "AES-256: actif" },
+  { status: "Prêt", step: "Passage au login", line: "Session sécurisée" }
 ];
 
 if (powerBtn) {
-  powerBtn.addEventListener("click", () => {
+  let powerTimer = null;
+  const startBoot = () => {
     try{SFX.open();}catch(e){}
     $("#powerScreen").classList.add("hidden");
     bootScreen.classList.remove("hidden");
     let idx = 0;
+    if (bootLines) {
+      bootLines.innerHTML = "";
+    }
     const advance = () => {
       const progress = Math.min(100, Math.round((idx + 1) / bootSteps.length * 100));
       if (bootStatus) bootStatus.textContent = bootSteps[idx].status;
       if (bootStep) bootStep.textContent = bootSteps[idx].step;
       if (bootBar) bootBar.style.width = `${progress}%`;
+      if (bootLines) {
+        const line = document.createElement("div");
+        line.textContent = bootSteps[idx].line;
+        bootLines.appendChild(line);
+      }
       idx += 1;
       if (idx >= bootSteps.length) {
         setTimeout(() => {
@@ -1128,6 +1159,29 @@ if (powerBtn) {
       setTimeout(advance, 420);
     };
     setTimeout(advance, 280);
+  };
+
+  const clearPowerTimer = () => {
+    if (powerTimer) {
+      clearTimeout(powerTimer);
+      powerTimer = null;
+    }
+  };
+
+  powerBtn.addEventListener("pointerdown", () => {
+    powerLed?.classList.add("active");
+    clearPowerTimer();
+    powerTimer = setTimeout(startBoot, 700);
+  });
+
+  powerBtn.addEventListener("pointerup", () => {
+    powerLed?.classList.remove("active");
+    clearPowerTimer();
+  });
+
+  powerBtn.addEventListener("pointerleave", () => {
+    powerLed?.classList.remove("active");
+    clearPowerTimer();
   });
 }
 
@@ -1137,10 +1191,37 @@ function setLoginStatus(text, ok=false, err=false){
   $("#statusDot").classList.toggle("on", ok);
   $("#statusDot").classList.toggle("err", err);
 }
+const credentials = new Map([
+  ["scot jhonson", "brandelis"],
+  ["alex ace", "brunor"],
+  ["franck harris", "caradoc"],
+  ["johnson witerson", "clarence"],
+  ["john fisheer", "claudas"],
+  ["marquis hines", "erec"],
+  ["alexy peterson", "galaad"],
+  ["matthew tuccon", "gringalas"],
+  ["jackson stanton", "harpin"],
+  ["ethan davis", "lancelot"],
+  ["rowan sullivan", "lanval"],
+  ["bryan o’connor", "lionel"],
+  ["jay crooks", "lucan"],
+  ["davis harper", "patrides"],
+  ["perceval", "toscan"],
+  ["john labour", "arthur"]
+]);
+
+function normalize(value) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/’/g, "'")
+    .replace(/\s+/g, " ");
+}
+
 function doLogin(){
   try{try{SFX.click();}catch(e){}}catch(e){}
-  const user = $("#user").value.trim();
-  const pass = $("#pass").value.trim();
+  const user = $("#user").value;
+  const pass = $("#pass").value;
 
   // simple guards
   if(!user || !pass){
@@ -1181,7 +1262,7 @@ function doLogin(){
   setTimeout(()=>{
     clearInterval(timer);
 
-    const ok = (user.toLowerCase()==="alexandre" && pass.toLowerCase()==="test");
+    const ok = credentials.get(normalize(user)) === normalize(pass);
     if(ok){
       state.username = user || "Utilisateur";
       $("#userName").textContent = state.username;
@@ -1319,6 +1400,43 @@ $$("[data-start-app]").forEach((btn) => {
       return;
     }
     openApp(target);
+  });
+});
+
+/* ---- icon dragging ---- */
+const deskArea = $("#deskArea");
+$$(".app-icon").forEach((icon) => {
+  icon.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
+    icon.setPointerCapture(e.pointerId);
+    icon.dataset.dragging = "true";
+    icon.dataset.moved = "false";
+    const rect = icon.getBoundingClientRect();
+    const deskRect = deskArea.getBoundingClientRect();
+    icon.dataset.offsetX = String(e.clientX - rect.left);
+    icon.dataset.offsetY = String(e.clientY - rect.top);
+    icon.dataset.deskW = String(deskRect.width);
+    icon.dataset.deskH = String(deskRect.height);
+  });
+
+  icon.addEventListener("pointermove", (e) => {
+    if (icon.dataset.dragging !== "true") return;
+    const deskRect = deskArea.getBoundingClientRect();
+    const offsetX = Number(icon.dataset.offsetX || 0);
+    const offsetY = Number(icon.dataset.offsetY || 0);
+    const maxLeft = deskRect.width - icon.offsetWidth;
+    const maxTop = deskRect.height - icon.offsetHeight;
+    const left = Math.max(0, Math.min(maxLeft, e.clientX - deskRect.left - offsetX));
+    const top = Math.max(0, Math.min(maxTop, e.clientY - deskRect.top - offsetY));
+    if (Math.abs(left - icon.offsetLeft) > 2 || Math.abs(top - icon.offsetTop) > 2) {
+      icon.dataset.moved = "true";
+    }
+    icon.style.left = `${left}px`;
+    icon.style.top = `${top}px`;
+  });
+
+  icon.addEventListener("pointerup", () => {
+    icon.dataset.dragging = "false";
   });
 });
 
@@ -2565,7 +2683,13 @@ function openApp(appId){
 
 /* bind icons (no inline onclick => works in stricter browsers) */
 $$(".app-icon").forEach(icon=>{
-  icon.addEventListener("click", ()=>openApp(icon.dataset.app));
+  icon.addEventListener("click", ()=>{
+    if (icon.dataset.moved === "true") {
+      icon.dataset.moved = "false";
+      return;
+    }
+    openApp(icon.dataset.app);
+  });
   // double click = close (like toggling from taskbar)
   icon.addEventListener("dblclick", ()=>{
     const appId = icon.dataset.app;
