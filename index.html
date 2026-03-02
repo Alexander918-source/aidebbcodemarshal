@@ -1292,6 +1292,48 @@
       border-color: rgba(212,175,55,.55);
       box-shadow:0 0 0 3px rgba(212,175,55,.18);
     }
+    .template-tools{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:8px;
+    }
+    .template-search{
+      width:100%;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      padding:.7rem .85rem;
+      background: rgba(10,13,20,.62);
+      color:var(--text);
+      font-size:.86rem;
+    }
+    .template-status{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius: 12px;
+      padding:8px 10px;
+      font-size:.78rem;
+      color:rgba(255,255,255,.75);
+    }
+    .template-status .pending{color:#ffd37a; font-weight:700;}
+    .template-quick{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .template-quick button{
+      padding:.5rem .7rem;
+      border-radius: 10px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color:rgba(255,255,255,.88);
+      font-size:.75rem;
+      font-weight:700;
+      cursor:pointer;
+    }
     .template-select option{
       background-color:#0b0f18;
       color:#fff;
@@ -1313,6 +1355,15 @@
       font-size:.8rem;
       font-weight:700;
       color: rgba(255,255,255,.8);
+    }
+    .form-group .required-mark{
+      color:#ffcc66;
+      margin-left:4px;
+    }
+    .form-group .field-hint{
+      font-size:.7rem;
+      color: rgba(255,255,255,.5);
+      margin-top:-2px;
     }
     .form-group input,
     .form-group textarea,
@@ -4024,6 +4075,8 @@ MARSHAL SERVICE</b>
 let templateSelect = null;
 let templateFields = null;
 let templateDescription = null;
+let templateSearchInput = null;
+let templatePendingLabel = null;
 const templateGroupsOrder = [
   'Première de couverture',
   'Page de garde',
@@ -4033,16 +4086,22 @@ const templateGroupsOrder = [
 ];
 let firstSelectableTemplateId = '';
 
-function populateTemplateSelect() {
+function populateTemplateSelect(filterText = '') {
   if (!templateSelect) {
     return;
   }
 
+  const previousValue = templateSelect.value;
   templateSelect.innerHTML = '';
   firstSelectableTemplateId = '';
+  const query = filterText.trim().toLowerCase();
 
   const groupedTemplates = new Map();
   documentTemplates.forEach(template => {
+    const haystack = `${template.group || ''} ${template.label || ''} ${template.description || ''}`.toLowerCase();
+    if (query && !haystack.includes(query)) {
+      return;
+    }
     const groupName = template.group || 'Autres';
     if (!groupedTemplates.has(groupName)) {
       groupedTemplates.set(groupName, []);
@@ -4088,14 +4147,52 @@ function populateTemplateSelect() {
   }
 
   if (firstSelectableTemplateId) {
-    templateSelect.value = firstSelectableTemplateId;
-    renderTemplate(firstSelectableTemplateId);
+    const hasPrevious = previousValue
+      ? Array.from(templateSelect.options).some(option => option.value === previousValue)
+      : false;
+    templateSelect.value = hasPrevious ? previousValue : firstSelectableTemplateId;
+    renderTemplate(templateSelect.value);
   } else if (templateDescription) {
-    templateDescription.textContent = '';
+    templateDescription.textContent = query ? 'Aucun template trouvé pour cette recherche.' : '';
     if (templateFields) {
       templateFields.innerHTML = '';
     }
+    updateTemplatePendingCount();
   }
+}
+
+function updateTemplatePendingCount() {
+  if (!templateFields || !templatePendingLabel) return;
+  const inputs = Array.from(templateFields.querySelectorAll('input, textarea, select'));
+  const editable = inputs.filter(el => !el.disabled && !el.readOnly);
+  const pending = editable.filter(el => !(el.value || '').trim()).length;
+  templatePendingLabel.textContent = pending > 0 ? `${pending} champ(s) à compléter` : 'Template prêt à copier';
+  templatePendingLabel.classList.toggle('pending', pending > 0);
+}
+
+function autofillTemplateFields() {
+  if (!templateSelect) return;
+  const template = documentTemplates.find(item => item.id === templateSelect.value);
+  if (!template) return;
+  const now = new Date();
+  const dateValue = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
+  const username = state.username && state.username !== '—' ? state.username : 'Agent';
+
+  template.fields.forEach(field => {
+    const input = document.getElementById(`field-${field.id}`);
+    if (!input || input.disabled || input.readOnly || (input.value || '').trim()) return;
+    const id = field.id.toLowerCase();
+    const label = (field.label || '').toLowerCase();
+    if (id.includes('date') || label.includes('date')) {
+      input.value = dateValue;
+    } else if (id.includes('agent') || id.includes('recipientname') || label.includes('rédacteur')) {
+      input.value = username;
+    } else if (id.includes('role') || label.includes('fonction')) {
+      input.value = 'Deputy Marshal';
+    }
+  });
+  updateTemplatePendingCount();
+  toast('Champs communs pré-remplis');
 }
 
 function renderTemplate(templateId) {
@@ -4120,6 +4217,10 @@ function renderTemplate(templateId) {
     const label = document.createElement('label');
     label.setAttribute('for', `field-${field.id}`);
     label.textContent = field.label;
+    const requiredMark = document.createElement('span');
+    requiredMark.className = 'required-mark';
+    requiredMark.textContent = '•';
+    label.append(requiredMark);
     wrapper.append(label);
 
     let input;
@@ -4182,6 +4283,8 @@ function renderTemplate(templateId) {
       }
     }
     input.autocomplete = 'off';
+    input.addEventListener('input', updateTemplatePendingCount);
+    input.addEventListener('change', updateTemplatePendingCount);
 
     if (field.value !== undefined) {
       if (field.type === 'select') {
@@ -4211,8 +4314,15 @@ function renderTemplate(templateId) {
     }
 
     wrapper.append(input);
+    if (field.placeholder) {
+      const hint = document.createElement('div');
+      hint.className = 'field-hint';
+      hint.textContent = `Exemple : ${field.placeholder}`;
+      wrapper.append(hint);
+    }
     templateFields.append(wrapper);
   });
+  updateTemplatePendingCount();
 }
 
 function generateDocumentBBCode() {
@@ -4271,6 +4381,7 @@ function generateDocumentBBCode() {
   }
 
   toast('Copié dans le presse-papiers');
+  updateTemplatePendingCount();
 }
 
 /* ---- apps ---- */
@@ -4288,7 +4399,15 @@ function reportApp(){
           </div>
         </div>
         <label for="templateSelect">Catégorie template</label>
+        <div class="template-tools">
+          <input class="template-search" id="templateSearch" type="search" placeholder="Rechercher un template..." />
+          <button class="btn" type="button" id="templateAutofillBtn">Pré-remplir</button>
+        </div>
         <select id="templateSelect"></select>
+        <div class="template-status">
+          <span id="templatePending">0 champ(s) à compléter</span>
+          <span>Objectif : copier en 1 clic</span>
+        </div>
       </div>
       <p class="template-description" id="templateDescription"></p>
       <div class="form-grid" id="templateFields"></div>
@@ -5579,14 +5698,23 @@ function openApp(appId){
       setActiveTask(appId);
       templateSelect = win.querySelector('#templateSelect');
       templateFields = win.querySelector('#templateFields');
+      templateSearchInput = win.querySelector('#templateSearch');
+      templatePendingLabel = win.querySelector('#templatePending');
       templateDescription = win.querySelector('#templateDescription');
       populateTemplateSelect();
       const generateBtn = win.querySelector('#generateTemplateBtn');
+      const autofillBtn = win.querySelector('#templateAutofillBtn');
       if (generateBtn) {
         generateBtn.addEventListener('click', generateDocumentBBCode);
       }
+      if (autofillBtn) {
+        autofillBtn.addEventListener('click', autofillTemplateFields);
+      }
       if (templateSelect) {
         templateSelect.addEventListener('change', () => renderTemplate(templateSelect.value));
+      }
+      if (templateSearchInput) {
+        templateSearchInput.addEventListener('input', () => populateTemplateSelect(templateSearchInput.value || ''));
       }
     }
     if(appId==="agenda"){
