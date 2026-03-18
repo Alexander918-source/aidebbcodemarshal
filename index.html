@@ -1483,6 +1483,214 @@
       z-index:40;
     }
     .toast.show{opacity:1; transform: translateY(0)}
+
+    /* Notes app */
+    .notes-app{
+      display:grid;
+      grid-template-columns: 220px 1fr;
+      gap:10px;
+      height:100%;
+      min-height:0;
+    }
+    .notes-sidebar{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(6,8,14,.9);
+      padding:10px;
+      min-height:0;
+    }
+    .notes-sidebar-top{
+      display:flex;
+      gap:6px;
+      align-items:center;
+    }
+    .notes-sidebar-top h3{
+      margin:0;
+      font-size:.78rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.6);
+      flex:1;
+    }
+    .notes-new-btn{
+      padding:5px 10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(212,175,55,.18);
+      color:var(--gold);
+      font-size:.75rem;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .notes-new-btn:hover{background: rgba(212,175,55,.28);}
+    .notes-list{
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      flex:1;
+      min-height:0;
+    }
+    .note-item{
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(12,16,24,.5);
+      cursor:pointer;
+      position:relative;
+    }
+    .note-item:hover{background: rgba(42,171,238,.1); border-color: rgba(42,171,238,.2);}
+    .note-item.active{background: rgba(42,171,238,.16); border-color: rgba(42,171,238,.35);}
+    .note-item-title{
+      font-size:.78rem;
+      font-weight:700;
+      color:rgba(255,255,255,.9);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .note-item-date{
+      font-size:.68rem;
+      color:rgba(255,255,255,.5);
+      margin-top:2px;
+    }
+    .notes-main{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-height:0;
+    }
+    .notes-main-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+    }
+    .notes-del-btn{
+      padding:5px 10px;
+      border-radius:10px;
+      border:1px solid rgba(255,91,91,.3);
+      background: rgba(255,91,91,.1);
+      color:#ff5b5b;
+      font-size:.75rem;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .notes-del-btn:hover{background: rgba(255,91,91,.2);}
+    .notes-empty{
+      color:rgba(255,255,255,.45);
+      font-size:.85rem;
+      text-align:center;
+      padding:28px;
+      border-radius:12px;
+      border:1px dashed rgba(255,255,255,.1);
+      margin:auto 0;
+    }
+    .notes-editor{
+      flex:1;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(10,13,20,.7);
+      color:rgba(255,255,255,.9);
+      padding:12px;
+      font-size:.9rem;
+      font-family:inherit;
+      line-height:1.5;
+      resize:none;
+      outline:none;
+      min-height:0;
+    }
+    .notes-editor:focus{border-color: rgba(212,175,55,.35);}
+    body.theme-light .notes-sidebar{background: rgba(245,245,240,.95); border-color: rgba(0,0,0,.1);}
+    body.theme-light .note-item{background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.08);}
+    body.theme-light .note-item-title{color:#1a1a1a;}
+    body.theme-light .note-item-date{color:rgba(0,0,0,.5);}
+    body.theme-light .notes-editor{background: rgba(250,250,248,.96); color:#1a1a1a; border-color: rgba(0,0,0,.12);}
+    body.theme-light .notes-sidebar-top h3{color:rgba(0,0,0,.55);}
+
+    /* Iframe fallback overlay */
+    .iframe-fallback{
+      position:absolute;
+      inset:0;
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      background: rgba(6,8,14,.94);
+      border-radius:12px;
+      padding:24px;
+      text-align:center;
+    }
+    .iframe-fallback.show{display:flex;}
+    .iframe-fallback .fb-icon{font-size:2rem;}
+    .iframe-fallback .fb-title{font-weight:800; font-size:1rem; color:rgba(255,255,255,.9);}
+    .iframe-fallback .fb-msg{font-size:.85rem; color:rgba(255,255,255,.6); max-width:280px; line-height:1.45;}
+    .iframe-fallback .fb-btn{
+      padding:.65rem 1.1rem;
+      border-radius:999px;
+      border:none;
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      color:#0a0a0a;
+      font-weight:700;
+      cursor:pointer;
+      font-size:.86rem;
+    }
+    body.theme-light .iframe-fallback{background: rgba(248,248,246,.96);}
+    body.theme-light .iframe-fallback .fb-title{color:#1a1a1a;}
+
+    /* Theme toggle btn in quick panel */
+    .theme-toggle-btn{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:rgba(255,255,255,.85);
+      font-size:.82rem;
+      font-weight:700;
+      cursor:pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .theme-toggle-btn:hover{border-color: rgba(212,175,55,.35);}
+    body.theme-light .theme-toggle-btn{background: rgba(0,0,0,.05); border-color:rgba(0,0,0,.1); color:#1a1a1a;}
+
+    /* Keyboard shortcut hint toast */
+    .kbd-hint{
+      position:absolute;
+      top:14px;
+      left:50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: rgba(6,8,14,.94);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:14px;
+      padding:10px 16px;
+      color:rgba(255,255,255,.85);
+      font-size:.78rem;
+      white-space:nowrap;
+      pointer-events:none;
+      opacity:0;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index:60;
+    }
+    .kbd-hint.show{opacity:1; transform: translateX(-50%) translateY(0);}
+
+    /* Attach image modal in Telegram shadow DOM */
+    /* (styles inside shadow DOM - defined inline) */
+
+    /* Print styles for PDF export */
+    @media print {
+      body > *:not(.print-target){ display:none !important; }
+      .print-target{ display:block !important; }
+      .print-target *{ visibility: visible !important; }
+      html, body{ height:auto; background:white; padding:0; margin:0; }
+      @page{ size: A4; margin:10mm; }
+    }
   
 /* ===== iMessage ULTRA (scope: uniquement messagerie) ===================
    - Look iPhone Messages (light/dark), safe-area, statusbar, bubbles,
@@ -2463,9 +2671,17 @@
               </div>
               <span>Telegram</span>
             </div>
+
+            <div class="app-icon" data-app="notes" style="left:132px; top:18px;">
+              <div class="tile" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 20h-7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5"/><path d="M8 10h8M8 14h5"/><path d="m17 17 4-4"/><path d="M16 22v-5h5"/></svg>
+              </div>
+              <span>Notes</span>
+            </div>
           </div>
 
           <div class="toast" id="toast">Ouverture…</div>
+          <div class="kbd-hint" id="kbdHint">Raccourcis: Ctrl+L verrouiller &bull; Échap fermer &bull; Ctrl+N notes</div>
           <div class="agent-tag">AGENT <span id="agentName">—</span></div>
           <div class="corner-clock" id="cornerClock">--/--/---- --:--:--</div>
           <div class="copyright">Développé par Alexandre.</div>
@@ -2542,6 +2758,12 @@
               </div>
 
               <div class="row">
+                <button class="theme-toggle-btn" id="themeToggleBtn" type="button">
+                  <span id="themeToggleIcon">☀️</span>
+                  <span id="themeToggleLabel">Thème clair</span>
+                </button>
+              </div>
+              <div class="row">
                 <button class="btn" id="btnLock" type="button">Verrouiller</button>
                 <button class="btn" id="btnLogout" type="button">Déconnexion</button>
               </div>
@@ -2601,6 +2823,10 @@
                 <span class="tile-icon">✈️</span>
                 <span>Telegram</span>
                 <span class="app-badge hidden" id="telegramBadgeStart">+1</span>
+              </button>
+              <button class="start-tile" type="button" data-start-app="notes">
+                <span class="tile-icon">📝</span>
+                <span>Notes</span>
               </button>
               <button class="start-tile" type="button" data-start-app="lock">
                 <span class="tile-icon">🔒</span>
@@ -4493,6 +4719,7 @@ function reportApp(){
       <p class="template-description" id="templateDescription"></p>
       <div class="form-grid" id="templateFields"></div>
       <div class="form-actions">
+        <button class="btn" type="button" id="pdfTemplateBtn">Télécharger PDF</button>
         <button class="btn primary" type="button" id="generateTemplateBtn">Copier le template</button>
       </div>
     </div>
@@ -4500,69 +4727,8 @@ function reportApp(){
   return node;
 }
 
-function embedApp(url, title){
-  const wrap = document.createElement("div");
-  wrap.style.height = "100%";
-  wrap.style.display="grid";
-  wrap.style.gridTemplateRows="auto 1fr";
-  wrap.style.gap="10px";
-  const top = document.createElement("div");
-  top.className="card";
-  top.innerHTML = `
-    <div class="notice">
-      <div style="font-size:1.1rem">🌐</div>
-      <div>
-        <b>${title}</b><br>
-        Si le site bloque l'intégration (sécurité du navigateur), un message s'affichera.
-        <div class="kbtn">
-          <button class="btn" type="button" data-open>Ouvrir externe</button>
-          <span class="kbd">${url.replace(/^https?:\/\//,'')}</span>
-        </div>
-      </div>
-    </div>
-  `;
-  const frameCard = document.createElement("div");
-  frameCard.className="card";
-  frameCard.style.height="100%";
-  frameCard.style.minHeight="300px";
-
-  const iframe = document.createElement("iframe");
-  iframe.className="iframe";
-  iframe.referrerPolicy="no-referrer";
-  iframe.loading="eager";
-  iframe.src = url;
-
-  const fallback = document.createElement("div");
-  fallback.className="notice";
-  fallback.style.display="none";
-  fallback.style.padding="12px";
-  fallback.innerHTML = `
-    <div style="font-size:1.1rem">⚠️</div>
-    <div>
-      <b>Intégration bloquée</b><br>
-      Le site refuse souvent l'affichage dans une iframe (X-Frame-Options / CSP).<br>
-      Solution: <b>ouvrir externe</b> ou utiliser un <b>proxy/relay</b> (si tu en héberges un) pour l'intégrer.
-    </div>
-  `;
-
-  top.querySelector("[data-open]").addEventListener("click", ()=>{
-    try{try{SFX.open();}catch(e){}}catch(e){}
-    window.open(url, "_blank", "noopener,noreferrer");
-  });
-
-  let loaded=false;
-  iframe.addEventListener("load", ()=>loaded=true);
-  setTimeout(()=>{
-    if(!loaded){
-      iframe.style.display="none";
-      fallback.style.display="flex";
-    }
-  }, 2500);
-
-  frameCard.append(iframe, fallback);
-  wrap.append(top, frameCard);
-  return wrap;
-}
+/* embedApp defined later (improved version below) */
+function _embedAppPlaceholder(url, title){ return document.createElement("div"); }
 
 const TELEGRAM_MESSAGES_KEY = "marshal.telegram.messages";
 const TELEGRAM_UNREAD_KEY = "marshal.telegram.unread";
@@ -5017,6 +5183,60 @@ function telegramApp(){
       padding:0 4px;
     }
     .out .stamp{color: rgba(229,231,235,.6);}
+    .receipt{font-size:11px; margin-left:3px;}
+    .receipt.read{color:#2aabee;}
+    .receipt.sent{color: rgba(229,231,235,.5);}
+    .status-dot{
+      display:inline-block;
+      width:8px; height:8px;
+      border-radius:50%;
+      margin-right:4px;
+      flex:0 0 auto;
+    }
+    .status-dot.online{background:#31d39c; box-shadow:0 0 6px rgba(49,211,156,.5);}
+    .status-dot.away{background:#f5a623;}
+    .status-dot.offline{background:rgba(255,255,255,.22);}
+    .status-label{font-size:11px; color: rgba(229,231,235,.5);}
+    .attach-modal{
+      position:absolute;
+      bottom:70px;
+      left:14px;
+      width:260px;
+      background: rgba(12,16,26,.97);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:14px;
+      padding:12px;
+      display:none;
+      flex-direction:column;
+      gap:8px;
+      z-index:20;
+      box-shadow:0 18px 50px rgba(0,0,0,.5);
+    }
+    .attach-modal.show{display:flex;}
+    .attach-modal label{font-size:.78rem;color:rgba(255,255,255,.7);}
+    .attach-modal input{
+      width:100%;
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:#e5e7eb;
+      font-size:13px;
+      outline:none;
+    }
+    .attach-modal .attach-actions{display:flex;gap:8px;}
+    .attach-modal button{
+      flex:1;padding:7px 10px;border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);color:#e5e7eb;font-size:12px;font-weight:700;cursor:pointer;
+    }
+    .attach-modal button.primary{background:#2aabee;color:#fff;border-color:#2aabee;}
+    .bubble img.attach-img{
+      display:block;
+      max-width:200px;
+      border-radius:8px;
+      margin-top:6px;
+    }
     .composeWrap{
       padding:12px 14px;
       border-top:1px solid rgba(255,255,255,.08);
@@ -5178,10 +5398,18 @@ function telegramApp(){
 
       <div class="log" role="log" aria-live="polite"></div>
 
-      <div class="composeWrap">
+      <div class="composeWrap" style="position:relative;">
+        <div class="attach-modal" id="attachModal">
+          <label>URL de l'image à joindre</label>
+          <input type="url" id="attachUrlInput" placeholder="https://..." />
+          <div class="attach-actions">
+            <button type="button" id="attachCancel">Annuler</button>
+            <button type="button" id="attachConfirm" class="primary">Joindre</button>
+          </div>
+        </div>
         <div class="compose">
           <button class="pillBtn" type="button" data-act="plus" title="Plus">＋</button>
-          <button class="pillBtn" type="button" data-act="clip" title="Joindre">📎</button>
+          <button class="pillBtn" type="button" data-act="clip" title="Joindre" id="clipBtn">📎</button>
           <textarea rows="1" placeholder="Message" aria-label="Message"></textarea>
           <button class="send" type="button" disabled aria-label="Envoyer">➤</button>
         </div>
@@ -5208,6 +5436,25 @@ function telegramApp(){
   const pinnedSet = new Set(loadTelegramPinned().map(normalizeName));
   updateTelegramBadge(loadTelegramUnread());
 
+  // Online status simulation
+  const STATUS_TYPES = ["online", "away", "offline"];
+  const contactStatuses = {};
+  TELEGRAM_CONTACTS.forEach(name=>{
+    contactStatuses[normalizeName(name)] = STATUS_TYPES[Math.floor(Math.random()*3)];
+  });
+  // Occasionally change status
+  setInterval(()=>{
+    const names = Object.keys(contactStatuses);
+    const pick = names[Math.floor(Math.random()*names.length)];
+    contactStatuses[pick] = STATUS_TYPES[Math.floor(Math.random()*3)];
+    // Re-render list silently if available
+    try{ renderList(); }catch(e){}
+  }, 15000 + Math.random()*15000);
+
+  const getStatus = (name)=> contactStatuses[normalizeName(name)] || "offline";
+  const statusEmoji = (s)=> s==="online" ? "🟢" : s==="away" ? "🟡" : "⚫";
+  const statusLabel = (s)=> s==="online" ? "En ligne" : s==="away" ? "Absent" : "Hors ligne";
+
   const els = {
     app: root,
     list: root.querySelector(".list"),
@@ -5223,7 +5470,12 @@ function telegramApp(){
     modalBody: root.querySelector(".modal-card p"),
     modalInput: root.querySelector(".modal-input"),
     modalCancel: root.querySelector("[data-modal='cancel']"),
-    modalConfirm: root.querySelector("[data-modal='confirm']")
+    modalConfirm: root.querySelector("[data-modal='confirm']"),
+    attachModal: root.querySelector("#attachModal"),
+    attachUrlInput: root.querySelector("#attachUrlInput"),
+    attachCancel: root.querySelector("#attachCancel"),
+    attachConfirm: root.querySelector("#attachConfirm"),
+    clipBtn: root.querySelector("#clipBtn")
   };
 
   let active = TELEGRAM_CONTACTS[0];
@@ -5364,11 +5616,14 @@ function telegramApp(){
       const unread = unreadCountFor(name);
       const badge = unread > 0 ? `<span class="row-badge">${unread}</span>` : "";
       const pinClass = pinned ? "pin-btn active" : "pin-btn";
+      const st = name !== TELEGRAM_GROUP ? getStatus(name) : null;
+      const statusBadge = st ? `<span class="status-dot ${st}" title="${statusLabel(st)}"></span>` : "";
+      const statusInfo = st ? `<span class="status-label">${statusEmoji(st)} ${statusLabel(st)}</span>` : "";
       row.innerHTML = `
         <div class="avatar" aria-hidden="true">${initials(displayName)}${tag}</div>
         <div class="meta">
           <div class="topline">
-            <div class="name">${displayName}</div>
+            <div class="name" style="display:flex;align-items:center;gap:4px;">${statusBadge}${displayName}</div>
             <div class="time">${last ? formatTelegramTime(last.ts) : ""}</div>
           </div>
           <div class="preview">${last ? (last.text || "") : "Aucun message"}</div>
@@ -5417,7 +5672,12 @@ function telegramApp(){
   const renderLog = ()=>{
     const titleName = active === TELEGRAM_GROUP ? active : formatTelegramName(active);
     els.title.textContent = titleName;
-    els.scope.textContent = active === TELEGRAM_GROUP ? "GROUPE" : "Privé";
+    if(active !== TELEGRAM_GROUP){
+      const st = getStatus(active);
+      els.scope.textContent = `${statusEmoji(st)} ${statusLabel(st)}`;
+    } else {
+      els.scope.textContent = "GROUPE";
+    }
     els.log.innerHTML = "";
     const conv = convoFor(active);
     if(!conv.length){
@@ -5451,15 +5711,34 @@ function telegramApp(){
         </div>
       ` : "";
       const editedLabel = m.edited ? " • modifié" : "";
+      // Read receipts: ✓ sent, ✓✓ read (blue)
+      let receiptHtml = "";
+      if(isOut){
+        if(m.read){
+          receiptHtml = `<span class="receipt read" title="Lu">✓✓</span>`;
+        } else {
+          receiptHtml = `<span class="receipt sent" title="Envoyé">✓</span>`;
+        }
+      }
       msg.innerHTML = `
         ${senderMarkup}
         <div class="bubble-wrap">
           <div class="bubble"></div>
           ${actions}
         </div>
-        <div class="stamp">${formatTelegramTime(m.ts)}${editedLabel}</div>
+        <div class="stamp">${formatTelegramTime(m.ts)}${editedLabel}${receiptHtml}</div>
       `;
-      msg.querySelector(".bubble").textContent = m.text || "";
+      const bubble = msg.querySelector(".bubble");
+      bubble.textContent = m.text || "";
+      // If message has an attachment image
+      if(m.imageUrl){
+        const img = document.createElement("img");
+        img.className = "attach-img";
+        img.src = m.imageUrl;
+        img.alt = "Image jointe";
+        img.onerror = ()=>{ img.style.display="none"; };
+        bubble.appendChild(img);
+      }
       msg.querySelectorAll("[data-msg-action]").forEach(btn=>{
         btn.addEventListener("click", (event)=>{
           event.stopPropagation();
@@ -5609,11 +5888,62 @@ function telegramApp(){
     });
   }
 
+  // Attachment modal logic
+  let pendingImageUrl = null;
+  if(els.clipBtn){
+    els.clipBtn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      if(els.attachModal){
+        els.attachModal.classList.toggle("show");
+        if(els.attachModal.classList.contains("show") && els.attachUrlInput){
+          els.attachUrlInput.value = "";
+          els.attachUrlInput.focus();
+        }
+      }
+    });
+  }
+  if(els.attachCancel){
+    els.attachCancel.addEventListener("click", ()=>{
+      if(els.attachModal) els.attachModal.classList.remove("show");
+    });
+  }
+  if(els.attachConfirm){
+    els.attachConfirm.addEventListener("click", ()=>{
+      const url = (els.attachUrlInput ? els.attachUrlInput.value : "").trim();
+      if(!url){ return; }
+      const name = currentUserName();
+      const scope = active === TELEGRAM_GROUP ? "group" : "private";
+      const recipient = active;
+      if(scope === "private" && normalizeName(recipient) === normalizeName(name)){
+        toast("Impossible de s'envoyer un message");
+        return;
+      }
+      // Add message with image
+      const entry = {
+        id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
+        name, text: "📷 Image jointe", scope, recipient,
+        ts: Date.now(),
+        read: normalizeName(name) === normalizeName(currentUserName()),
+        imageUrl: url
+      };
+      messages.push(entry);
+      saveTelegramMessages(messages);
+      if(normalizeName(name) !== normalizeName(currentUserName())){
+        rebuildUnreadMap();
+      }
+      try{ SFX.send(); }catch(e){}
+      if(els.attachModal) els.attachModal.classList.remove("show");
+      renderAll();
+    });
+  }
+
   els.back.addEventListener("click", ()=>{
     els.app.classList.remove("showThread");
   });
 
   root.querySelectorAll("[data-act]").forEach(btn=>{
+    // don't override clip btn
+    if(btn.dataset.act === "clip") return;
     btn.addEventListener("click", ()=>{
       try{ toast("Fonction Telegram"); }catch(e){}
     });
@@ -5685,7 +6015,8 @@ const appMeta = (appId)=>({
   report: { title: "Templates", icon: "🗂️" },
   agenda: { title: "Agenda", icon: "📅" },
   dcso: { title: "Intranet", icon: "🌐" },
-  telegram: { title: "Telegram", icon: "✈️" }
+  telegram: { title: "Telegram", icon: "✈️" },
+  notes: { title: "Notes", icon: "📝" }
 }[appId] || { title: appId || "App", icon: "🛰️" });
 
 function setActiveTask(appId){
@@ -5791,6 +6122,10 @@ function openApp(appId){
       if (autofillBtn) {
         autofillBtn.addEventListener('click', autofillTemplateFields);
       }
+      const pdfBtn = win.querySelector('#pdfTemplateBtn');
+      if (pdfBtn) {
+        pdfBtn.addEventListener('click', printTemplatePDF);
+      }
       if (templateSelect) {
         templateSelect.addEventListener('change', () => renderTemplate(templateSelect.value));
       }
@@ -5816,6 +6151,12 @@ function openApp(appId){
       registerTask(appId);
       setActiveTask(appId);
     }
+    if(appId==="notes"){
+      const win = createWindow({appId, title:"Notes", subtitle:"Bloc-notes", contentNode: notesApp(), onClose});
+      appWindows.set(appId, win);
+      registerTask(appId);
+      setActiveTask(appId);
+    }
   };
   setTimeout(launch, 320);
 }
@@ -5836,13 +6177,34 @@ $$(".app-icon").forEach(icon=>{
   });
 });
 
-/* ---- weather (simple + lightweight; no web calls) ---- */
-function updateWeather(){
-  const ic = "⛅";
-  const t = "24";
-  $("#weatherPill").textContent = `${ic}  ${t}°C · Nashville`;
+/* ---- weather via OpenMeteo API ---- */
+function wmoToEmoji(code){
+  if(code === 0) return "☀️";
+  if(code >= 1 && code <= 3) return "⛅";
+  if(code >= 45 && code <= 48) return "🌫️";
+  if(code >= 51 && code <= 67) return "🌧️";
+  if(code >= 71 && code <= 77) return "❄️";
+  if(code >= 80 && code <= 82) return "🌦️";
+  if(code === 95) return "⛈️";
+  return "⛅";
 }
-updateWeather();
+async function fetchWeather(){
+  try{
+    const resp = await fetch("https://api.open-meteo.com/v1/forecast?latitude=36.1627&longitude=-86.7816&current_weather=true&temperature_unit=celsius");
+    if(!resp.ok) throw new Error("HTTP " + resp.status);
+    const data = await resp.json();
+    const cw = data.current_weather;
+    const emoji = wmoToEmoji(cw.weathercode);
+    const temp = Math.round(cw.temperature);
+    const pill = $("#weatherPill");
+    if(pill) pill.textContent = `${emoji}  ${temp}°C · Nashville`;
+  }catch(e){
+    const pill = $("#weatherPill");
+    if(pill) pill.textContent = "⛅  --°C · Nashville";
+  }
+}
+fetchWeather();
+setInterval(fetchWeather, 10 * 60 * 1000);
 updateTelegramBadge(loadTelegramUnread());
 
 function updateNetworkStatus(){
@@ -5876,6 +6238,379 @@ window.addEventListener("storage", (event) => {
     }
   }catch(e){}
 });
+
+/* ============================================================
+   RESPONSIVE SCALING
+   ============================================================ */
+function applyTabletScale(){
+  const tablet = document.getElementById("tablet");
+  if(!tablet) return;
+  const W = 980, H = 640;
+  const vw = window.innerWidth - 36;  // account for body padding
+  const vh = window.innerHeight - 36;
+  const scale = Math.min(1, vw / W, vh / H);
+  tablet.style.transformOrigin = "center center";
+  tablet.style.transform = scale < 1 ? `scale(${scale.toFixed(4)})` : "";
+}
+applyTabletScale();
+window.addEventListener("resize", applyTabletScale);
+
+/* ============================================================
+   DARK / LIGHT THEME TOGGLE
+   ============================================================ */
+const THEME_KEY = "hplatoon.theme";
+function applyTheme(theme){
+  if(theme === "light"){
+    document.body.classList.add("theme-light");
+    const icon = document.getElementById("themeToggleIcon");
+    const label = document.getElementById("themeToggleLabel");
+    if(icon) icon.textContent = "🌙";
+    if(label) label.textContent = "Thème sombre";
+  } else {
+    document.body.classList.remove("theme-light");
+    const icon = document.getElementById("themeToggleIcon");
+    const label = document.getElementById("themeToggleLabel");
+    if(icon) icon.textContent = "☀️";
+    if(label) label.textContent = "Thème clair";
+  }
+  localStorage.setItem(THEME_KEY, theme);
+}
+// Load persisted theme (default: dark)
+(function(){
+  const saved = localStorage.getItem(THEME_KEY);
+  if(saved === "light") applyTheme("light");
+})();
+const themeToggleBtn = document.getElementById("themeToggleBtn");
+if(themeToggleBtn){
+  themeToggleBtn.addEventListener("click", ()=>{
+    const isLight = document.body.classList.contains("theme-light");
+    applyTheme(isLight ? "dark" : "light");
+    try{SFX.tap();}catch(e){}
+  });
+}
+
+/* ============================================================
+   KEYBOARD SHORTCUTS
+   ============================================================ */
+document.addEventListener("keydown", (e)=>{
+  // Ctrl+L = lock
+  if(e.ctrlKey && e.key === "l"){
+    e.preventDefault();
+    if(!$("#desktop").classList.contains("hidden")) lock();
+    return;
+  }
+  // Ctrl+N = open Notes
+  if(e.ctrlKey && e.key === "n"){
+    e.preventDefault();
+    if(!$("#desktop").classList.contains("hidden")) openApp("notes");
+    return;
+  }
+  // Escape = close topmost window
+  if(e.key === "Escape"){
+    // close panels first
+    const trayPanel = $("#trayPanel");
+    const clockPanel = $("#clockPanel");
+    const sm = $("#startMenu");
+    if(trayPanel && trayPanel.classList.contains("show")){
+      trayPanel.classList.remove("show"); return;
+    }
+    if(clockPanel && clockPanel.classList.contains("show")){
+      clockPanel.classList.remove("show"); return;
+    }
+    if(sm && sm.classList.contains("show")){
+      sm.classList.remove("show"); return;
+    }
+    // Find window with highest z-index
+    const wins = Array.from(document.querySelectorAll(".window")).filter(w=>!w.classList.contains("hidden") && w.isConnected);
+    if(wins.length){
+      const top = wins.reduce((a,b)=> Number(b.style.zIndex||0) > Number(a.style.zIndex||0) ? b : a);
+      const appId = top.dataset.app;
+      if(appId) closeApp(appId);
+      else top.remove();
+    }
+    return;
+  }
+});
+
+/* Show shortcut hint toast after first login */
+const KBD_HINT_SHOWN = "hplatoon.kbdhint";
+function showKbdHint(){
+  if(localStorage.getItem(KBD_HINT_SHOWN)) return;
+  const hint = document.getElementById("kbdHint");
+  if(!hint) return;
+  hint.classList.add("show");
+  setTimeout(()=>hint.classList.remove("show"), 5500);
+  localStorage.setItem(KBD_HINT_SHOWN, "1");
+}
+
+/* Patch doLogin to show hint after login */
+const _origDesktopShow = document.getElementById("desktop");
+const _loginObserver = new MutationObserver((mutations)=>{
+  mutations.forEach(m=>{
+    if(m.target === _origDesktopShow && !_origDesktopShow.classList.contains("hidden")){
+      setTimeout(showKbdHint, 1200);
+    }
+  });
+});
+if(_origDesktopShow){
+  _loginObserver.observe(_origDesktopShow, {attributes:true, attributeFilter:["class"]});
+}
+
+/* ============================================================
+   NOTES APP
+   ============================================================ */
+const NOTES_KEY = "hplatoon.notes";
+
+function loadNotes(){
+  try{
+    const raw = localStorage.getItem(NOTES_KEY);
+    const data = raw ? JSON.parse(raw) : [];
+    return Array.isArray(data) ? data : [];
+  }catch(e){ return []; }
+}
+function saveNotes(notes){
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+function noteTitle(content){
+  const firstLine = (content || "").split("\n")[0].trim();
+  return firstLine.slice(0,40) || "Sans titre";
+}
+function formatNoteDate(ts){
+  const d = new Date(ts);
+  return d.toLocaleDateString("fr-FR",{day:"2-digit", month:"2-digit", year:"numeric"}) + " " +
+         d.toLocaleTimeString("fr-FR",{hour:"2-digit", minute:"2-digit"});
+}
+
+function notesApp(){
+  const wrap = document.createElement("div");
+  wrap.className = "notes-app";
+  wrap.style.height = "100%";
+  wrap.style.minHeight = "0";
+
+  const sidebar = document.createElement("div");
+  sidebar.className = "notes-sidebar";
+  sidebar.innerHTML = `
+    <div class="notes-sidebar-top">
+      <h3>Notes</h3>
+      <button class="notes-new-btn" type="button">+ Nouvelle note</button>
+    </div>
+    <div class="notes-list"></div>
+  `;
+
+  const main = document.createElement("div");
+  main.className = "notes-main";
+  main.style.flex = "1 1 auto";
+  main.style.minHeight = "0";
+  main.style.display = "flex";
+  main.style.flexDirection = "column";
+  main.style.gap = "8px";
+
+  const mainTop = document.createElement("div");
+  mainTop.className = "notes-main-top";
+  mainTop.innerHTML = `<span style="font-size:.82rem;color:rgba(255,255,255,.55);font-weight:700;" id="noteTitleDisplay">Sélectionnez une note</span>`;
+  const delBtn = document.createElement("button");
+  delBtn.className = "notes-del-btn";
+  delBtn.type = "button";
+  delBtn.textContent = "Supprimer";
+  delBtn.style.display = "none";
+  mainTop.appendChild(delBtn);
+
+  const editor = document.createElement("textarea");
+  editor.className = "notes-editor";
+  editor.style.flex = "1 1 auto";
+  editor.placeholder = "Commencez à écrire…";
+  editor.disabled = true;
+
+  main.appendChild(mainTop);
+  main.appendChild(editor);
+  wrap.appendChild(sidebar);
+  wrap.appendChild(main);
+
+  const notesList = sidebar.querySelector(".notes-list");
+  const newBtn = sidebar.querySelector(".notes-new-btn");
+  const titleDisplay = mainTop.querySelector("#noteTitleDisplay");
+
+  let notes = loadNotes();
+  let selectedId = null;
+  let saveDebounce = null;
+
+  function renderList(){
+    notesList.innerHTML = "";
+    if(!notes.length){
+      const empty = document.createElement("div");
+      empty.className = "notes-empty";
+      empty.textContent = "Aucune note";
+      notesList.appendChild(empty);
+      return;
+    }
+    [...notes].sort((a,b)=>b.updatedAt - a.updatedAt).forEach(n=>{
+      const item = document.createElement("div");
+      item.className = "note-item" + (n.id === selectedId ? " active" : "");
+      item.dataset.id = n.id;
+      item.innerHTML = `<div class="note-item-title">${noteTitle(n.content)}</div><div class="note-item-date">${formatNoteDate(n.updatedAt)}</div>`;
+      item.addEventListener("click", ()=>selectNote(n.id));
+      notesList.appendChild(item);
+    });
+  }
+
+  function selectNote(id){
+    selectedId = id;
+    const note = notes.find(n=>n.id === id);
+    if(!note){ editor.value=""; editor.disabled=true; delBtn.style.display="none"; titleDisplay.textContent="Sélectionnez une note"; renderList(); return; }
+    editor.value = note.content;
+    editor.disabled = false;
+    delBtn.style.display = "";
+    titleDisplay.textContent = noteTitle(note.content) || "Sans titre";
+    renderList();
+    editor.focus();
+  }
+
+  function createNote(){
+    const id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
+    const note = {id, content: "", createdAt: Date.now(), updatedAt: Date.now()};
+    notes.unshift(note);
+    saveNotes(notes);
+    selectNote(id);
+    try{SFX.tap();}catch(e){}
+  }
+
+  editor.addEventListener("input", ()=>{
+    if(!selectedId) return;
+    const note = notes.find(n=>n.id === selectedId);
+    if(!note) return;
+    note.content = editor.value;
+    note.updatedAt = Date.now();
+    titleDisplay.textContent = noteTitle(note.content) || "Sans titre";
+    clearTimeout(saveDebounce);
+    saveDebounce = setTimeout(()=>{ saveNotes(notes); renderList(); }, 500);
+  });
+
+  delBtn.addEventListener("click", ()=>{
+    if(!selectedId) return;
+    notes = notes.filter(n=>n.id !== selectedId);
+    saveNotes(notes);
+    selectedId = null;
+    editor.value = "";
+    editor.disabled = true;
+    delBtn.style.display = "none";
+    titleDisplay.textContent = "Sélectionnez une note";
+    renderList();
+    try{SFX.close();}catch(e){}
+  });
+
+  newBtn.addEventListener("click", createNote);
+
+  // Select first note if available
+  if(notes.length){ selectNote(notes[0].id); } else { renderList(); }
+
+  return wrap;
+}
+
+/* ============================================================
+   PDF EXPORT FOR TEMPLATES
+   ============================================================ */
+function printTemplatePDF(){
+  if(!templateSelect) return;
+  const template = documentTemplates.find(item=>item.id === templateSelect.value);
+  if(!template) return;
+
+  const values = {};
+  template.fields.forEach(field=>{
+    const input = document.getElementById(`field-${field.id}`);
+    if(!input){ values[field.id]=""; return; }
+    const rawValue = input.value;
+    values[field.id] = field.type==="textarea"||field.multiline ? formatMultiline(rawValue) : escapeHtml(rawValue);
+  });
+  let html = template.template;
+  template.fields.forEach(field=>{
+    html = html.replaceAll(`{{${field.id}}}`, values[field.id] ?? "");
+  });
+
+  const printWin = window.open("", "_blank", "width=900,height=700");
+  if(!printWin){ toast("Popup bloquée par le navigateur"); return; }
+  printWin.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Template PDF</title><style>
+    body{margin:0;padding:0;background:white;}
+    @page{size:A4;margin:0;}
+    @media print{body{margin:0;}}
+  </style></head><body>${html}<script>window.onload=function(){window.print();window.close();}<\/script></body></html>`);
+  printWin.document.close();
+  toast("Impression lancée");
+}
+
+/* ============================================================
+   IMPROVED IFRAME FALLBACK — final embedApp definition
+   ============================================================ */
+function embedApp(url, title, icon){
+  icon = icon || "🌐";
+  const wrap = document.createElement("div");
+  wrap.style.height = "100%";
+  wrap.style.display = "grid";
+  wrap.style.gridTemplateRows = "auto 1fr";
+  wrap.style.gap = "10px";
+
+  const top = document.createElement("div");
+  top.className = "card";
+  top.innerHTML = `
+    <div class="notice">
+      <div style="font-size:1.1rem">${icon}</div>
+      <div>
+        <b>${title}</b><br>
+        Si le site bloque l'intégration, le fallback s'affiche automatiquement.
+        <div class="kbtn">
+          <button class="btn" type="button" data-open>Ouvrir dans un nouvel onglet</button>
+          <span class="kbd">${url.replace(/^https?:\/\//,'')}</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const frameCard = document.createElement("div");
+  frameCard.className = "card";
+  frameCard.style.height = "100%";
+  frameCard.style.minHeight = "300px";
+  frameCard.style.position = "relative";
+
+  const iframe = document.createElement("iframe");
+  iframe.className = "iframe";
+  iframe.referrerPolicy = "no-referrer";
+  iframe.loading = "eager";
+  iframe.src = url;
+  iframe.style.position = "absolute";
+  iframe.style.inset = "0";
+  iframe.style.width = "100%";
+  iframe.style.height = "100%";
+
+  const fallback = document.createElement("div");
+  fallback.className = "iframe-fallback";
+  fallback.innerHTML = `
+    <div class="fb-icon">${icon}</div>
+    <div class="fb-title">Contenu non accessible dans l'iframe</div>
+    <div class="fb-msg">Ce site refuse l'intégration pour des raisons de sécurité (X-Frame-Options / CSP). Ouvrez-le dans un nouvel onglet.</div>
+    <button class="fb-btn" type="button">Ouvrir dans un nouvel onglet</button>
+  `;
+
+  fallback.querySelector(".fb-btn").addEventListener("click", ()=>{
+    try{SFX.open();}catch(e){}
+    window.open(url, "_blank", "noopener,noreferrer");
+  });
+  top.querySelector("[data-open]").addEventListener("click", ()=>{
+    try{SFX.open();}catch(e){}
+    window.open(url, "_blank", "noopener,noreferrer");
+  });
+
+  let loaded = false;
+  iframe.addEventListener("load", ()=>{ loaded = true; });
+  setTimeout(()=>{
+    if(!loaded){
+      iframe.style.display = "none";
+      fallback.classList.add("show");
+    }
+  }, 2800);
+
+  frameCard.append(iframe, fallback);
+  wrap.append(top, frameCard);
+  return wrap;
+}
 </script>
 </body>
 </html>
